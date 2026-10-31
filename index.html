@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#101719" />
+    <meta
+      name="description"
+      content="Explora cómo un tornado afecta una vivienda chilena en este laboratorio 3D interactivo."
+    />
+    <title>SimTorCL · Laboratorio de tornados</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="SimTorCL, inicio"
+        ><svg viewBox="0 0 36 36" fill="none" aria-hidden="true">
+          <path
+            d="M6 8h24M9 14h19M13 20h12M16 26h6M19 32h2"
+            stroke="currentColor"
+            stroke-width="2.5"
+            stroke-linecap="round"
+          /></svg
+        ><span>SimTor<span class="brand-accent">CL</span></span
+        ><span class="version">LAB / 01</span></a
+      >
+      <nav aria-label="Principal">
+        <span class="nav-active">Simulador</span
+        ><button class="nav-button" id="about-button">
+          Acerca del modelo <span>↗</span>
+        </button>
+      </nav>
+      <a
+        class="github-link"
+        href="https://github.com/CitriCool/SimTorCL"
+        target="_blank"
+        rel="noreferrer"
+        aria-label="Ver código en GitHub"
+        ><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path
+            d="M12 .8a11.2 11.2 0 0 0-3.54 21.83c.56.1.76-.24.76-.54v-2.1c-3.12.68-3.78-1.33-3.78-1.33-.51-1.29-1.25-1.63-1.25-1.63-1.02-.7.08-.69.08-.69 1.13.08 1.72 1.16 1.72 1.16 1 1.72 2.63 1.22 3.27.93.1-.73.4-1.22.71-1.5-2.5-.28-5.13-1.25-5.13-5.56 0-1.23.44-2.23 1.16-3.02-.12-.28-.5-1.43.11-2.98 0 0 .95-.3 3.08 1.16a10.7 10.7 0 0 1 5.6 0c2.13-1.45 3.07-1.16 3.07-1.16.62 1.55.23 2.7.12 2.98.72.79 1.15 1.8 1.15 3.02 0 4.32-2.63 5.27-5.14 5.55.4.35.76 1.03.76 2.08v3.09c0 .3.2.65.77.54A11.2 11.2 0 0 0 12 .8Z"
+          /></svg
+        ><span>GitHub</span></a
+      >
+    </header>
+
+    <main class="workspace">
+      <aside class="sidebar" aria-label="Configuración del experimento">
+        <div class="eyebrow">
+          <span class="tiny-cross">+</span> LABORATORIO INTERACTIVO
+        </div>
+        <h1>La fuerza del viento.<br /><span>Su impacto real.</span></h1>
+        <p class="intro">
+          Explora la respuesta de una vivienda chilena ante un tornado.
+        </p>
+
+        <section class="control-section">
+          <div class="section-heading">
+            <h2><span>01</span> Escenario</h2>
+            <span class="small-label">VIVIENDA</span>
+          </div>
+          <div class="house-card">
+            <div class="house-icon" aria-hidden="true">⌂</div>
+            <div>
+              <strong>Casa de albañilería</strong>
+              <p>Muros pesados · Cubierta de zinc</p>
+            </div>
+            <span class="selected-dot"></span>
+          </div>
+          <div class="spec-row">
+            <span>Superficie <b>41 m²</b></span
+            ><span>Cubierta <b>16 planchas</b></span>
+          </div>
+        </section>
+
+        <section class="control-section wind-controls">
+          <div class="section-heading">
+            <h2><span>02</span> Condiciones del tornado</h2>
+          </div>
+          <div class="presets" role="group" aria-label="Intensidad predefinida">
+            <button data-preset="suave">Suave</button
+            ><button class="active" data-preset="fuerte" aria-pressed="true">
+              Fuerte</button
+            ><button data-preset="extremo">Extremo</button>
+          </div>
+          <label class="range-label" for="wind"
+            >Velocidad del viento
+            <span
+              ><output id="wind-value" for="wind">160</output>
+              <small>km/h</small></span
+            ></label
+          >
+          <input
+            id="wind"
+            type="range"
+            min="60"
+            max="280"
+            step="5"
+            value="160"
+          />
+          <div class="range-ticks">
+            <span>60 km/h</span><span>280 km/h</span>
+          </div>
+          <label class="range-label" for="radius"
+            >Radio de influencia
+            <span
+              ><output id="radius-value" for="radius">8</output>
+              <small>m</small></span
+            ></label
+          >
+          <input
+            id="radius"
+            type="range"
+            min="4"
+            max="12"
+            step="0.5"
+            value="8"
+          />
+          <div class="range-ticks"><span>4 m</span><span>12 m</span></div>
+          <label class="range-label" for="fastening"
+            >Resistencia de las fijaciones
+            <span
+              ><output id="fastening-value" for="fastening">55</output>
+              <small>N</small></span
+            ></label
+          >
+          <input
+            id="fastening"
+            type="range"
+            min="20"
+            max="160"
+            step="5"
+            value="55"
+          />
+          <div class="range-ticks">
+            <span>Débil</span><span>Reforzada</span>
+          </div>
+        </section>
+
+        <section class="control-section visual-controls">
+          <div class="section-heading">
+            <h2><span>03</span> Visualización</h2>
+          </div>
+          <label class="switch-row" for="show-tornado"
+            ><span
+              >Mostrar vórtice
+              <small>Representación del campo de viento</small></span
+            ><input
+              type="checkbox"
+              id="show-tornado"
+              role="switch"
+              checked /><span class="switch" aria-hidden="true"></span
+          ></label>
+          <label class="switch-row" for="show-radius"
+            ><span>Radio de influencia</span
+            ><input
+              type="checkbox"
+              id="show-radius"
+              role="switch"
+              checked /><span class="switch" aria-hidden="true"></span
+          ></label>
+        </section>
+        <div class="sidebar-note">
+          <span aria-hidden="true">ⓘ</span>
+          <p>
+            Modelo educativo de física simplificada.<br />No predice daños
+            estructurales reales.
+          </p>
+        </div>
+      </aside>
+
+      <section class="simulation" aria-label="Simulación tridimensional">
+        <div class="scene-header">
+          <div>
+            <div class="eyebrow">
+              EXPERIMENTO 001 <span class="separator">/</span> ENTORNO DE
+              TORMENTA
+            </div>
+            <h2>Vivienda bajo el vórtice</h2>
+          </div>
+          <div class="status" id="status" role="status">
+            <span></span><b id="status-text">Listo para iniciar</b>
+          </div>
+        </div>
+        <div class="viewport" id="viewport">
+          <canvas
+            id="scene"
+            aria-label="Casa chilena tridimensional y campo de viento de un tornado"
+          ></canvas>
+          <div class="viewport-top">
+            <span class="live-tag"><span></span> VISTA EN TIEMPO REAL</span
+            ><span class="coordinates"
+              >36° S &nbsp; / &nbsp; CHILE CENTRAL
+              <small>ESCENARIO ILUSTRATIVO</small></span
+            >
+          </div>
+          <div class="scene-caption">
+            <span class="caption-line"></span
+            ><span
+              ><b>ALBAÑILERÍA + ZINC</b
+              ><small>Escenario modular · Escala métrica</small></span
+            >
+          </div>
+          <div
+            class="view-buttons"
+            role="group"
+            aria-label="Perspectiva de cámara"
+          >
+            <button
+              class="active"
+              data-view="perspective"
+              aria-label="Vista en perspectiva"
+              title="Perspectiva"
+            >
+              ◈</button
+            ><button
+              data-view="top"
+              aria-label="Vista superior"
+              title="Vista superior"
+            >
+              ⊞</button
+            ><button
+              data-view="front"
+              aria-label="Vista frontal"
+              title="Vista frontal"
+            >
+              ▱
+            </button>
+          </div>
+          <div class="viewport-bottom">
+            <span
+              ><svg viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path
+                  d="M10 3v14M3 10h14M7 6l3-3 3 3M7 14l3 3 3-3M6 7l-3 3 3 3M14 7l3 3-3 3"
+                  stroke="currentColor"
+                /></svg
+              >Arrastra para orbitar <i>·</i> Scroll para acercar</span
+            ><span class="north-indicator">N <span>↑</span></span>
+          </div>
+          <div class="loading" id="loading">
+            <span></span>Preparando el escenario…
+          </div>
+          <div class="error-banner" id="error" role="alert" hidden></div>
+        </div>
+        <div class="telemetry" aria-label="Resultados del experimento">
+          <div class="metric">
+            <span class="metric-label"
+              ><span class="metric-dot orange"></span> CUBIERTA
+              DESPRENDIDA</span
+            >
+            <div>
+              <strong id="roof-count">0</strong
+              ><span class="metric-total">/ 16 <small>planchas</small></span
+              ><span class="metric-percentage" id="damage-value">0%</span>
+            </div>
+            <div class="damage-track"><span id="damage-bar"></span></div>
+          </div>
+          <div class="metric">
+            <span class="metric-label"
+              ><span class="metric-dot teal"></span> ESTABILIDAD DE MUROS</span
+            >
+            <div>
+              <strong id="wall-count">4</strong
+              ><span class="metric-total">/ 4 <small>estables</small></span>
+            </div>
+            <span class="metric-foot" id="wall-description"
+              >Estructura en equilibrio</span
+            >
+          </div>
+          <div class="metric time-metric">
+            <span class="metric-label">TIEMPO DE SIMULACIÓN</span>
+            <div>
+              <strong id="elapsed">00:00</strong
+              ><span class="metric-total">s</span>
+            </div>
+            <span class="metric-foot">Paso físico fijo · 60 Hz</span>
+          </div>
+        </div>
+        <div class="transport">
+          <div class="transport-actions">
+            <button class="primary-button" id="play">
+              <span id="play-icon">▶</span
+              ><span id="play-text">Iniciar simulación</span></button
+            ><button
+              class="reset-button"
+              id="reset"
+              title="Reiniciar escenario (R)"
+            >
+              <span>↺</span> Reiniciar
+            </button>
+          </div>
+          <div class="transport-hint"><kbd>ESPACIO</kbd> iniciar / pausar</div>
+        </div>
+        <footer class="scene-footer">
+          <span
+            ><span class="footer-dot"></span> MOTOR FÍSICO ACTIVO
+            <i>/</i> THREE.JS + CANNON-ES</span
+          ><span>SimTorCL <b>v1.0</b></span>
+        </footer>
+      </section>
+    </main>
+
+    <dialog id="about-dialog" aria-labelledby="about-title">
+      <button id="close-about" class="dialog-close" aria-label="Cerrar">
+        ×
+      </button>
+      <div class="eyebrow">DETRÁS DEL EXPERIMENTO</div>
+      <h2 id="about-title">Un laboratorio para explorar.</h2>
+      <p>
+        SimTorCL representa una vivienda de albañilería con 16 planchas de zinc
+        y un campo de viento giratorio en movimiento.
+      </p>
+      <p>
+        La succión y el arrastre aumentan con el cuadrado de la velocidad. Las
+        planchas se liberan cuando la carga supera la resistencia de sus
+        fijaciones; después responden a la gravedad, el viento y las colisiones.
+        Los muros tienen una masa de 800 kg por pieza y reciben una carga de
+        viento reducida.
+      </p>
+      <p>
+        El vórtice visible es una ayuda gráfica: puedes ocultarlo sin cambiar
+        las fuerzas. Cambiar la resistencia afecta las fijaciones que aún están
+        intactas. Reinicia para reconstruir la vivienda.
+      </p>
+      <div class="model-notice">
+        Es una demostración educativa. Los parámetros son ilustrativos y no
+        sustituyen un análisis de ingeniería ni representan categorías oficiales
+        de tornados.
+      </div>
+      <a
+        href="https://github.com/CitriCool/SimTorCL"
+        target="_blank"
+        rel="noreferrer"
+        >Explorar el código en GitHub ↗</a
+      >
+    </dialog>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>

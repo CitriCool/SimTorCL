@@ -1,0 +1,11 @@
+node_modules/
+dist/
+tmp/
+.env
+.env.*
+!.env.example
+*.local
+*.log
+.DS_Store
+# Source briefs stay local; the repository contains the implementation.
+/*.pdf
