@@ -374,9 +374,16 @@ export class Simulation {
     }
   }
   step() {
+    this.prepareStep();
+    this.world.step(FIXED_STEP);
+    this.finishStep();
+  }
+  prepareStep(field = null, time = null) {
     this.config = validateConfig(this.config);
     this.elapsed += FIXED_STEP;
     this.updateCenter();
+    if (field) this.center.copy(field);
+    if (time !== null) this.elapsed = time;
     const ramp = Math.min(this.elapsed / 1.8, 1);
     for (const piece of this.pieces) {
       const { body } = piece;
@@ -425,7 +432,8 @@ export class Simulation {
         new CANNON.Vec3(piece.kind === "roof" ? 0.1 : 0, 0.1, 0),
       );
     }
-    this.world.step(FIXED_STEP);
+  }
+  finishStep() {
     for (const piece of this.pieces) {
       if (piece.detached) {
         // Floor-only penetration correction for thin fragments, not general CCD.

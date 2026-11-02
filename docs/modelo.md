@@ -82,3 +82,9 @@ La simulación usa un paso fijo de 1/120 s. Reiniciar construye un mundo nuevo, 
 La comparación crea un mundo nuevo para cada perfil compatible y utiliza la misma cubierta, velocidad, radio, refuerzo y cantidad de pasos. Las combinaciones excluidas se identifican, no se sustituyen silenciosamente. El cálculo vive en un Web Worker y no utiliza tiempo del renderizado ni opciones visuales. Se puede cancelar y volver a ejecutar sin alterar la escena.
 
 Las pruebas cubren todas las combinaciones sin viento, rechazo de entradas inválidas, proporcionalidad del campo, daño de cubierta sin falso colapso, rotura estructural, daño secundario, soporte de losa, restricciones de conjuntos liberados, reinicio y repetición determinista. Su aprobación verifica el comportamiento programado, no valida el modelo frente a ensayos reales.
+
+## Extensión a manzanas
+
+Los parámetros y criterios anteriores se aplican por vivienda. Se generan 9 o 16 casas en una cuadrícula con centros separados 10, 13 o 16 m; las filas alternan orientación 180°. La mezcla de cuatro perfiles es determinista, sin ponderación censal. Todas las piezas se trasladan y rotan al sistema global y se integran una sola vez por paso en un mundo físico compartido. Los enlaces estructurales pertenecen a su casa, mientras que las colisiones pueden cruzar entre viviendas. Los impactos no generan demanda adicional de rotura en esta versión.
+
+El recorrido es una recta diagonal u orientada sobre uno de los ejes, desde fuera del conjunto hasta el extremo opuesto, a 2 m/s. El campo es común a las casas y no modifica su forma por la presencia de edificios. Las casas lejanas reciben fuerza nula fuera del radio, conservando sus colisiones. El estado de cada casa usa los criterios individuales; el resumen cuenta viviendas con alguna unión fallada y viviendas con colapso del modelo. Las cantidades de piezas se suman, y los máximos de movimiento toman el mayor valor entre casas.

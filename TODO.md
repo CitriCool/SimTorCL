@@ -63,3 +63,13 @@ Fuentes para la preparación del catálogo:
 - [INE: glosario de características de las viviendas y servicios básicos, Censo 2024](https://censo2024.ine.gob.cl/wp-content/uploads/2025/05/Glosario_viviendas_y_servicios-basicos_CPV2024.pdf).
 - [INE: resultados nacionales sobre características de las viviendas, 30 de mayo de 2025](https://censo2024.ine.gob.cl/censo-2024-el-611-de-los-hogares-residen-en-una-vivienda-propia-y-el-262-en-una-vivienda-arrendada/).
 - [INE: portal de resultados, tabulados y microdatos del Censo 2024](https://censo2024.ine.gob.cl/resultados/).
+
+7. **Manzana ilustrativa**
+   - [x] Generar 9 o 16 casas, perfiles uniformes o mixtos y separaciones configurables.
+   - [x] Compartir el mundo físico y permitir colisiones de fragmentos entre viviendas.
+   - [x] Incorporar trayectorias que atraviesan la manzana, sin repetición automática.
+   - [x] Mostrar resultados por casa, agregados, identificadores y color de daño por lote.
+   - [x] Incorporar enfoque por casa y conservar el modo individual.
+   - [x] Probar estabilidad sin viento, distribución, recorrido, reinicio y colisiones entre casas.
+   - [ ] Incorporar rotura de uniones por impactos de fragmentos, además de viento y pérdida de soporte.
+   - [ ] Sustituir el trazado ilustrativo por geometría territorial y distribuciones respaldadas por datos.

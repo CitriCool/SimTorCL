@@ -22,7 +22,7 @@
             stroke-linecap="round"
           /></svg
         ><span>SimTor<span class="brand-accent">CL</span></span
-        ><span class="version">LAB / 02</span></a
+        ><span class="version">LAB / 03</span></a
       >
       <nav aria-label="Principal">
         <span class="nav-active">Simulador</span
@@ -58,6 +58,36 @@
           <div class="section-heading">
             <h2><span>01</span> Escenario</h2>
             <span class="small-label">VIVIENDA</span>
+          </div>
+          <label class="field-label" for="mode">Escala del experimento</label
+          ><select id="mode">
+            <option value="single">Casa individual</option>
+            <option value="block9">Manzana · 9 casas</option>
+            <option value="block16">Manzana · 16 casas</option>
+          </select>
+          <div id="district-controls" hidden>
+            <label class="field-label" for="distribution"
+              >Distribución de perfiles</label
+            ><select id="distribution">
+              <option value="mixed">Mezcla ilustrativa</option>
+              <option value="uniform">Todas del perfil base</option></select
+            ><label class="field-label" for="spacing"
+              >Separación entre centros</label
+            ><select id="spacing">
+              <option value="10">10 m</option>
+              <option value="13" selected>13 m</option>
+              <option value="16">16 m</option></select
+            ><label class="field-label" for="trajectory"
+              >Recorrido del tornado</label
+            ><select id="trajectory">
+              <option value="diagonal">Diagonal</option>
+              <option value="horizontal">Oeste a este</option>
+              <option value="vertical">Sur a norte</option>
+            </select>
+            <p class="selection-note">
+              Casas y calles ilustrativas. Cambiar la distribución reconstruye
+              la manzana. Recorrido a 2 m/s, sin repetición.
+            </p>
           </div>
           <label class="field-label" for="profile">Sistema de paredes</label>
           <select id="profile" aria-describedby="profile-description"></select>
@@ -343,11 +373,42 @@
             Comparar perfiles ↗
           </button>
         </div>
+        <section
+          id="district-results"
+          hidden
+          aria-label="Resultados por vivienda"
+        >
+          <h3>Resultados de la manzana</h3>
+          <p id="district-summary" role="status"></p>
+          <label for="house-inspect">Enfocar vivienda</label
+          ><select id="house-inspect"></select>
+          <p class="selection-note">
+            Lotes: verde sin daño, amarillo con pérdidas, naranja con uniones
+            estructurales falladas y rojo con colapso del modelo. El viento
+            conserva el modelo simplificado; las calles y edificios no modifican
+            el flujo.
+          </p>
+          <div class="table-scroll district-table">
+            <table class="comparison-table">
+              <thead>
+                <tr>
+                  <th>Casa</th>
+                  <th>Perfil</th>
+                  <th>Cubierta desprendida</th>
+                  <th>Paredes sin soporte</th>
+                  <th>Secundarios</th>
+                  <th>Estado estructural</th>
+                </tr>
+              </thead>
+              <tbody id="district-rows"></tbody>
+            </table>
+          </div>
+        </section>
         <footer class="scene-footer">
           <span
             ><span class="footer-dot"></span> MOTOR FÍSICO ACTIVO
             <i>/</i> THREE.JS + CANNON-ES</span
-          ><span>SimTorCL <b>v2.0</b></span>
+          ><span>SimTorCL <b>v2.1</b></span>
         </footer>
       </section>
     </main>
@@ -361,6 +422,13 @@
         ×
       </button>
       <div class="eyebrow">DETRÁS DEL EXPERIMENTO</div>
+      <p>
+        En modo manzana, las viviendas comparten mundo físico y colisiones. El
+        tornado cruza a 2 m/s por una trayectoria marcada. Los impactos pueden
+        colisionar con otras viviendas, pero no se convierten en nuevas roturas
+        por impacto: las uniones siguen evaluándose por viento y pérdida de
+        soporte. La mezcla y el trazado urbano son ilustrativos.
+      </p>
       <h2 id="about-title">Cubierta, paredes y soporte.</h2>
       <p>
         El catálogo distingue albañilería, entramado de madera o acero y

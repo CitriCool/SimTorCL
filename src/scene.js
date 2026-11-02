@@ -48,8 +48,13 @@ export class SceneView {
     sun.shadow.camera.far = 70;
     sun.shadow.normalBias = 0.025;
     sun.shadow.bias = -0.0002;
+    this.sun = sun;
     this.scene.add(sun);
+    const beforeTerrain = new Set(this.scene.children);
     this.createTerrain();
+    this.terrainObjects = this.scene.children.filter(
+      (o) => !beforeTerrain.has(o),
+    );
     this.createHouse();
     this.createVortex();
     this.createRain();
@@ -243,6 +248,143 @@ export class SceneView {
       this.scene.remove(this.houseRoot);
       this.disposeObject(this.houseRoot);
     }
+    if (this.districtTerrain) {
+      this.scene.remove(this.districtTerrain);
+      this.disposeObject(this.districtTerrain);
+      this.districtTerrain = null;
+    }
+    const experiment = this.simulation;
+    this.districtMode = !!experiment.houses;
+    this.terrainObjects?.forEach((o) => {
+      o.visible = !this.districtMode;
+    });
+    const root = new THREE.Group(),
+      meshes = new Map();
+    this.districtMarkers = [];
+    if (this.districtMode) {
+      this.districtTerrain = new THREE.Group();
+      this.scene.add(this.districtTerrain);
+      const ground = new THREE.Mesh(
+        new THREE.PlaneGeometry(500, 500),
+        this.material("#293c36"),
+      );
+      ground.rotation.x = -Math.PI / 2;
+      ground.position.y = -0.06;
+      ground.receiveShadow = true;
+      this.districtTerrain.add(ground);
+      const extent = experiment.active.extent + 5;
+      this.box(
+        [extent * 2, 0.3, extent * 2],
+        [0, -0.18, 0],
+        this.material("#485c43"),
+        this.districtTerrain,
+      );
+      const road = this.material("#3a4844"),
+        curb = this.material("#a0a58c");
+      for (let i = 0; i <= experiment.active.side; i++) {
+        const q = (i - experiment.active.side / 2) * experiment.config.spacing;
+        this.box(
+          [3, 0.04, extent * 2],
+          [q, -0.005, 0],
+          road,
+          this.districtTerrain,
+        );
+        this.box(
+          [extent * 2, 0.04, 3],
+          [0, -0.005, q],
+          road,
+          this.districtTerrain,
+        );
+      }
+      for (const house of experiment.houses) {
+        const tile = this.material("#75836a");
+        this.box(
+          [8.4, 0.035, 8.4],
+          [house.offset.x, -0.005, house.offset.z],
+          tile,
+          this.districtTerrain,
+        );
+        const canvas = document.createElement("canvas");
+        canvas.width = 128;
+        canvas.height = 48;
+        const ctx = canvas.getContext("2d");
+        ctx.fillStyle = "#122b24";
+        ctx.fillRect(0, 0, 128, 48);
+        ctx.font = "bold 30px sans-serif";
+        ctx.fillStyle = "#daeddd";
+        ctx.textAlign = "center";
+        ctx.fillText(house.label, 64, 35);
+        const sprite = new THREE.Sprite(
+          new THREE.SpriteMaterial({
+            map: new THREE.CanvasTexture(canvas),
+            depthTest: false,
+          }),
+        );
+        sprite.position.set(house.offset.x, 6, house.offset.z);
+        sprite.scale.set(2.8, 1.05, 1);
+        this.districtTerrain.add(sprite);
+        this.districtMarkers.push({ house, tile });
+      }
+      const edge = experiment.active.extent + 6,
+        path = experiment.config.trajectory;
+      const a =
+        path === "horizontal"
+          ? [-edge, 0]
+          : path === "vertical"
+            ? [0, -edge]
+            : [-edge, -edge];
+      const line = new THREE.Line(
+        new THREE.BufferGeometry().setFromPoints([
+          new THREE.Vector3(a[0], 0.08, a[1]),
+          new THREE.Vector3(-a[0], 0.08, -a[1]),
+        ]),
+        new THREE.LineDashedMaterial({
+          color: "#e4b28a",
+          dashSize: 1,
+          gapSize: 0.7,
+        }),
+      );
+      line.computeLineDistances();
+      this.districtTerrain.add(line);
+    }
+    for (const house of experiment.houses ?? [{ simulation: experiment }]) {
+      this.simulation = house.simulation;
+      this.houseRoot = null;
+      this.meshes = new Map();
+      this.createOneHouse();
+      root.add(this.houseRoot);
+      for (const entry of this.meshes) meshes.set(...entry);
+    }
+    this.simulation = experiment;
+    this.houseRoot = root;
+    this.meshes = meshes;
+    this.scene.add(root);
+    this.houseRevision = experiment.revision;
+    const key = experiment.config.mode + ":" + experiment.config.spacing;
+    this.scene.fog.density = this.districtMode ? 0.006 : 0.016;
+    this.camera.far = 400;
+    this.camera.updateProjectionMatrix();
+    this.controls.maxDistance = this.districtMode ? 220 : 60;
+    const shadowSize = this.districtMode ? experiment.active.extent + 10 : 22;
+    Object.assign(this.sun.shadow.camera, {
+      left: -shadowSize,
+      right: shadowSize,
+      top: shadowSize,
+      bottom: -shadowSize,
+      far: 150,
+    });
+    this.sun.shadow.camera.updateProjectionMatrix();
+    if (this.layoutKey !== key) {
+      this.layoutKey = key;
+      this.setView("perspective");
+    }
+  }
+
+  createOneHouse() {
+    if (this.houseRoot) {
+      this.scene.remove(this.houseRoot);
+      this.disposeObject(this.houseRoot);
+    }
     this.meshes.clear();
     this.houseRoot = new THREE.Group();
     this.houseRevision = this.simulation.revision;
@@ -273,7 +415,7 @@ export class SceneView {
       if (piece.kind === "roof") {
         this.box(piece.size, [0, 0, 0], roofMaterial, group);
         if (roof.id === "metal" || roof.id === "fiber") {
-          const count = roof.id === "metal" ? 8 : 5;
+          const count = this.districtMode ? 0 : roof.id === "metal" ? 8 : 5;
           for (let i = 0; i < count; i++)
             this.box(
               [w, 0.03, 0.026],
@@ -318,7 +460,7 @@ export class SceneView {
         this.box([0.04, h, 0.06], [0, 0, 0.04], trim, group);
       } else {
         this.box(piece.size, [0, 0, 0], wallMaterial, group);
-        if (piece.kind === "cladding") {
+        if (piece.kind === "cladding" && !this.districtMode) {
           const groove = this.material(
             profile.id === "timber" ? "#756d51" : "#889c99",
           );
@@ -340,7 +482,8 @@ export class SceneView {
           this.box([1.04, 2.18, 0.055], [0, -0.4, d / 2 + 0.035], trim, group);
           this.box([0.89, 2.04, 0.06], [0, -0.44, d / 2 + 0.07], dark, group);
           this.box([0.05, 0.1, 0.04], [0.32, -0.35, d / 2 + 0.12], trim, group);
-        } else this.addWindow(group, 0, 0.2, d / 2 + 0.035, trim, glass);
+        } else if (!this.districtMode || piece.details.front)
+          this.addWindow(group, 0, 0.2, d / 2 + 0.035, trim, glass);
       }
       if (piece.kind === "wall") {
         const points = [];
@@ -361,7 +504,8 @@ export class SceneView {
         group.userData.damageLine = crack;
         if (roof.id !== "slab" && [0, 2].includes(piece.details.facade)) {
           const worldX = (local) =>
-            piece.origin.x + Math.cos(piece.details.angle) * local;
+            (piece.localOrigin ?? piece.origin).x +
+            Math.cos(piece.details.angle) * local;
           const top = (local) => roofHeightAt(worldX(local)) - piece.origin.y;
           const shape = new THREE.Shape();
           shape.moveTo(-w / 2, h / 2);
@@ -387,7 +531,7 @@ export class SceneView {
       emissive: "#5b7d68",
       emissiveIntensity: 0.3,
     });
-    for (const x of [-5.1, 5.1])
+    for (const x of this.districtMode ? [] : [-5.1, 5.1])
       for (const z of [-5.1, 5.1]) {
         this.box(
           [0.8, 0.02, 0.045],
@@ -566,6 +710,14 @@ export class SceneView {
       top: [0.5, 38, 0.1],
       front: [0, 10, 34],
     };
+    if (this.simulation.houses) {
+      const e = this.simulation.active.extent + 6;
+      Object.assign(positions, {
+        perspective: [e * 1.6, e * 1.5, e * 1.9],
+        top: [0.5, e * 3, 0.1],
+        front: [0, e, e * 3],
+      });
+    }
     this.camera.position.set(...positions[view]);
     this.controls.target.set(0.5, 2.5, 0);
     this.controls.update();
@@ -586,6 +738,18 @@ export class SceneView {
       mesh.quaternion.copy(piece.body.quaternion);
       if (mesh.userData.damageLine)
         mesh.userData.damageLine.visible = piece.damage > 0;
+    }
+    for (const { house, tile } of this.districtMarkers ?? []) {
+      const s = house.simulation.stats;
+      tile.color.set(
+        s.state === "Colapso del modelo"
+          ? "#985b45"
+          : s.structuralBroken
+            ? "#a27e4b"
+            : s.broken
+              ? "#8c8d57"
+              : "#75836a",
+      );
     }
     const center = this.simulation.center;
     this.vortex.position.set(center.x, 0, center.z);

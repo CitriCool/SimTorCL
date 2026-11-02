@@ -1,10 +1,11 @@
 import "./style.css";
-import { Simulation, FIXED_STEP } from "./physics.js";
+import { FIXED_STEP } from "./physics.js";
 import { PROFILES, ROOFS, HOUSE, CENSUS, SOURCES, PRESETS } from "./catalog.js";
+import { Experiment } from "./district.js";
 import { SceneView } from "./scene.js";
 
 const $ = (id) => document.getElementById(id);
-const simulation = new Simulation();
+const simulation = new Experiment();
 let view, frame, worker, comparisonConfig;
 let running = false,
   accumulator = 0,
@@ -18,13 +19,14 @@ const number = (value) =>
 function updateReadout() {
   const s = simulation.stats;
   $("roof-count").textContent = s.detached;
-  $("roof-total").textContent = `${s.total} ${simulation.roof.unit}`;
+  $("roof-total").textContent =
+    `${s.total} ${simulation.houses ? "piezas" : simulation.roof.unit}`;
   $("damage-value").textContent = percent(s.detached, s.total);
   $("damage-bar").style.width = percent(s.detached, s.total);
   $("wall-detached").textContent = s.wallDetached;
   $("wall-total").textContent = s.wallTotal;
   $("secondary-count").textContent = s.secondaryTotal
-    ? `${s.secondaryDetached}/${s.secondaryTotal} ${simulation.profile.id === "concrete" ? "ventanas desprendidas" : "revestimientos desprendidos"}`
+    ? `${s.secondaryDetached}/${s.secondaryTotal} ${simulation.houses ? "elementos secundarios desprendidos" : simulation.profile.id === "concrete" ? "ventanas desprendidas" : "revestimientos desprendidos"}`
     : "Sin elementos secundarios separados";
   $("wall-count").textContent = s.stable;
   $("facade-total").textContent = s.facadeTotal;
@@ -36,6 +38,26 @@ function updateReadout() {
     `${s.wallDamaged}/${s.wallTotal} paneles con uniones estructurales falladas`;
   $("displacement").textContent = s.maxDisplacement.toFixed(2);
   $("tilt").textContent = `Inclinación máx. ${s.maxTilt.toFixed(1)}°`;
+  if (simulation.houses) {
+    $("district-summary").textContent =
+      `${s.affected}/${s.houseTotal} viviendas afectadas · ${s.collapsed} con colapso del modelo · recorrido ${Math.round(s.progress * 100)} %`;
+    for (const row of s.rows) {
+      const values = [
+        row.label,
+        row.profile,
+        `${row.detached}/${row.total}`,
+        `${row.wallDetached}/${row.wallTotal}`,
+        row.secondaryTotal
+          ? `${row.secondaryDetached}/${row.secondaryTotal}`
+          : "—",
+        row.state,
+      ];
+      const cells = document.querySelectorAll(`#house-row-${row.id} td`);
+      cells.forEach((cell, i) => {
+        if (cell.textContent !== values[i]) cell.textContent = values[i];
+      });
+    }
+  }
   const seconds = Math.floor(s.elapsed + 1e-8);
   $("elapsed").textContent =
     `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
@@ -63,11 +85,40 @@ function setRunning(value) {
 
 function updateScenarioInfo() {
   const { profile, roof } = simulation;
+  const district = !!simulation.houses;
+  $("district-controls").hidden = !district;
+  $("district-results").hidden = !district;
+  $("compare-button").hidden = district;
+  $("profile-title").textContent = district
+    ? "Manzana ilustrativa"
+    : profile.label;
+  if (district) {
+    $("district-rows").replaceChildren(
+      ...simulation.houses.map((h) => {
+        const tr = document.createElement("tr");
+        tr.id = `house-row-${h.id}`;
+        for (let i = 0; i < 6; i++) tr.append(document.createElement("td"));
+        return tr;
+      }),
+    );
+    $("house-inspect").replaceChildren(
+      new Option("Vista general", "all"),
+      ...simulation.houses.map(
+        (h) =>
+          new Option(
+            `${h.label} · ${h.simulation.profile.label}`,
+            String(h.id),
+          ),
+      ),
+    );
+  }
+
   $("profile-title").textContent = profile.label;
   $("profile-description").textContent = profile.description;
   $("census-link").href = SOURCES.glossary.url;
   $("census-link").textContent = `Censo 2024: ${profile.censusWall} ↗`;
-  $("floor-area").textContent = `${Math.round(HOUSE.width * HOUSE.depth)} m²`;
+  $("floor-area").textContent =
+    `${Math.round(HOUSE.width * HOUSE.depth)} m²${district ? "/casa" : ""}`;
   $("roof-spec").textContent = `${simulation.stats.total} ${roof.unit}`;
   $("scene-label").textContent =
     `${profile.label} + ${roof.label}`.toUpperCase();
@@ -77,11 +128,34 @@ function updateScenarioInfo() {
   );
   const options = Object.values(ROOFS).map((item) => {
     const option = new Option(item.label, item.id);
-    option.disabled = !profile.roofs.includes(item.id);
+    option.disabled =
+      !profile.roofs.includes(item.id) ||
+      (district &&
+        simulation.config.distribution === "mixed" &&
+        item.id === "slab");
     return option;
   });
   $("roof").replaceChildren(...options);
   $("roof").value = roof.id;
+  if (district) {
+    $("profile-title").textContent =
+      `${simulation.houses.length} viviendas · ${simulation.config.distribution === "mixed" ? "mezcla ilustrativa" : profile.label}`;
+    $("scene-label").textContent =
+      "MANZANA ILUSTRATIVA · " + simulation.houses.length + " CASAS";
+    $("profile-description").textContent =
+      simulation.config.distribution === "mixed"
+        ? "Mezcla determinista de cuatro variantes, sin proporciones censales."
+        : profile.description;
+    $("census-link").textContent = "Fuentes de las categorías de vivienda ↗";
+  }
+  document.querySelector(".scene-header h2").textContent = district
+    ? "Manzana bajo el vórtice"
+    : "Vivienda bajo el vórtice";
+  if (district)
+    $("scene").setAttribute(
+      "aria-label",
+      `Manzana ilustrativa de ${simulation.houses.length} viviendas y tornado`,
+    );
   $("roof-description").textContent =
     profile.family === "Estructura liviana"
       ? "Losa no disponible en este perfil ilustrativo. Cambiar la selección reconstruye la vivienda."
@@ -90,11 +164,19 @@ function updateScenarioInfo() {
 
 function reset(changes = {}) {
   setRunning(false);
-  simulation.reset(changes);
+  const next = { ...simulation.config, ...changes };
+  if (
+    next.mode !== "single" &&
+    next.distribution === "mixed" &&
+    next.roof === "slab"
+  )
+    next.roof = "metal";
+  simulation.reset(next);
   accumulator = 0;
   lastTime = null;
   lastReadout = -1;
   view?.sync();
+  if (simulation.houses) view?.setView("perspective");
   updateScenarioInfo();
   updateReadout();
   setRunning(false);
@@ -117,6 +199,22 @@ function updateRange(id) {
   view?.sync();
 }
 
+for (const id of ["mode", "distribution", "spacing", "trajectory"])
+  $(id).addEventListener("change", () =>
+    reset({ [id]: id === "spacing" ? Number($(id).value) : $(id).value }),
+  );
+$("house-inspect").addEventListener("change", () => {
+  const house = simulation.houses?.find(
+    (h) => String(h.id) === $("house-inspect").value,
+  );
+  if (!house) {
+    view?.setView("perspective");
+    return;
+  }
+  view.controls.target.set(house.offset.x, 2, house.offset.z);
+  view.camera.position.set(house.offset.x + 17, 17, house.offset.z + 21);
+  view.controls.update();
+});
 $("profile").replaceChildren(
   ...Object.values(PROFILES).map((p) => new Option(p.label, p.id)),
 );
@@ -391,7 +489,10 @@ function animate(now) {
   const dt = lastTime === null ? 0 : Math.min((now - lastTime) / 1000, 0.1);
   lastTime = now;
   if (running) {
-    accumulator += dt;
+    accumulator = Math.min(
+      accumulator + dt,
+      FIXED_STEP * (simulation.houses ? 4 : 12),
+    );
     while (accumulator >= FIXED_STEP) {
       simulation.step();
       accumulator -= FIXED_STEP;

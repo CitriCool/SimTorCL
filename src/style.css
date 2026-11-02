@@ -1553,3 +1553,37 @@ dialog .selection-note {
     padding: 22px 17px;
   }
 }
+
+[hidden] {
+  display: none !important;
+}
+#district-results {
+  margin: 20px 0;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+}
+#district-results h3 {
+  font: 500 17px var(--mono);
+}
+#district-summary {
+  font-size: 12px;
+  color: var(--teal);
+}
+#district-results label {
+  font-size: 12px;
+}
+#house-inspect {
+  margin: 10px 0;
+  max-width: 300px;
+}
+.district-table {
+  max-height: 300px;
+}
+.district-table thead {
+  position: sticky;
+  top: 0;
+}
+.district-table td {
+  font-size: 11px;
+}

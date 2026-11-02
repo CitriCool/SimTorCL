@@ -111,3 +111,17 @@ test/physics.test.js       Pruebas de comportamiento
 Los PDF originales de referencia, dependencias instaladas, archivos compilados, temporales y variables de entorno permanecen fuera del control de versiones.
 
 Documentación de bibliotecas: [Three.js](https://threejs.org/docs/), [Cannon-es](https://pmndrs.github.io/cannon-es/docs/), [Vite](https://vite.dev/guide/).
+
+## Manzanas ilustrativas (v2.1)
+
+![Manzana ilustrativa con resultados por vivienda](docs/manzana.jpg)
+
+El selector de escala permite mantener la casa individual o generar 9 o 16 viviendas, con separación de centros de 10, 13 o 16 m. Se puede usar el mismo perfil en todas las casas o una mezcla determinista de cuatro variantes; esa mezcla no representa frecuencias del censo. La cubierta es común. La losa queda excluida de mezclas que incluyen entramados livianos. Las filas alternan orientación y cada casa tiene un identificador C01, C02, etc.
+
+Las casas comparten un único mundo Cannon-es y un único plano físico. Los fragmentos pueden colisionar con otras viviendas, aunque el modelo de uniones aún no convierte esos impactos en roturas adicionales. El viento sigue siendo el campo simplificado, sin canalización ni apantallamiento entre edificios. Las calles, las parcelas y sus dimensiones son ilustrativas.
+
+El tornado cruza en diagonal, de oeste a este o de sur a norte a 2 m/s; al terminar permanece en el extremo de salida. Reiniciar devuelve todas las viviendas y el tornado a sus estados iniciales. La tabla muestra los resultados de cada casa y los contadores superiores suman las piezas del conjunto. Los lotes cambian de color según daños secundarios, fallas de uniones estructurales y colapso del modelo. El selector de enfoque permite inspeccionar cada vivienda. El comparador independiente de perfiles queda disponible en modo individual.
+
+Para mantener la interfaz utilizable, el modo manzana limita a cuatro pasos físicos por cuadro: en equipos lentos el tiempo simulado puede avanzar más despacio que el real. La geometría visual se simplifica en esta escala. No se garantiza una tasa de cuadros específica.
+
+Las pruebas de manzana verifican el mundo compartido, ausencia de daño sin viento, sumas por vivienda, paso del tornado, reconstrucción, validación y una colisión real entre un fragmento y una vivienda vecina.
