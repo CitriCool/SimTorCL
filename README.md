@@ -82,7 +82,8 @@ La comparación describe estos supuestos, no una clasificación real de segurida
 ## Datos y documentación
 
 - [Categorías, fuentes y calibración del modelo](docs/modelo.md).
-- [Lista de tareas y ampliaciones posteriores](TODO.md).
+- [Roadmap maestro: experimentos, edificios, zonas verdes y análisis avanzado](ROADMAP.md).
+- [Lista de tareas y entregas anteriores](TODO.md).
 - [INE: glosario de vivienda del Censo 2024](https://censo2024.ine.gob.cl/wp-content/uploads/2025/05/Glosario_viviendas_y_servicios-basicos_CPV2024.pdf).
 - [INE: manual censal](https://censo2024.ine.gob.cl/wp-content/uploads/2025/03/Manual_Censal_CPV2024.pdf).
 - [INE: resultados, tabulados y microdatos](https://censo2024.ine.gob.cl/resultados/).

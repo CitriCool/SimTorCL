@@ -1,8 +1,10 @@
 # SimTorCL: catálogo de viviendas y daño en techo y murallas
 
+Plan futuro consolidado: [ROADMAP.md](ROADMAP.md). Este archivo conserva el detalle de las entregas anteriores y sus pendientes.
+
 Lista de trabajo acordada a partir de la revisión del Censo 2024 y del alcance físico actual. Actualizada el 2 de noviembre de 2026.
 
-Estado actual: versión 2 implementada con tres familias y cuatro variantes, 14 combinaciones de cubierta, uniones rompibles, pérdida de soporte en paredes, elementos secundarios separados y comparación reproducible. Las grietas son trazos esquemáticos de uniones falladas; no hay cálculo continuo de tensiones. Pasaron 28 pruebas locales y la compilación. Se verificaron la escena, selectores, reinicio, fuentes, comparación, cancelación y diseño móvil en navegador. El censo aporta categorías; los valores físicos siguen siendo supuestos educativos. Detalles en [docs/modelo.md](docs/modelo.md).
+Estado actual: versión 2.1 implementada con tres familias y cuatro variantes, 14 combinaciones de cubierta, uniones rompibles, pérdida de soporte en paredes, elementos secundarios separados y comparación reproducible. Las grietas son trazos esquemáticos de uniones falladas; no hay cálculo continuo de tensiones. Pasaron 33 pruebas locales y la compilación, incluyendo el modo manzana. Se verificaron la escena, selectores, reinicio, fuentes, comparación, cancelación y diseño móvil en navegador. El censo aporta categorías; los valores físicos siguen siendo supuestos educativos. Detalles en [docs/modelo.md](docs/modelo.md).
 
 1. **Entrega 1: base censal y definición de los modelos**
    - [x] Registrar las categorías oficiales del Censo 2024, distinguiendo tipo de vivienda y materialidad de paredes, cubierta y piso.
