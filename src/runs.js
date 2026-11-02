@@ -32,12 +32,20 @@ export function* compareScenarios(config, key, value, seconds = 20) {
       "spacing",
       "roof",
       "trajectory",
+      "lotSize",
+      "orientation",
     ].includes(key)
   )
     throw new Error("Condición no comparable.");
 
   const first = cleanConfig(config),
     second = cleanConfig({ ...config, [key]: value });
+  if (first.mode === "neighborhood" && key === "spacing")
+    throw new Error(
+      "El barrio usa lado de parcela, veredas y ancho de calle para definir las separaciones.",
+    );
+  if (first.mode !== "neighborhood" && ["lotSize", "orientation"].includes(key))
+    throw new Error("Esta condición requiere un barrio configurable.");
 
   for (const [label, settings] of [
     ["A", first],

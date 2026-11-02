@@ -1,3 +1,4 @@
+import { setupUrban } from "./urban-ui.js";
 import "./style.css";
 import { FIXED_STEP } from "./physics.js";
 import { PROFILES, ROOFS, HOUSE, CENSUS, SOURCES, PRESETS } from "./catalog.js";
@@ -7,7 +8,7 @@ import { SceneView } from "./scene.js";
 
 const $ = (id) => document.getElementById(id);
 const simulation = new Experiment();
-let view, frame, worker, comparisonConfig, notebook;
+let view, frame, worker, comparisonConfig, notebook, urban;
 let running = false,
   accumulator = 0,
   lastTime = null,
@@ -85,6 +86,7 @@ function setRunning(value) {
 }
 
 function updateScenarioInfo() {
+  urban?.refresh();
   for (const id of ["mode", "distribution", "spacing", "trajectory", "profile"])
     $(id).value = simulation.config[id];
   for (const id of ["wind", "radius", "reinforcement"]) {
@@ -95,6 +97,10 @@ function updateScenarioInfo() {
   const district = !!simulation.houses;
   $("district-controls").hidden = !district;
   $("district-results").hidden = !district;
+  document.querySelector("#district-results h3").textContent =
+    simulation.config.mode === "neighborhood"
+      ? "Resultados de las viviendas del barrio"
+      : "Resultados de la manzana";
   $("compare-button").hidden = district;
   $("profile-title").textContent = district
     ? "Manzana ilustrativa"
@@ -113,7 +119,7 @@ function updateScenarioInfo() {
       ...simulation.houses.map(
         (h) =>
           new Option(
-            `${h.label} · ${h.simulation.profile.label}`,
+            `${h.label}${h.parcelId ? " / " + h.parcelId : ""} · ${h.simulation.profile.label}`,
             String(h.id),
           ),
       ),
@@ -148,7 +154,11 @@ function updateScenarioInfo() {
     $("profile-title").textContent =
       `${simulation.houses.length} viviendas · ${simulation.config.distribution === "mixed" ? "mezcla ilustrativa" : profile.label}`;
     $("scene-label").textContent =
-      "MANZANA ILUSTRATIVA · " + simulation.houses.length + " CASAS";
+      (simulation.config.mode === "neighborhood"
+        ? "BARRIO SINTÉTICO · "
+        : "MANZANA ILUSTRATIVA · ") +
+      simulation.houses.length +
+      " CASAS";
     $("profile-description").textContent =
       simulation.config.distribution === "mixed"
         ? "Mezcla determinista de cuatro variantes, sin proporciones censales."
@@ -156,12 +166,14 @@ function updateScenarioInfo() {
     $("census-link").textContent = "Fuentes de las categorías de vivienda ↗";
   }
   document.querySelector(".scene-header h2").textContent = district
-    ? "Manzana bajo el vórtice"
+    ? simulation.config.mode === "neighborhood"
+      ? "Barrio bajo el vórtice"
+      : "Manzana bajo el vórtice"
     : "Vivienda bajo el vórtice";
   if (district)
     $("scene").setAttribute(
       "aria-label",
-      `Manzana ilustrativa de ${simulation.houses.length} viviendas y tornado`,
+      `${simulation.config.mode === "neighborhood" ? "Barrio sintético" : "Manzana ilustrativa"} de ${simulation.houses.length} viviendas y tornado`,
     );
   $("roof-description").textContent =
     profile.family === "Estructura liviana"
@@ -529,6 +541,13 @@ updateReadout();
 try {
   view = new SceneView($("scene"), simulation);
   $("loading").hidden = true;
+  urban = setupUrban({
+    experiment: simulation,
+    getView: () => view,
+    pause: () => setRunning(false),
+    reset,
+  });
+  urban.refresh();
   notebook = setupNotebook({
     experiment: simulation,
     getView: () => view,

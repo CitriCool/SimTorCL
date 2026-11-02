@@ -64,6 +64,7 @@
             <option value="single">Casa individual</option>
             <option value="block9">Manzana · 9 casas</option>
             <option value="block16">Manzana · 16 casas</option>
+            <option value="neighborhood">Barrio configurable</option>
           </select>
           <div id="district-controls" hidden>
             <label class="field-label" for="distribution"
@@ -71,7 +72,7 @@
             ><select id="distribution">
               <option value="mixed">Mezcla ilustrativa</option>
               <option value="uniform">Todas del perfil base</option></select
-            ><label class="field-label" for="spacing"
+            ><label class="field-label" id="spacing-label" for="spacing"
               >Separación entre centros</label
             ><select id="spacing">
               <option value="10">10 m</option>
@@ -86,7 +87,17 @@
             </select>
             <p class="selection-note">
               Casas y calles ilustrativas. Cambiar la distribución reconstruye
-              la manzana. Recorrido a 2 m/s, sin repetición.
+              el escenario. Recorrido a 2 m/s, sin repetición.
+            </p>
+          </div>
+          <div id="urban-controls" hidden>
+            <p id="urban-config-summary" class="selection-note"></p>
+            <button class="details-button" id="urban-open">
+              Configurar barrio ↗
+            </button>
+            <p class="selection-note">
+              Viviendas, parques visuales y parcelas reservadas para futuros
+              edificios. Distribución sintética.
             </p>
           </div>
           <label class="field-label" for="profile">Sistema de paredes</label>
@@ -406,6 +417,35 @@
             </button>
           </div>
         </section>
+        <section id="urban-results" hidden aria-label="Plano del barrio">
+          <div class="eyebrow">GENERADOR URBANO</div>
+          <h3>Parcelas del barrio</h3>
+          <p id="urban-summary"></p>
+          <label for="parcel-inspect">Enfocar parcela</label
+          ><select id="parcel-inspect"></select>
+          <p class="selection-note">
+            P: parcela. C: vivienda con simulación de daño. Reservas azules:
+            espacios para futuros edificios. Árboles y mobiliario de parques son
+            visuales. Calles, parques y reservas no modifican el viento.
+          </p>
+          <details>
+            <summary>Ver inventario de parcelas</summary>
+            <div class="table-scroll">
+              <table class="comparison-table">
+                <thead>
+                  <tr>
+                    <th>Parcela</th>
+                    <th>Uso</th>
+                    <th>Vivienda</th>
+                    <th>Superficie</th>
+                    <th>Centro X, Z (m)</th>
+                  </tr>
+                </thead>
+                <tbody id="parcel-rows"></tbody>
+              </table>
+            </div>
+          </details>
+        </section>
         <section
           id="district-results"
           hidden
@@ -441,11 +481,128 @@
           <span
             ><span class="footer-dot"></span> MOTOR FÍSICO ACTIVO
             <i>/</i> THREE.JS + CANNON-ES</span
-          ><span>SimTorCL <b>v2.2</b></span>
+          ><span>SimTorCL <b>v2.3</b></span>
         </footer>
       </section>
     </main>
 
+    <dialog
+      id="urban-dialog"
+      class="urban-dialog"
+      aria-labelledby="urban-title"
+    >
+      <button
+        id="urban-close"
+        class="dialog-close"
+        aria-label="Cerrar generador"
+      >
+        ×
+      </button>
+      <div class="eyebrow">PARCELAS · CALLES · USOS</div>
+      <h2 id="urban-title">Generador de barrio</h2>
+      <p>
+        Define una cuadrícula de hasta 16 parcelas. Aplicar reconstruye el
+        escenario y comienza una ejecución nueva.
+      </p>
+      <form id="urban-form">
+        <div class="urban-form-grid">
+          <label for="urban-rows"
+            >Filas<select id="urban-rows" data-urban="rows">
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select></label
+          ><label for="urban-columns"
+            >Columnas<select id="urban-columns" data-urban="columns">
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select></label
+          ><label for="urban-lotSize"
+            >Lado de cada parcela<select
+              id="urban-lotSize"
+              data-urban="lotSize"
+            >
+              <option value="12">12 m</option>
+              <option value="16">16 m</option>
+              <option value="20">20 m</option>
+            </select></label
+          ><label for="urban-roadWidth"
+            >Ancho de las calles<select
+              id="urban-roadWidth"
+              data-urban="roadWidth"
+            >
+              <option value="4">4 m</option>
+              <option value="6">6 m</option>
+              <option value="8">8 m</option>
+            </select></label
+          ><label for="urban-orientation"
+            >Orientación del barrio<select
+              id="urban-orientation"
+              data-urban="orientation"
+            >
+              <option value="0">0°</option>
+              <option value="45">45°</option>
+              <option value="90">90°</option>
+              <option value="135">135°</option>
+              <option value="180">180°</option>
+              <option value="225">225°</option>
+              <option value="270">270°</option>
+              <option value="315">315°</option>
+            </select></label
+          ><label for="urban-density"
+            >Ocupación de parcelas residenciales (%)<input
+              id="urban-density"
+              data-urban="density"
+              type="number"
+              min="25"
+              max="100"
+              step="1"
+              required /></label
+          ><label for="urban-greenPercent"
+            >Parcelas verdes solicitadas (%)<input
+              id="urban-greenPercent"
+              data-urban="greenPercent"
+              type="number"
+              min="0"
+              max="50"
+              step="1"
+              required /></label
+          ><label for="urban-buildingPercent"
+            >Reservas para edificios solicitadas (%)<input
+              id="urban-buildingPercent"
+              data-urban="buildingPercent"
+              type="number"
+              min="0"
+              max="50"
+              step="1"
+              required /></label
+          ><label for="urban-seed"
+            >Semilla del barrio<input
+              id="urban-seed"
+              data-urban="seed"
+              type="number"
+              min="0"
+              max="4294967295"
+              step="1"
+              required
+          /></label>
+        </div>
+        <button id="urban-new-seed" type="button" class="details-button">
+          Crear otra semilla
+        </button>
+        <p class="selection-note">
+          Verdes y reservas: hasta 75 % de las parcelas en conjunto. Sus
+          cantidades se redondean hacia abajo; la ocupación residencial, hacia
+          arriba. Siempre queda al menos una vivienda. Una misma semilla y los
+          mismos parámetros reproducen el mismo plano.
+        </p>
+        <p id="urban-form-status" role="status"></p>
+        <button id="urban-apply" class="primary-button" type="submit">
+          Aplicar y generar barrio
+        </button>
+      </form>
+    </dialog>
     <dialog id="about-dialog" aria-labelledby="about-title">
       <button
         id="close-about"
@@ -687,6 +844,8 @@
         <div class="notebook-actions">
           <button class="reset-button" id="export-results">
             CSV de viviendas</button
+          ><button class="reset-button" id="export-parcels">
+            CSV de parcelas</button
           ><button class="reset-button" id="export-components">
             CSV de piezas</button
           ><button class="reset-button" id="export-events">
@@ -773,6 +932,8 @@
               <option value="spacing">Separación entre casas</option>
               <option value="roof">Cubierta</option>
               <option value="trajectory">Trayectoria</option>
+              <option value="lotSize">Lado de parcela (barrio)</option>
+              <option value="orientation">Orientación del barrio</option>
             </select></label
           ><label for="run-value"
             >Valor para B<select id="run-value"></select

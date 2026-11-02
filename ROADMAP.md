@@ -14,7 +14,7 @@ Prioridades: **P0** base necesaria para trabajar con confianza; **P1** ampliaci�
 - [x] **BASE-04** Mundo físico compartido, colisiones de fragmentos entre viviendas y tres trayectorias lineales del tornado a velocidad fija.
 - [x] **BASE-05** Resultados por casa y agregados, identificación de viviendas, enfoque de cámara y colores de daño por lote.
 - [x] **BASE-06** Comparación determinista de perfiles individuales con condiciones comunes, cancelación, pausa y reinicio.
-- [x] **BASE-07** Interfaz adaptable, documentación, 43 pruebas automatizadas y compilación comprobadas; código en GitHub.
+- [x] **BASE-07** Interfaz adaptable, documentación, 53 pruebas automatizadas y compilación comprobadas; código en GitHub.
 
 Límites actuales: trazados sintéticos; propiedades físicas ilustrativas; ausencia de daño adicional por impacto; viento sin apantallamiento ni canalización por edificios; sin presión interior ni validación experimental. Las zonas verdes decorativas actuales no tienen un modelo físico de vegetación.
 
@@ -39,20 +39,22 @@ Criterio de salida: otra persona puede cargar una configuración, repetirla con 
 
 ## 2. Generación urbana 3D y editor de escenarios — P1
 
-Depende del formato de experimento de la etapa 1.
+Depende del formato de experimento de la etapa 1. Primera entrega B1 disponible en v2.3: [generador de barrio y alcance](docs/barrio.md). El editor y las configuraciones por objeto siguen pendientes.
 
-- [ ] **URB-01** Generalizar las cuadrículas actuales a manzanas de tamaño y forma configurables, con calles perimetrales, interiores y orientación definidas.
-- [ ] **URB-02** Incorporar parcelas, veredas, accesos, patios, retranqueos y separación entre construcciones.
+- [x] **URB-01** Generalizar las cuadrículas actuales a manzanas de tamaño y forma configurables, con calles perimetrales, interiores y orientación definidas.
+- [x] **URB-02** Incorporar parcelas, veredas, accesos, patios, retranqueos y separación entre construcciones.
 - [ ] **URB-03** Configurar densidad, ocupación de suelo, proporción de tipos de construcción y proporción de zonas verdes; identificar las distribuciones manuales o sintéticas.
-- [ ] **URB-04** Incorporar una semilla de generación para reconstruir exactamente el mismo barrio.
-- [ ] **URB-05** Evitar superposición entre volúmenes, parcelas, calles, zonas verdes y accesos mediante reglas geométricas explícitas.
+- [x] **URB-04** Incorporar una semilla de generación para reconstruir exactamente el mismo barrio.
+- [x] **URB-05** Evitar superposición entre volúmenes, parcelas, calles, zonas verdes y accesos mediante reglas geométricas explícitas.
 - [ ] **URB-06** Crear un editor para colocar, mover, rotar, duplicar y eliminar construcciones y zonas verdes, con deshacer y rehacer.
 - [ ] **URB-07** Permitir configurar cada parcela y construcción, además de los parámetros globales.
 - [ ] **URB-08** Añadir escenarios predefinidos: residencial de baja altura, barrio mixto, entorno con edificios y barrio con parque.
 - [ ] **URB-09** Permitir repetir comparaciones sobre la misma geometría, conservando identidades de edificios, parcelas y elementos del terreno.
 - [ ] **URB-10** Diferenciar visualización, geometría de colisión y modelo resistente de cada objeto del catálogo.
 
-Criterio de salida: un escenario mixto puede generarse, editarse, guardarse y regenerarse con posiciones y parámetros idénticos, sin solapamientos no intencionados.
+Alcance de B1: cuadrículas rectangulares de 2 a 4 filas y columnas; parcelas, veredas y accesos simples; proporciones de usos, reservas para edificios y parques visuales. URB-03 tiene avance parcial: faltan proporciones por variante constructiva y control independiente de ocupación edificada.
+
+Criterio de salida de la etapa completa, aún pendiente: un escenario mixto puede generarse, editarse, guardarse y regenerarse con posiciones y parámetros idénticos, sin solapamientos no intencionados.
 
 ## 3. Edificios y ampliación del catálogo construido — P1 / P2
 

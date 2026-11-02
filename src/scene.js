@@ -261,6 +261,7 @@ export class SceneView {
     const root = new THREE.Group(),
       meshes = new Map();
     this.districtMarkers = [];
+    this.parcelTiles = new Map();
     if (this.districtMode) {
       this.districtTerrain = new THREE.Group();
       this.scene.add(this.districtTerrain);
@@ -272,71 +273,61 @@ export class SceneView {
       ground.position.y = -0.06;
       ground.receiveShadow = true;
       this.districtTerrain.add(ground);
-      const extent = experiment.active.extent + 5;
-      this.box(
-        [extent * 2, 0.3, extent * 2],
-        [0, -0.18, 0],
-        this.material("#485c43"),
-        this.districtTerrain,
-      );
-      const road = this.material("#3a4844"),
-        curb = this.material("#a0a58c");
-      for (let i = 0; i <= experiment.active.side; i++) {
-        const q = (i - experiment.active.side / 2) * experiment.config.spacing;
+      if (experiment.active.layout)
+        this.createNeighborhoodTerrain(experiment.active.layout);
+      else {
+        const extent = experiment.active.extent + 5;
         this.box(
-          [3, 0.04, extent * 2],
-          [q, -0.005, 0],
-          road,
+          [extent * 2, 0.3, extent * 2],
+          [0, -0.18, 0],
+          this.material("#485c43"),
           this.districtTerrain,
         );
-        this.box(
-          [extent * 2, 0.04, 3],
-          [0, -0.005, q],
-          road,
-          this.districtTerrain,
-        );
+        const road = this.material("#3a4844"),
+          curb = this.material("#a0a58c");
+        for (let i = 0; i <= experiment.active.side; i++) {
+          const q =
+            (i - experiment.active.side / 2) * experiment.config.spacing;
+          this.box(
+            [3, 0.04, extent * 2],
+            [q, -0.005, 0],
+            road,
+            this.districtTerrain,
+          );
+          this.box(
+            [extent * 2, 0.04, 3],
+            [0, -0.005, q],
+            road,
+            this.districtTerrain,
+          );
+        }
       }
       for (const house of experiment.houses) {
-        const tile = this.material("#75836a");
-        this.box(
-          [8.4, 0.035, 8.4],
-          [house.offset.x, -0.005, house.offset.z],
-          tile,
+        const tile =
+          this.parcelTiles?.get(house.parcelId) ?? this.material("#75836a");
+        if (!experiment.active.layout)
+          this.box(
+            [8.4, 0.035, 8.4],
+            [house.offset.x, -0.005, house.offset.z],
+            tile,
+            this.districtTerrain,
+          );
+        this.addParcelLabel(
+          house.parcelId ? `${house.label} / ${house.parcelId}` : house.label,
+          house.offset.x,
+          6,
+          house.offset.z,
           this.districtTerrain,
+          experiment.active.layout ? 9 : 3.7,
         );
-        const canvas = document.createElement("canvas");
-        canvas.width = 128;
-        canvas.height = 48;
-        const ctx = canvas.getContext("2d");
-        ctx.fillStyle = "#122b24";
-        ctx.fillRect(0, 0, 128, 48);
-        ctx.font = "bold 30px sans-serif";
-        ctx.fillStyle = "#daeddd";
-        ctx.textAlign = "center";
-        ctx.fillText(house.label, 64, 35);
-        const sprite = new THREE.Sprite(
-          new THREE.SpriteMaterial({
-            map: new THREE.CanvasTexture(canvas),
-            depthTest: false,
-          }),
-        );
-        sprite.position.set(house.offset.x, 6, house.offset.z);
-        sprite.scale.set(2.8, 1.05, 1);
-        this.districtTerrain.add(sprite);
         this.districtMarkers.push({ house, tile });
       }
-      const edge = experiment.active.extent + 6,
-        path = experiment.config.trajectory;
-      const a =
-        path === "horizontal"
-          ? [-edge, 0]
-          : path === "vertical"
-            ? [0, -edge]
-            : [-edge, -edge];
+      const a = experiment.active.path.start,
+        b = experiment.active.path.end;
       const line = new THREE.Line(
         new THREE.BufferGeometry().setFromPoints([
           new THREE.Vector3(a[0], 0.08, a[1]),
-          new THREE.Vector3(-a[0], 0.08, -a[1]),
+          new THREE.Vector3(b[0], 0.08, b[1]),
         ]),
         new THREE.LineDashedMaterial({
           color: "#e4b28a",
@@ -361,10 +352,16 @@ export class SceneView {
     this.scene.add(root);
     this.houseRevision = experiment.revision;
     const key = experiment.config.mode + ":" + experiment.config.spacing;
-    this.scene.fog.density = this.districtMode ? 0.006 : 0.016;
-    this.camera.far = 400;
+    this.scene.fog.density = experiment.active.layout
+      ? 0.0018
+      : this.districtMode
+        ? 0.006
+        : 0.016;
+    this.camera.far = Math.max(400, (experiment.active.extent ?? 22) * 8);
     this.camera.updateProjectionMatrix();
-    this.controls.maxDistance = this.districtMode ? 220 : 60;
+    this.controls.maxDistance = this.districtMode
+      ? Math.max(220, experiment.active.extent * 4 + 20)
+      : 60;
     const shadowSize = this.districtMode ? experiment.active.extent + 10 : 22;
     Object.assign(this.sun.shadow.camera, {
       left: -shadowSize,
@@ -377,6 +374,145 @@ export class SceneView {
     if (this.layoutKey !== key) {
       this.layoutKey = key;
       this.setView("perspective");
+    }
+  }
+
+  addParcelLabel(text, x, y, z, parent, width = 9) {
+    const canvas = document.createElement("canvas");
+    canvas.width = 256;
+    canvas.height = 80;
+    const ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#142f29";
+    ctx.fillRect(0, 0, 256, 80);
+    ctx.font = `bold ${text.length > 10 ? 40 : 48}px sans-serif`;
+    ctx.fillStyle = "#e1ede0";
+    ctx.textAlign = "center";
+    ctx.fillText(text, 128, 57);
+    const sprite = new THREE.Sprite(
+      new THREE.SpriteMaterial({
+        map: new THREE.CanvasTexture(canvas),
+        depthTest: false,
+      }),
+    );
+    sprite.position.set(x, y, z);
+    sprite.scale.set(width, (width * 80) / 256, 1);
+    parent.add(sprite);
+  }
+
+  createNeighborhoodTerrain(layout) {
+    const root = new THREE.Group();
+    root.rotation.y = layout.yaw;
+    this.districtTerrain.add(root);
+    this.box(
+      [layout.width + 1, 0.3, layout.depth + 1],
+      [0, -0.18, 0],
+      this.material("#485c43"),
+      root,
+    );
+    const pavement = this.material("#939780"),
+      road = this.material("#35433f"),
+      paint = this.material("#bcb7a2");
+    for (const r of layout.roads) {
+      this.box([r.width, 0.025, r.depth], [r.x, -0.006, r.z], road, root);
+      if (r.id.startsWith("V"))
+        for (let z = -layout.depth / 2 + 1; z < layout.depth / 2; z += 3) {
+          if (
+            layout.roads.some(
+              (c) =>
+                c.id.startsWith("H") && Math.abs(z - c.z) < c.depth / 2 + 1.2,
+            )
+          )
+            continue;
+          this.box([0.09, 0.008, 1.1], [r.x, 0.012, z], paint, root);
+        }
+      else
+        for (let x = -layout.width / 2 + 1; x < layout.width / 2; x += 3) {
+          if (
+            layout.roads.some(
+              (c) =>
+                c.id.startsWith("V") && Math.abs(x - c.x) < c.width / 2 + 1.2,
+            )
+          )
+            continue;
+          this.box([1.1, 0.008, 0.09], [x, 0.012, r.z], paint, root);
+        }
+    }
+    const colors = {
+      house: "#75836a",
+      green: "#4c7950",
+      building: "#647d82",
+      vacant: "#716e55",
+    };
+    for (const p of layout.parcels) {
+      const tile = this.material(colors[p.type]);
+      this.parcelTiles.set(p.id, tile);
+      this.box(
+        [p.size + 2 * layout.sidewalk, 0.04, p.size + 2 * layout.sidewalk],
+        [p.x, -0.01, p.z],
+        pavement,
+        root,
+      );
+      this.box([p.size, 0.045, p.size], [p.x, -0.005, p.z], tile, root);
+      if (p.type === "house") {
+        const front = p.row % 2 ? -1 : 1,
+          length = (p.size - 7.4) / 2;
+        this.box(
+          [1.3, 0.012, length],
+          [p.x, 0.026, p.z + front * (3.7 + length / 2)],
+          pavement,
+          root,
+        );
+      } else if (p.type === "building") {
+        const slab = this.material("#879d9c");
+        for (const sign of [-1, 1]) {
+          this.box([8, 0.015, 0.13], [p.x, 0.027, p.z + sign * 4], slab, root);
+          this.box([0.13, 0.015, 8], [p.x + sign * 4, 0.027, p.z], slab, root);
+        }
+      } else if (p.type === "green") {
+        this.box([p.size, 0.014, 1.2], [p.x, 0.028, p.z], pavement, root);
+        this.box([1.2, 0.014, p.size], [p.x, 0.028, p.z], pavement, root);
+        for (const sign of [-1, 1]) {
+          const x = p.x + sign * p.size * 0.28,
+            z = p.z + sign * p.size * 0.27;
+          const trunk = new THREE.Mesh(
+            new THREE.CylinderGeometry(0.12, 0.19, 1.7, 6),
+            this.material("#695844"),
+          );
+          trunk.position.set(x, 0.85, z);
+          trunk.castShadow = true;
+          root.add(trunk);
+          const crown = new THREE.Mesh(
+            new THREE.IcosahedronGeometry(1.25, 0),
+            this.material(sign === 1 ? "#83a46e" : "#5b8b5e"),
+          );
+          crown.position.set(x, 2.15, z);
+          crown.scale.y = 1.3;
+          crown.castShadow = true;
+          root.add(crown);
+        }
+        for (const sign of [-1, 1]) {
+          this.box(
+            [1.8, 0.18, 0.55],
+            [p.x + sign * 2.5, 0.45, p.z + sign * 1.5],
+            this.material("#b29971"),
+            root,
+          );
+          this.box(
+            [1.8, 0.65, 0.1],
+            [p.x + sign * 2.5, 0.7, p.z + sign * 1.8],
+            this.material("#b29971"),
+            root,
+          );
+        }
+      }
+      if (p.type !== "house")
+        this.addParcelLabel(
+          `${p.id} / ${p.type === "green" ? "VERDE" : p.type === "building" ? "RESERVA" : "LIBRE"}`,
+          p.x,
+          p.type === "green" ? 4 : 1.4,
+          p.z,
+          root,
+        );
     }
   }
 
@@ -717,6 +853,10 @@ export class SceneView {
         top: [0.5, e * 3, 0.1],
         front: [0, e, e * 3],
       });
+    }
+    if (this.simulation.active?.layout) {
+      const e = this.simulation.active.extent + 6;
+      positions.perspective = [e * 1.25, e * 1.35, e * 1.45];
     }
     this.camera.position.set(...positions[view]);
     this.controls.target.set(0.5, 2.5, 0);

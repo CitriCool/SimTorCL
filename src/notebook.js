@@ -16,6 +16,7 @@ import {
   parseDocument,
   parseShareHash,
   resultsCSV,
+  parcelsCSV,
   shareLink,
 } from "./records.js";
 import { listEntries, readEntry, saveEntry } from "./library.js";
@@ -98,6 +99,7 @@ export function setupNotebook({
     "wind",
     "radius",
     "reinforcement",
+    "urban-open",
     ...Array.from(document.querySelectorAll("[data-preset]")),
   ];
   let disabled = [];
@@ -322,6 +324,7 @@ export function setupNotebook({
     inspectDetail();
   }
   function populate() {
+    $("export-parcels").disabled = !snapshot.layout;
     houses($("event-house"), true);
     houses($("inspect-house"));
     $("damage-chart").innerHTML = damageChart(snapshot);
@@ -330,6 +333,9 @@ export function setupNotebook({
     const c = experiment.config;
     $("run-conditions").textContent =
       `Base A: ${c.mode} · ${PROFILES[c.profile].label} · ${ROOFS[c.roof].label} · ${c.wind} km/h · radio ${c.radius} m · refuerzo ${c.reinforcement} % · ${c.distribution} · separación ${c.spacing} m · ${c.trajectory}.`;
+    if (c.mode === "neighborhood")
+      $("run-conditions").textContent =
+        `Barrio: ${c.rows} × ${c.columns} parcelas · semilla ${c.seed} · parcela ${c.lotSize} m · calles ${c.roadWidth} m · orientación ${c.orientation}° · ${PROFILES[c.profile].label} / ${ROOFS[c.roof].label} · ocupación residencial ${c.density} %, verdes ${c.greenPercent} %, reservas ${c.buildingPercent} % · ${c.wind} km/h · radio ${c.radius} m · refuerzo A ${c.reinforcement} %.`;
     $("verify-run").disabled = !snapshot.steps;
   }
   $("notebook-open").addEventListener(
@@ -475,6 +481,16 @@ export function setupNotebook({
       ),
     ),
   );
+  $("export-parcels").addEventListener(
+    "click",
+    attempt(() =>
+      download(
+        `${filename(name())}-parcelas.csv`,
+        parcelsCSV(current()),
+        "text/csv;charset=utf-8",
+      ),
+    ),
+  );
   $("export-components").addEventListener(
     "click",
     attempt(() => {
@@ -567,6 +583,12 @@ export function setupNotebook({
   $("replay-exit").addEventListener("click", () => exitReplay());
 
   const variables = {
+    lotSize: [
+      [12, "12 m"],
+      [16, "16 m"],
+      [20, "20 m"],
+    ],
+    orientation: Array.from({ length: 8 }, (_, i) => [i * 45, `${i * 45}°`]),
     reinforcement: [
       [50, "50 %"],
       [100, "100 %"],
@@ -688,10 +710,21 @@ export function setupNotebook({
     "click",
     attempt(() => {
       const key = $("run-variable").value,
-        value = ["reinforcement", "spacing"].includes(key)
+        value = ["reinforcement", "spacing", "lotSize", "orientation"].includes(
+          key,
+        )
           ? Number($("run-value").value)
           : $("run-value").value;
       const config = cleanConfig(experiment.config);
+      if (key === "spacing" && config.mode === "neighborhood")
+        throw new Error(
+          "En un barrio configurable, compara el lado de parcela en lugar de la separación fija.",
+        );
+      if (
+        ["lotSize", "orientation"].includes(key) &&
+        config.mode !== "neighborhood"
+      )
+        throw new Error("Esta condición requiere un barrio configurable.");
       cleanConfig({ ...config, [key]: value });
       if (
         config.mode === "single" &&

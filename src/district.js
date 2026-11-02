@@ -1,3 +1,4 @@
+import { generateNeighborhood, housePlacements } from "./urban.js";
 import * as CANNON from "cannon-es";
 import { Simulation, FIXED_STEP } from "./physics.js";
 import { RunRecorder, cleanConfig } from "./records.js";
@@ -5,84 +6,84 @@ import { PROFILES, validateConfig } from "./catalog.js";
 
 export class District {
   constructor(config) {
-    this.config = validateConfig(config);
-    const { mode, distribution, spacing, trajectory } = config;
-    if (
-      !["block9", "block16"].includes(mode) ||
-      !["mixed", "uniform"].includes(distribution) ||
-      ![10, 13, 16].includes(spacing) ||
-      !["diagonal", "horizontal", "vertical"].includes(trajectory)
-    )
-      throw new RangeError("Configuración de manzana inválida.");
-    if (distribution === "mixed" && config.roof === "slab")
-      throw new RangeError(
-        "La mezcla de perfiles requiere una cubierta inclinada común.",
-      );
+    this.config = cleanConfig(config);
+    config = this.config;
+    if (!["block9", "block16", "neighborhood"].includes(config.mode))
+      throw new RangeError("Escenario urbano desconocido.");
+    const { mode, distribution, spacing } = config;
+    this.layout = mode === "neighborhood" ? generateNeighborhood(config) : null;
     this.side = mode === "block9" ? 3 : 4;
-    this.extent = ((this.side - 1) * spacing) / 2 + 6;
+    this.extent = this.layout
+      ? Math.max(this.layout.bounds.width, this.layout.bounds.depth) / 2 + 2
+      : ((this.side - 1) * spacing) / 2 + 6;
+    const halfX = this.layout
+      ? this.layout.bounds.width / 2 + 6
+      : this.extent + 6;
+    const halfZ = this.layout
+      ? this.layout.bounds.depth / 2 + 6
+      : this.extent + 6;
+    this.path = {
+      start:
+        config.trajectory === "horizontal"
+          ? [-halfX, 0]
+          : config.trajectory === "vertical"
+            ? [0, -halfZ]
+            : [-halfX, -halfZ],
+    };
+    this.path.end = this.path.start.map((v) => -v);
     this.houses = [];
     this.elapsed = 0;
     this.center = new CANNON.Vec3();
     const profiles = Object.keys(PROFILES),
       base = profiles.indexOf(config.profile);
-    for (let row = 0; row < this.side; row++)
-      for (let column = 0; column < this.side; column++) {
-        const index = row * this.side + column;
-        const profile =
-          distribution === "mixed"
-            ? profiles[(base + index) % profiles.length]
-            : config.profile;
-        const simulation = new Simulation({ ...config, profile });
-        const offset = new CANNON.Vec3(
-          (column - (this.side - 1) / 2) * spacing,
-          0,
-          (row - (this.side - 1) / 2) * spacing,
-        );
-        const yaw = row % 2 ? Math.PI : 0,
-          rotation = new CANNON.Quaternion();
-        rotation.setFromEuler(0, yaw, 0);
-        for (const piece of simulation.pieces) {
-          piece.localOrigin = piece.origin.clone();
-          piece.houseId = index;
-          rotation.vmult(piece.origin, piece.body.position);
-          piece.body.position.vadd(offset, piece.body.position);
-          rotation.mult(piece.body.quaternion, piece.body.quaternion);
-          piece.origin.copy(piece.body.position);
-          piece.orientation.copy(piece.body.quaternion);
-          piece.body.previousPosition.copy(piece.origin);
-          piece.body.interpolatedPosition.copy(piece.origin);
-          piece.body.aabbNeedsUpdate = true;
-        }
-        if (!this.world) this.world = simulation.world;
-        else {
-          for (const piece of simulation.pieces) {
-            simulation.world.removeBody(piece.body);
-            this.world.addBody(piece.body);
-          }
-          simulation.world = this.world;
-        }
-        this.houses.push({
-          id: index,
-          label: `C${String(index + 1).padStart(2, "0")}`,
-          simulation,
-          offset,
-          yaw,
-        });
+    for (const [index, plan] of housePlacements(
+      config,
+      this.layout,
+    ).entries()) {
+      const profile =
+        distribution === "mixed"
+          ? profiles[(base + plan.profileOffset) % profiles.length]
+          : config.profile;
+      const simulation = new Simulation({ ...config, profile });
+      const offset = new CANNON.Vec3(plan.x, 0, plan.z);
+      const yaw = plan.yaw,
+        rotation = new CANNON.Quaternion();
+      rotation.setFromEuler(0, yaw, 0);
+      for (const piece of simulation.pieces) {
+        piece.localOrigin = piece.origin.clone();
+        piece.houseId = index;
+        rotation.vmult(piece.origin, piece.body.position);
+        piece.body.position.vadd(offset, piece.body.position);
+        rotation.mult(piece.body.quaternion, piece.body.quaternion);
+        piece.origin.copy(piece.body.position);
+        piece.orientation.copy(piece.body.quaternion);
+        piece.body.previousPosition.copy(piece.origin);
+        piece.body.interpolatedPosition.copy(piece.origin);
+        piece.body.aabbNeedsUpdate = true;
       }
+      if (!this.world) this.world = simulation.world;
+      else {
+        for (const piece of simulation.pieces) {
+          simulation.world.removeBody(piece.body);
+          this.world.addBody(piece.body);
+        }
+        simulation.world = this.world;
+      }
+      this.houses.push({
+        id: index,
+        ...(plan.parcelId ? { parcelId: plan.parcelId } : {}),
+        label: `C${String(index + 1).padStart(2, "0")}`,
+        simulation,
+        offset,
+        yaw,
+      });
+    }
     this.world.broadphase.dirty = true;
     this.updateCenter();
   }
   updateCenter() {
-    const edge = this.extent + 6;
-    const direction = this.config.trajectory;
-    const start =
-      direction === "horizontal"
-        ? [-edge, 0]
-        : direction === "vertical"
-          ? [0, -edge]
-          : [-edge, -edge];
-    const end = start.map((v) => -v),
-      length = Math.hypot(end[0] - start[0], end[1] - start[1]);
+    const { start, end } = this.path;
+    const length = Math.hypot(end[0] - start[0], end[1] - start[1]);
     const progress = Math.min(1, (this.elapsed * 2) / length);
     this.center.set(
       start[0] + (end[0] - start[0]) * progress,
@@ -118,6 +119,7 @@ export class District {
       id: h.id,
       label: h.label,
       profile: h.simulation.profile.label,
+      ...(h.parcelId ? { parcelId: h.parcelId } : {}),
     }));
     const keys = [
       "detached",
@@ -170,7 +172,7 @@ export class Experiment {
       ...this.config,
       ...changes,
     });
-    if (!["single", "block9", "block16"].includes(config.mode))
+    if (!["single", "block9", "block16", "neighborhood"].includes(config.mode))
       throw new RangeError("Escenario desconocido.");
     const next =
       config.mode === "single" ? new Simulation(config) : new District(config);

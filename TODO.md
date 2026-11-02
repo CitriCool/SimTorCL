@@ -83,3 +83,13 @@ Fuentes para la preparación del catálogo:
 - [x] Revisión en navegador: guardar, duplicar, renombrar, importar, repetir, recuperar la ejecución previa, comparar y exportar un informe con imagen.
 
 Las etapas de generación urbana, edificios y zonas verdes siguen pendientes según sus dependencias en el roadmap.
+
+## Entrega B1: generador de barrio (v2.3)
+
+- [x] Cuadrícula rectangular configurable, orientación, semilla y asignación de usos.
+- [x] Parcelas identificadas, calles, veredas, accesos y retiros geométricos.
+- [x] Reservas para edificios, áreas verdes visuales y parcelas libres.
+- [x] Inventario, enfoque, CSV de parcelas e inclusión del plano en informes.
+- [x] Esquema 2 con plano validado y compatibilidad con ejecuciones v2.2.
+- [x] Pruebas de geometría, física urbana, reproducibilidad y migración.
+- [ ] Siguiente entrega: editor manual por parcela con deshacer y rehacer (URB-06/07).

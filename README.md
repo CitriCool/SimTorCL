@@ -95,6 +95,8 @@ No se cargan frecuencias nacionales, regionales ni de combinaciones de paredes y
 ```text
 src/catalog.js             Categorías censales, perfiles y parámetros con procedencia
 src/physics.js             Grafo de uniones, fuerzas, rotura, colisiones y métricas
+src/urban.js               Geometría urbana, semilla y asignación de usos
+src/urban-ui.js            Formulario e inventario de parcelas
 src/scene.js               Modelos y efectos Three.js; reconstrucción y liberación de GPU
 src/main.js                Selectores, diálogos y bucle de tiempo fijo
 src/comparison.js          Ejecuciones reproducibles independientes de la escena
@@ -138,6 +140,16 @@ El cuaderno permite guardar, cargar, duplicar y nombrar configuraciones y ejecuc
 
 La biblioteca se conserva en el navegador y requiere exportación JSON para trasladarse a otro equipo. La repetición usa fotogramas muestreados y permite recuperar la ejecución pausada anterior. El recálculo reproduce los pasos y controles iniciales. Las importaciones requieren un modelo compatible y se limitan a 40 MB.
 
-[Guía del cuaderno, formato, migración y límites](docs/experimentos.md). Las 43 pruebas cubren física, manzanas, persistencia del formato, eventos, exportación y reproducción.
+[Guía del cuaderno, formato, migración y límites](docs/experimentos.md). Las 53 pruebas cubren física, manzanas, persistencia del formato, eventos, exportación y reproducción.
 
 ![Cuaderno de experimentos](docs/experimentos.png)
+
+## Generador de barrio (v2.3)
+
+Selecciona **Barrio configurable** y abre **Configurar barrio**. Genera entre 4 y 16 parcelas con orientación, semilla, calles y veredas, ocupación residencial y proporciones de áreas verdes y reservas para edificios. El inventario identifica todas las parcelas y permite enfocarlas.
+
+Las viviendas participan en la física; las reservas azules representan espacios para futuros edificios. Parques, árboles y bancos son visuales. El plano se guarda en JSON de esquema 2 y se exporta a CSV e informes. Los experimentos de v2.2 continúan cargando. El editor manual se abordará en la siguiente entrega.
+
+[Guía del generador y sus límites](docs/barrio.md).
+
+![Barrio configurable](docs/barrio.png)
