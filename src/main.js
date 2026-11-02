@@ -2,11 +2,12 @@ import "./style.css";
 import { FIXED_STEP } from "./physics.js";
 import { PROFILES, ROOFS, HOUSE, CENSUS, SOURCES, PRESETS } from "./catalog.js";
 import { Experiment } from "./district.js";
+import { setupNotebook } from "./notebook.js";
 import { SceneView } from "./scene.js";
 
 const $ = (id) => document.getElementById(id);
 const simulation = new Experiment();
-let view, frame, worker, comparisonConfig;
+let view, frame, worker, comparisonConfig, notebook;
 let running = false,
   accumulator = 0,
   lastTime = null,
@@ -17,7 +18,7 @@ const number = (value) =>
   value.toLocaleString("es-CL", { maximumFractionDigits: 2 });
 
 function updateReadout() {
-  const s = simulation.stats;
+  const s = notebook?.replayStats ?? simulation.stats;
   $("roof-count").textContent = s.detached;
   $("roof-total").textContent =
     `${s.total} ${simulation.houses ? "piezas" : simulation.roof.unit}`;
@@ -84,6 +85,12 @@ function setRunning(value) {
 }
 
 function updateScenarioInfo() {
+  for (const id of ["mode", "distribution", "spacing", "trajectory", "profile"])
+    $(id).value = simulation.config[id];
+  for (const id of ["wind", "radius", "reinforcement"]) {
+    $(id).value = simulation.config[id];
+    paintRange(id);
+  }
   const { profile, roof } = simulation;
   const district = !!simulation.houses;
   $("district-controls").hidden = !district;
@@ -163,6 +170,7 @@ function updateScenarioInfo() {
 }
 
 function reset(changes = {}) {
+  notebook?.beforeReset();
   setRunning(false);
   const next = { ...simulation.config, ...changes };
   if (
@@ -184,7 +192,13 @@ function reset(changes = {}) {
 
 function updateRange(id) {
   const input = $(id);
-  simulation.config[id] = Number(input.value);
+  simulation.setParameter(id, Number(input.value));
+  paintRange(id);
+  view?.sync();
+}
+
+function paintRange(id) {
+  const input = $(id);
   $(`${id}-value`).value = input.value;
   input.style.setProperty(
     "--fill",
@@ -259,6 +273,7 @@ document.querySelectorAll("[data-view]").forEach((button) =>
 
 function showDialog(id) {
   setRunning(false);
+  notebook?.pauseReplay();
   $(id).showModal();
 }
 $("about-button").addEventListener("click", () => showDialog("about-dialog"));
@@ -486,9 +501,12 @@ document.addEventListener("visibilitychange", () => {
 });
 function animate(now) {
   frame = requestAnimationFrame(animate);
-  const dt = lastTime === null ? 0 : Math.min((now - lastTime) / 1000, 0.1);
+  const realDt = lastTime === null ? 0 : (now - lastTime) / 1000;
+  const dt = Math.min(realDt, 0.1);
   lastTime = now;
-  if (running) {
+  notebook?.advanceReplay(dt);
+  if (running && !notebook?.replaying) {
+    simulation.realSeconds += realDt;
     accumulator = Math.min(
       accumulator + dt,
       FIXED_STEP * (simulation.houses ? 4 : 12),
@@ -501,6 +519,7 @@ function animate(now) {
   }
   if (now - lastReadout > 100) {
     updateReadout();
+    notebook?.refresh();
     lastReadout = now;
   }
   view.render();
@@ -510,6 +529,18 @@ updateReadout();
 try {
   view = new SceneView($("scene"), simulation);
   $("loading").hidden = true;
+  notebook = setupNotebook({
+    experiment: simulation,
+    getView: () => view,
+    pause: () => setRunning(false),
+    refresh: updateReadout,
+    resetConfig: reset,
+    sceneChanged: () => {
+      view.sync();
+      updateScenarioInfo();
+      updateReadout();
+    },
+  });
   frame = requestAnimationFrame(animate);
 } catch (error) {
   $("loading").hidden = true;
@@ -534,5 +565,6 @@ if (import.meta.hot)
   import.meta.hot.dispose(() => {
     cancelAnimationFrame(frame);
     worker?.terminate();
+    notebook?.dispose();
     view?.dispose();
   });

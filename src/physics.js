@@ -58,6 +58,7 @@ export class Simulation {
     const ground = new CANNON.Body({ mass: 0, shape: new CANNON.Plane() });
     ground.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
     this.world.addBody(ground);
+    this.events = [];
     this.pieces = [];
     this.connections = [];
     this.facades = [];
@@ -288,8 +289,56 @@ export class Simulation {
     const angle = this.elapsed * 0.17 + 0.6;
     this.center.set(Math.cos(angle) * 5.5, 0, Math.sin(angle) * 4.4);
   }
+  logEvent(data) {
+    const event = { id: this.events.length + 1, time: this.elapsed, ...data };
+    this.events.push(event);
+    return event.id;
+  }
+  breakConnection(connection, cause, demand = 0) {
+    if (connection.broken) return;
+    connection.broken = true;
+    connection.cause = cause;
+    const parents = [
+      connection.b?.releaseEventId,
+      ...connection.a.connections
+        .filter((c) => c !== connection && c.broken)
+        .map((c) => c.eventId),
+    ].filter(Boolean);
+    connection.eventId = this.logEvent({
+      type: "connection",
+      connectionId: connection.id,
+      kind: connection.kind,
+      pieceId: connection.a.id,
+      otherPieceId: connection.b?.id ?? null,
+      cause,
+      demand,
+      capacity: (connection.capacity * this.config.reinforcement) / 100,
+      parents: [...new Set(parents)],
+    });
+  }
   release(piece) {
     if (piece.detached) return;
+    const parents = piece.connections
+      .filter((c) => c.broken)
+      .map((c) => c.eventId)
+      .filter(Boolean);
+    if (piece.kind === "wall" && !parents.length)
+      parents.push(
+        ...this.connections
+          .filter(
+            (c) => c.broken && ["base", "wall", "corner"].includes(c.kind),
+          )
+          .map((c) => c.eventId)
+          .filter(Boolean),
+      );
+    piece.releaseEventId = this.logEvent({
+      type: "release",
+      pieceId: piece.id,
+      kind: piece.kind,
+      cause: "support",
+      mass: piece.mass,
+      parents: [...new Set(parents)],
+    });
     piece.detached = true;
     piece.body.mass = piece.mass;
     piece.body.type = CANNON.Body.DYNAMIC;
@@ -324,22 +373,19 @@ export class Simulation {
       if (piece.kind === "cladding") {
         const mount = piece.connections.find((c) => c.kind === "cladding");
         if (mount.b.detached) {
-          mount.broken = true;
-          mount.cause ??= "support";
+          this.breakConnection(mount, "support");
         }
         if (mount.broken) this.release(piece);
       } else if (piece.kind === "roof") {
         const mounts = piece.connections.filter((c) => c.kind === "roof");
         for (const mount of mounts)
           if (mount.b.detached) {
-            mount.broken = true;
-            mount.cause ??= "support";
+            this.breakConnection(mount, "support");
           }
         const supported = mounts.filter((c) => !c.broken).length;
         if (supported < (piece.details.slab ? 3 : 1)) {
           for (const mount of mounts) {
-            mount.broken = true;
-            mount.cause ??= "support";
+            this.breakConnection(mount, "support");
           }
           this.release(piece);
         }
@@ -414,8 +460,7 @@ export class Simulation {
           ? connection.stress + FIXED_STEP
           : Math.max(0, connection.stress - FIXED_STEP * 2);
       if (connection.stress + 1e-9 >= RULES.overloadSeconds) {
-        connection.broken = true;
-        connection.cause = "overload";
+        this.breakConnection(connection, "overload", demand);
         changed = true;
       }
     }

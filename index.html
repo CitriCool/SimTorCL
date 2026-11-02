@@ -139,13 +139,13 @@
           <input
             id="wind"
             type="range"
-            min="60"
+            min="0"
             max="280"
             step="5"
             value="160"
           />
           <div class="range-ticks">
-            <span>60 km/h</span><span>280 km/h</span>
+            <span>0 km/h</span><span>280 km/h</span>
           </div>
           <label class="range-label" for="radius"
             >Radio de influencia
@@ -373,6 +373,39 @@
             Comparar perfiles ↗
           </button>
         </div>
+        <section class="notebook-strip" aria-label="Cuaderno del experimento">
+          <button class="reset-button" id="notebook-open">
+            Cuaderno de experimentos ↗</button
+          ><span id="active-clock">Tiempo real activo: 0 s</span>
+        </section>
+        <section
+          id="replay-panel"
+          class="replay-panel"
+          hidden
+          aria-label="Repetición visual"
+        >
+          <strong>REPETICIÓN VISUAL · fotogramas guardados</strong>
+          <p id="replay-description"></p>
+          <label for="replay-position"
+            >Fotograma <output id="replay-time"></output></label
+          ><input
+            id="replay-position"
+            type="range"
+            min="0"
+            max="1"
+            value="0"
+            step="1"
+          />
+          <div class="replay-actions">
+            <button id="replay-first" class="reset-button">
+              Volver al inicio</button
+            ><button id="replay-play" class="reset-button">
+              Reproducir grabación</button
+            ><button id="replay-exit" class="reset-button">
+              Volver a mi ejecución
+            </button>
+          </div>
+        </section>
         <section
           id="district-results"
           hidden
@@ -408,7 +441,7 @@
           <span
             ><span class="footer-dot"></span> MOTOR FÍSICO ACTIVO
             <i>/</i> THREE.JS + CANNON-ES</span
-          ><span>SimTorCL <b>v2.1</b></span>
+          ><span>SimTorCL <b>v2.2</b></span>
         </footer>
       </section>
     </main>
@@ -552,6 +585,220 @@
         materiales. La losa solo está disponible con albañilería u hormigón en
         este catálogo.
       </p>
+    </dialog>
+    <dialog
+      id="notebook-dialog"
+      class="notebook-dialog"
+      aria-labelledby="notebook-title"
+    >
+      <button
+        id="notebook-close"
+        class="dialog-close"
+        aria-label="Cerrar cuaderno"
+      >
+        ×
+      </button>
+      <div class="eyebrow">GUARDAR · REPETIR · EXPLICAR</div>
+      <h2 id="notebook-title">Cuaderno de experimentos</h2>
+      <p id="notebook-status" role="status">
+        Los datos se guardan en este navegador. Exporta JSON para trasladarlos.
+      </p>
+      <div
+        class="notebook-tabs"
+        role="tablist"
+        aria-label="Secciones del cuaderno"
+      >
+        <button
+          role="tab"
+          id="tab-files"
+          aria-controls="panel-files"
+          aria-selected="true"
+        >
+          Archivo</button
+        ><button
+          role="tab"
+          id="tab-events"
+          aria-controls="panel-events"
+          aria-selected="false"
+        >
+          Eventos y gráficos</button
+        ><button
+          role="tab"
+          id="tab-inspect"
+          aria-controls="panel-inspect"
+          aria-selected="false"
+        >
+          Inspección</button
+        ><button
+          role="tab"
+          id="tab-runs"
+          aria-controls="panel-runs"
+          aria-selected="false"
+        >
+          Comparar / verificar
+        </button>
+      </div>
+      <section id="panel-files" role="tabpanel" aria-labelledby="tab-files">
+        <label class="field-label" for="experiment-name"
+          >Nombre del experimento</label
+        ><input
+          id="experiment-name"
+          type="text"
+          maxlength="80"
+          value="Mi experimento"
+        />
+        <div class="notebook-actions">
+          <button class="primary-button" id="experiment-save">
+            Guardar ejecución en biblioteca</button
+          ><button class="reset-button" id="configuration-save">
+            Guardar configuración en biblioteca</button
+          ><button class="reset-button" id="export-config">
+            Exportar configuración JSON</button
+          ><button class="reset-button" id="export-run">
+            Exportar ejecución JSON
+          </button>
+        </div>
+        <p class="selection-note">
+          Configuración: parámetros actuales para iniciar desde cero. Ejecución:
+          configuración inicial, cambios de controles, resultados, eventos y
+          fotogramas. La grabación no permite reanudar la física desde un
+          fotograma.
+        </p>
+        <label class="field-label" for="experiment-file"
+          >Importar archivo JSON (máx. 40 MB)</label
+        ><input
+          id="experiment-file"
+          type="file"
+          accept=".json,application/json"
+        /><label class="field-label" for="experiment-library"
+          >Biblioteca local</label
+        ><select id="experiment-library">
+          <option value="">Sin experimentos guardados</option>
+        </select>
+        <div class="notebook-actions">
+          <button class="reset-button" id="library-load">
+            Cargar seleccionado</button
+          ><button class="reset-button" id="library-copy">
+            Duplicar seleccionado</button
+          ><button class="reset-button" id="library-rename">
+            Renombrar seleccionado
+          </button>
+        </div>
+        <div class="notebook-actions">
+          <button class="reset-button" id="export-results">
+            CSV de viviendas</button
+          ><button class="reset-button" id="export-components">
+            CSV de piezas</button
+          ><button class="reset-button" id="export-events">
+            CSV de eventos</button
+          ><button class="reset-button" id="export-report">
+            Informe HTML con imagen
+          </button>
+        </div>
+        <button class="details-button" id="generate-link">
+          Generar enlace de configuración</button
+        ><label class="field-label" for="experiment-link"
+          >Enlace para copiar</label
+        ><input id="experiment-link" type="text" readonly />
+        <p class="selection-note">
+          El enlace comparte parámetros, sin resultados ni datos de biblioteca.
+          Requiere SimTorCL compatible en la dirección utilizada; localhost no
+          publica el proyecto en internet.
+        </p>
+      </section>
+      <section
+        id="panel-events"
+        role="tabpanel"
+        aria-labelledby="tab-events"
+        hidden
+      >
+        <div id="damage-chart"></div>
+        <p class="selection-note">
+          Curvas muestreadas: naranja, cubierta desprendida; verde, paredes sin
+          soporte. El registro conserva el tiempo exacto de los eventos.
+        </p>
+        <div class="notebook-filters">
+          <label>Vivienda<select id="event-house"></select></label
+          ><label
+            >Tipo<select id="event-type">
+              <option value="all">Todos</option>
+              <option value="connection">Uniones falladas</option>
+              <option value="release">Piezas liberadas</option>
+            </select></label
+          >
+        </div>
+        <label class="field-label" for="event-list">Registro cronológico</label
+        ><select id="event-list" size="7"></select>
+        <pre id="event-detail"></pre>
+        <button class="reset-button" id="event-view">Ver evento en 3D</button>
+      </section>
+      <section
+        id="panel-inspect"
+        role="tabpanel"
+        aria-labelledby="tab-inspect"
+        hidden
+      >
+        <label class="field-label" for="inspect-house"
+          >Vivienda a inspeccionar</label
+        ><select id="inspect-house"></select
+        ><label class="field-label" for="inspect-piece">Pieza</label
+        ><select id="inspect-piece"></select>
+        <pre id="piece-detail"></pre>
+        <button class="reset-button" id="inspect-focus">
+          Enfocar en la escena
+        </button>
+        <p class="selection-note">
+          La masa corresponde a la pieza física; una teja del modelo puede
+          representar un módulo. Las capacidades son supuestos educativos.
+        </p>
+      </section>
+      <section
+        id="panel-runs"
+        role="tabpanel"
+        aria-labelledby="tab-runs"
+        hidden
+      >
+        <p id="run-conditions"></p>
+        <div class="notebook-filters">
+          <label for="run-seconds"
+            >Duración común<select id="run-seconds">
+              <option value="10">10 s</option>
+              <option value="20" selected>20 s</option>
+              <option value="30">30 s</option>
+            </select></label
+          ><label for="run-variable"
+            >Condición que cambia en B<select id="run-variable">
+              <option value="reinforcement">Refuerzo de uniones</option>
+              <option value="distribution">Distribución de perfiles</option>
+              <option value="spacing">Separación entre casas</option>
+              <option value="roof">Cubierta</option>
+              <option value="trajectory">Trayectoria</option>
+            </select></label
+          ><label for="run-value"
+            >Valor para B<select id="run-value"></select
+          ></label>
+        </div>
+        <div class="notebook-actions">
+          <button id="compare-runs" class="primary-button">
+            Comparar escenarios A / B</button
+          ><button id="verify-run" class="reset-button">
+            Recalcular y contrastar ejecución</button
+          ><button id="cancel-run" class="reset-button" hidden>
+            Cancelar cálculo</button
+          ><button id="export-comparison" class="reset-button" disabled>
+            Exportar comparación CSV
+          </button>
+        </div>
+        <p id="runs-progress" role="status"></p>
+        <div id="runs-results"></div>
+        <p class="selection-note">
+          Ambas ejecuciones comienzan desde cero con una configuración común y
+          la misma duración. Solo varía la condición seleccionada. El recálculo
+          es una nueva simulación; la repetición visual usa fotogramas
+          guardados. Las pequeñas diferencias numéricas entre equipos no
+          constituyen validación física.
+        </p>
+      </section>
     </dialog>
     <script type="module" src="/src/main.js"></script>
   </body>

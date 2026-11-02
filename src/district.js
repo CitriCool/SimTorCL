@@ -1,5 +1,6 @@
 import * as CANNON from "cannon-es";
 import { Simulation, FIXED_STEP } from "./physics.js";
+import { RunRecorder, cleanConfig } from "./records.js";
 import { PROFILES, validateConfig } from "./catalog.js";
 
 export class District {
@@ -155,29 +156,51 @@ export class District {
 }
 
 export class Experiment {
-  constructor() {
+  constructor(config = {}, options = {}) {
+    this.recordEnabled = options.record !== false;
     this.revision = 0;
-    this.reset();
+    this.reset(config);
   }
   reset(changes = {}) {
-    const config = {
+    const config = cleanConfig({
       mode: "single",
       distribution: "mixed",
       spacing: 13,
       trajectory: "diagonal",
       ...this.config,
       ...changes,
-    };
+    });
     if (!["single", "block9", "block16"].includes(config.mode))
       throw new RangeError("Escenario desconocido.");
     const next =
       config.mode === "single" ? new Simulation(config) : new District(config);
     this.active = next;
+    this.steps = 0;
+    this.realSeconds = 0;
     this.revision++;
+    this.recorder = this.recordEnabled ? new RunRecorder(this) : null;
   }
   step() {
     this.active.step();
+    this.steps++;
+    this.recorder?.tick(this);
   }
+  setParameter(key, value) {
+    if (!["wind", "radius", "reinforcement"].includes(key))
+      throw new Error("Control no modificable durante la ejecución.");
+    cleanConfig({ ...this.config, [key]: value });
+    if (this.config[key] === value) return;
+    this.config[key] = value;
+    this.recorder?.change(this.steps, key, value);
+  }
+  get events() {
+    return this.recorder?.events ?? [];
+  }
+  document(name) {
+    if (!this.recorder) throw new Error("Esta ejecución no se está grabando.");
+    return this.recorder.document(this, name);
+  }
+
   get config() {
     return this.active?.config;
   }

@@ -75,3 +75,11 @@ Fuentes para la preparación del catálogo:
    - [x] Probar estabilidad sin viento, distribución, recorrido, reinicio y colisiones entre casas.
    - [ ] Incorporar rotura de uniones por impactos de fragmentos, además de viento y pérdida de soporte.
    - [ ] Sustituir el trazado ilustrativo por geometría territorial y distribuciones respaldadas por datos.
+
+## Entrega A: cuaderno de experimentos (v2.2)
+
+- [x] EXP-01 a EXP-12 del [roadmap maestro](ROADMAP.md): formato, biblioteca, exportaciones, eventos, inspección, gráficos, repetición, comparación y relojes.
+- [x] Verificación automatizada: 43 pruebas y compilación.
+- [x] Revisión en navegador: guardar, duplicar, renombrar, importar, repetir, recuperar la ejecución previa, comparar y exportar un informe con imagen.
+
+Las etapas de generación urbana, edificios y zonas verdes siguen pendientes según sus dependencias en el roadmap.

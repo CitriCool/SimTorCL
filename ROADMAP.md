@@ -14,26 +14,26 @@ Prioridades: **P0** base necesaria para trabajar con confianza; **P1** ampliaci�
 - [x] **BASE-04** Mundo físico compartido, colisiones de fragmentos entre viviendas y tres trayectorias lineales del tornado a velocidad fija.
 - [x] **BASE-05** Resultados por casa y agregados, identificación de viviendas, enfoque de cámara y colores de daño por lote.
 - [x] **BASE-06** Comparación determinista de perfiles individuales con condiciones comunes, cancelación, pausa y reinicio.
-- [x] **BASE-07** Interfaz adaptable, documentación, 33 pruebas automatizadas y compilación comprobadas; código en GitHub.
+- [x] **BASE-07** Interfaz adaptable, documentación, 43 pruebas automatizadas y compilación comprobadas; código en GitHub.
 
 Límites actuales: trazados sintéticos; propiedades físicas ilustrativas; ausencia de daño adicional por impacto; viento sin apantallamiento ni canalización por edificios; sin presión interior ni validación experimental. Las zonas verdes decorativas actuales no tienen un modelo físico de vegetación.
 
 ## 1. Experimentos reproducibles y explicación del daño — P0
 
-Depende de la base disponible. Es el siguiente bloque recomendado.
+Entrega A implementada en v2.2. Depende de la base disponible. Consulta [uso, formato y límites del cuaderno](docs/experimentos.md).
 
-- [ ] **EXP-01** Definir un formato versionado de experimento con unidades, geometría, materiales, uniones, viento, trayectoria, duración y configuración del cálculo.
-- [ ] **EXP-02** Guardar, cargar, duplicar y nombrar experimentos; distinguir configuraciones iniciales de resultados ya calculados.
-- [ ] **EXP-03** Exportar e importar configuraciones JSON con validación y migración de versiones.
-- [ ] **EXP-04** Exportar resultados CSV por vivienda, componente y conjunto, conservando identificadores y unidades.
-- [ ] **EXP-05** Generar informes con parámetros, imágenes, métricas, fuentes, versión y limitaciones del modelo.
-- [ ] **EXP-06** Incorporar una línea de tiempo de eventos: qué unión falló, cuándo, por qué causa y qué piezas perdieron soporte después.
-- [ ] **EXP-07** Permitir seleccionar una casa o pieza y consultar su material, masa, carga, capacidad, conexiones y estado.
-- [ ] **EXP-08** Mostrar gráficos de daño acumulado y distinguir el estado actual de los máximos históricos.
-- [ ] **EXP-09** Reproducir una ejecución guardada, volver al inicio y navegar sus eventos sin confundir una repetición visual con un nuevo cálculo.
-- [ ] **EXP-10** Comparar manzanas con idéntico escenario inicial, variando una condición a la vez: refuerzo, distribución, separación, cubierta o recorrido.
-- [ ] **EXP-11** Compartir experimentos mediante archivos y evaluar enlaces reproducibles sin depender de la sesión local.
-- [ ] **EXP-12** Mostrar tiempo simulado, tiempo real transcurrido y ritmo de avance cuando el equipo no alcanza tiempo real.
+- [x] **EXP-01** Definir un formato versionado de experimento con unidades, geometría, materiales, uniones, viento, trayectoria, duración y configuración del cálculo.
+- [x] **EXP-02** Guardar, cargar, duplicar y nombrar experimentos; distinguir configuraciones iniciales de resultados ya calculados.
+- [x] **EXP-03** Exportar e importar configuraciones JSON con validación y migración de versiones.
+- [x] **EXP-04** Exportar resultados CSV por vivienda, componente y conjunto, conservando identificadores y unidades.
+- [x] **EXP-05** Generar informes con parámetros, imágenes, métricas, fuentes, versión y limitaciones del modelo.
+- [x] **EXP-06** Incorporar una línea de tiempo de eventos: qué unión falló, cuándo, por qué causa y qué piezas perdieron soporte después.
+- [x] **EXP-07** Permitir seleccionar una casa o pieza y consultar su material, masa, carga, capacidad, conexiones y estado.
+- [x] **EXP-08** Mostrar gráficos de daño acumulado y distinguir el estado actual de los máximos históricos.
+- [x] **EXP-09** Reproducir una ejecución guardada, volver al inicio y navegar sus eventos sin confundir una repetición visual con un nuevo cálculo.
+- [x] **EXP-10** Comparar manzanas con idéntico escenario inicial, variando una condición a la vez: refuerzo, distribución, separación, cubierta o recorrido.
+- [x] **EXP-11** Compartir experimentos mediante archivos y evaluar enlaces reproducibles sin depender de la sesión local.
+- [x] **EXP-12** Mostrar tiempo simulado, tiempo real transcurrido y ritmo de avance cuando el equipo no alcanza tiempo real.
 
 Criterio de salida: otra persona puede cargar una configuración, repetirla con la misma versión y explicar el primer daño y sus consecuencias a partir del registro exportado.
 
@@ -186,14 +186,14 @@ Criterio de salida: cada estimación de consecuencias conserva sus datos, modelo
 
 ## Orden recomendado de las próximas entregas
 
-| Entrega | Alcance principal | Condición para avanzar |
-| --- | --- | --- |
-| A | Registro de eventos, guardar/cargar y exportar experimentos | Repetición y explicación de resultados |
-| B | Generador urbano reproducible, edificios y zonas verdes visuales/editables | Escenarios mixtos guardables y geometría consistente |
-| C | Modelos físicos diferenciados de edificios y vegetación; daño por impacto | Pruebas por mecanismo y procedencia de parámetros |
-| D | Comparación de manzanas, sensibilidad y primer caso de validación | Resultados comparables con evaluación de error |
-| E | Inventarios territoriales, incertidumbre y funciones de fragilidad | Datos suficientes y trazabilidad de inferencias |
-| F | Acoplamiento con viento urbano/CFD y consecuencias | Validación y modelos específicos de cada módulo |
+| Entrega | Alcance principal                                                          | Condición para avanzar                               |
+| ------- | -------------------------------------------------------------------------- | ---------------------------------------------------- |
+| A       | Registro de eventos, guardar/cargar y exportar experimentos                | Repetición y explicación de resultados               |
+| B       | Generador urbano reproducible, edificios y zonas verdes visuales/editables | Escenarios mixtos guardables y geometría consistente |
+| C       | Modelos físicos diferenciados de edificios y vegetación; daño por impacto  | Pruebas por mecanismo y procedencia de parámetros    |
+| D       | Comparación de manzanas, sensibilidad y primer caso de validación          | Resultados comparables con evaluación de error       |
+| E       | Inventarios territoriales, incertidumbre y funciones de fragilidad         | Datos suficientes y trazabilidad de inferencias      |
+| F       | Acoplamiento con viento urbano/CFD y consecuencias                         | Validación y modelos específicos de cada módulo      |
 
 Las tareas transversales de validación, rendimiento y accesibilidad acompañan a todas las entregas. Incorporar edificios o árboles a una imagen no implica haber incorporado su respuesta estructural ni su efecto sobre el viento.
 

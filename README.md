@@ -44,7 +44,7 @@ Las cubiertas inclinadas tienen 16 planchas de metal/fibrocemento o 64 módulos 
 | ----------------------------- | ---------------------------------------------------------------------- |
 | Sistema de paredes / cubierta | Reconstruir la casa con el perfil elegido                              |
 | Parámetros y fuentes          | Consultar valores, unidades, supuestos y fuentes censales              |
-| Velocidad / radio             | Ajustar viento de 60 a 280 km/h y campo de 4 a 12 m                    |
+| Velocidad / radio             | Ajustar viento de 0 a 280 km/h y campo de 4 a 12 m                     |
 | Refuerzo de uniones           | Multiplicar las capacidades base entre 50 y 200 %                      |
 | Iniciar / pausar o Espacio    | Controlar el tiempo                                                    |
 | Reiniciar o R                 | Reconstruir piezas, uniones y estadísticas, conservando los parámetros |
@@ -99,6 +99,11 @@ src/scene.js               Modelos y efectos Three.js; reconstrucción y liberac
 src/main.js                Selectores, diálogos y bucle de tiempo fijo
 src/comparison.js          Ejecuciones reproducibles independientes de la escena
 src/comparison.worker.js   Comparación en segundo plano y progreso
+src/notebook.js            Biblioteca, eventos, inspección y repetición visual
+src/records.js             Formato versionado, validación, CSV e informes HTML
+src/library.js             Biblioteca local con IndexedDB
+src/runs.js                Recálculo y comparaciones A/B de escenarios
+src/runs.worker.js         Ejecuciones en segundo plano
 src/style.css              Interfaz adaptable
 index.html                 Interfaz en español
 test/physics.test.js       Pruebas de comportamiento
@@ -126,3 +131,13 @@ El tornado cruza en diagonal, de oeste a este o de sur a norte a 2 m/s; al termi
 Para mantener la interfaz utilizable, el modo manzana limita a cuatro pasos físicos por cuadro: en equipos lentos el tiempo simulado puede avanzar más despacio que el real. La geometría visual se simplifica en esta escala. No se garantiza una tasa de cuadros específica.
 
 Las pruebas de manzana verifican el mundo compartido, ausencia de daño sin viento, sumas por vivienda, paso del tornado, reconstrucción, validación y una colisión real entre un fragmento y una vivienda vecina.
+
+## Cuaderno de experimentos (v2.2)
+
+El cuaderno permite guardar, cargar, duplicar y nombrar configuraciones y ejecuciones; importar/exportar JSON; consultar eventos y piezas; recorrer fotogramas; recalcular resultados y comparar escenarios A/B de casas o manzanas, cambiando una condición a la vez. Incluye CSV por vivienda, conjunto, pieza y evento, informes HTML con captura 3D y enlaces de configuración.
+
+La biblioteca se conserva en el navegador y requiere exportación JSON para trasladarse a otro equipo. La repetición usa fotogramas muestreados y permite recuperar la ejecución pausada anterior. El recálculo reproduce los pasos y controles iniciales. Las importaciones requieren un modelo compatible y se limitan a 40 MB.
+
+[Guía del cuaderno, formato, migración y límites](docs/experimentos.md). Las 43 pruebas cubren física, manzanas, persistencia del formato, eventos, exportación y reproducción.
+
+![Cuaderno de experimentos](docs/experimentos.png)
