@@ -48,7 +48,7 @@ Estado actual: versión 2 implementada con tres familias y cuatro variantes, 14 
    - [x] Actualizar las pruebas automáticas para evaluar cada perfil; la estabilidad de todas las paredes ante cualquier tornado no será un criterio universal de éxito.
    - [x] Revisar rendimiento y legibilidad en escritorio y móvil.
    - [x] Actualizar README, limitaciones y fuentes; ejecutar pruebas y compilación.
-   - [ ] Verificar en GitHub Actions la actualización publicada.
+   - [x] Verificar en GitHub Actions la actualización publicada: [pruebas y compilación aprobadas](https://github.com/CitriCool/SimTorCL/actions/runs/41459436836).
 
 6. **Ampliaciones posteriores**
    - [ ] Incorporar una casa de adobe como variante explícita de la categoría de materiales artesanales, con un modelo de daño propio.
