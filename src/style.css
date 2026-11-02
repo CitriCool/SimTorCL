@@ -1145,3 +1145,411 @@ dialog a {
   src: url("@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2")
     format("woff2");
 }
+
+/* Catalogue, damage telemetry and reproducible comparisons. */
+.field-label {
+  display: block;
+  font-size: 11px;
+  color: #b5c9be;
+  margin: 14px 0 8px;
+}
+select {
+  width: 100%;
+  padding: 10px 28px 10px 10px;
+  border: 1px solid #486055;
+  border-radius: 4px;
+  background: #182820;
+  color: #d8e6dc;
+  font:
+    12px "DM Sans",
+    sans-serif;
+  cursor: pointer;
+  outline-offset: 3px;
+}
+select:focus-visible {
+  outline: 2px solid var(--teal);
+}
+.selection-note {
+  font-size: 10px;
+  line-height: 1.7;
+  color: #8ca699;
+  margin: 10px 0;
+}
+.house-card {
+  margin-top: 14px;
+  align-items: flex-start;
+}
+.house-card p {
+  font-size: 10px;
+  line-height: 1.7;
+}
+.house-icon {
+  padding-top: 2px;
+}
+.census-link {
+  display: block;
+  font-size: 10px;
+  color: var(--teal);
+  line-height: 1.6;
+  margin: 10px 0;
+}
+.details-button {
+  font-size: 10px;
+  color: #bedaca;
+  background: transparent;
+  border: 1px solid #3c5547;
+  border-radius: 4px;
+  padding: 9px 12px;
+  margin-top: 14px;
+  width: 100%;
+}
+.control-section {
+  padding: 20px 0;
+}
+.intro {
+  margin-bottom: 20px;
+}
+.telemetry {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  row-gap: 20px;
+  margin-top: 21px;
+}
+.metric:nth-child(3n) {
+  border-right: 0;
+  padding-right: 0;
+}
+.metric:nth-child(3n + 1) {
+  padding-left: 0;
+}
+.metric {
+  padding: 0 19px;
+}
+.metric-label {
+  font-size: 8px;
+  letter-spacing: 0.5px;
+  white-space: normal;
+  line-height: 1.5;
+  min-height: 12px;
+}
+.metric strong {
+  font-size: 29px;
+}
+.metric .compact-value {
+  font-size: 26px;
+}
+.metric-foot {
+  display: block;
+  line-height: 1.7;
+  font-size: 9px;
+  overflow-wrap: anywhere;
+}
+.metric-total {
+  font-size: 11px;
+}
+.metric-total small {
+  font-size: 9px;
+}
+.damage-state {
+  color: var(--orange);
+}
+.scene-label {
+  overflow-wrap: anywhere;
+}
+.scene-caption {
+  max-width: 75%;
+}
+.scene-caption b {
+  line-height: 1.7;
+  font-size: 8px;
+  display: block;
+}
+.comparison-dialog {
+  width: min(1100px, 95vw);
+  max-height: 88vh;
+}
+.comparison-controls {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  margin: 20px 0;
+  flex-wrap: wrap;
+}
+.comparison-controls label {
+  font-size: 11px;
+  color: #9eb6a7;
+}
+.comparison-controls select {
+  display: block;
+  min-width: 150px;
+  margin-top: 8px;
+}
+.comparison-controls button {
+  min-height: 39px;
+}
+.comparison-controls [hidden] {
+  display: none;
+}
+.table-scroll {
+  max-width: 100%;
+  overflow: auto;
+  margin: 18px 0;
+  border: 1px solid #354d3d;
+  border-radius: 5px;
+}
+.comparison-table,
+.parameter-table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 11px;
+  line-height: 1.6;
+  text-align: left;
+}
+.comparison-table {
+  min-width: 830px;
+}
+.parameter-table {
+  min-width: 360px;
+}
+.comparison-table th,
+.comparison-table td,
+.parameter-table th,
+.parameter-table td {
+  padding: 12px;
+  border-bottom: 1px solid #354d3d;
+}
+.comparison-table thead {
+  background: #23372b;
+  color: #bcd6c6;
+}
+.comparison-table tbody th {
+  color: #d9e7dc;
+  font-weight: 500;
+}
+.comparison-table td {
+  color: #a5c0ae;
+}
+.parameter-table th {
+  font-weight: 500;
+  color: #cadacd;
+  width: 45%;
+}
+.parameter-table td {
+  color: #a0b7a7;
+}
+.parameter-table td:last-child {
+  font-size: 9px;
+  color: #7d9c87;
+}
+.comparison-table caption,
+.parameter-table caption {
+  text-align: left;
+  padding: 12px;
+  font-size: 10px;
+  color: #83a28d;
+  background: #1b2d21;
+}
+#comparison-progress {
+  font-size: 12px;
+  color: var(--teal);
+}
+.source-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.source-links a {
+  font-size: 11px;
+  line-height: 1.7;
+}
+dialog {
+  max-height: 88vh;
+  overflow: auto;
+}
+dialog p {
+  font-size: 12px;
+}
+dialog .selection-note {
+  font-size: 10px;
+}
+@media (min-width: 1101px) {
+  .sidebar {
+    padding-top: 27px;
+  }
+  .sidebar h1 {
+    font-size: 24px;
+  }
+  .viewport {
+    height: clamp(390px, 44vw, 540px);
+  }
+}
+@media (max-width: 1100px) {
+  .metric {
+    padding: 0 12px;
+  }
+  .metric strong {
+    font-size: 26px;
+  }
+  .metric-label {
+    font-size: 7px;
+  }
+  .metric-total {
+    font-size: 10px;
+  }
+  .transport-actions {
+    gap: 7px;
+  }
+  .primary-button {
+    min-width: 150px;
+    padding: 12px 13px;
+  }
+  .compare-open {
+    font-size: 9px;
+  }
+  .transport {
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+}
+@media (max-width: 760px) {
+  .sidebar {
+    display: flex;
+    flex-direction: column;
+    padding: 22px 20px;
+  }
+  .control-section {
+    border-top: 1px solid var(--line);
+    padding-top: 20px;
+  }
+  .control-section:first-of-type {
+    border-top: 0;
+    padding-top: 0;
+  }
+  .spec-row {
+    flex-direction: row;
+  }
+  .house-card p {
+    font-size: 11px;
+  }
+  .field-label {
+    font-size: 12px;
+  }
+  select {
+    font-size: 13px;
+  }
+  .selection-note {
+    font-size: 11px;
+  }
+  .visual-controls {
+    padding-top: 20px;
+  }
+  .telemetry {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px 0;
+  }
+  .metric {
+    padding: 0 15px !important;
+    border-right: 0;
+  }
+  .metric:nth-child(odd) {
+    padding-left: 0 !important;
+    border-right: 1px solid var(--line);
+  }
+  .metric:nth-child(even) {
+    padding-right: 0 !important;
+  }
+  .metric-label {
+    font-size: 8px;
+    letter-spacing: 0.4px;
+  }
+  .metric-total small {
+    display: inline;
+  }
+  .metric strong {
+    font-size: 28px;
+  }
+  .metric-foot {
+    font-size: 10px;
+  }
+  .metric-percentage {
+    display: inline;
+  }
+  .transport {
+    align-items: stretch;
+  }
+  .compare-open {
+    padding: 12px;
+    font-size: 10px;
+  }
+  .transport-actions {
+    flex: 1;
+  }
+  .primary-button {
+    min-width: 165px;
+  }
+  .scene-caption b {
+    font-size: 7px;
+  }
+  .comparison-dialog {
+    padding: 30px 18px;
+  }
+  .comparison-controls {
+    align-items: stretch;
+  }
+  .comparison-controls label {
+    flex-basis: 100%;
+  }
+  .comparison-controls button {
+    flex: 1;
+  }
+  .sidebar-note p {
+    font-size: 10px;
+  }
+  .scene-footer {
+    font-size: 7px;
+  }
+  .sidebar-note {
+    padding-top: 18px;
+  }
+}
+@media (max-width: 420px) {
+  .transport-actions {
+    justify-content: space-between;
+  }
+  .transport-actions .primary-button {
+    flex: 1;
+    min-width: 0;
+  }
+  .compare-open {
+    width: 100%;
+    justify-content: center;
+  }
+  .metric strong {
+    font-size: 27px;
+  }
+  .metric-foot {
+    font-size: 9px;
+  }
+  .metric-label {
+    font-size: 7px;
+  }
+  .scene-header {
+    align-items: flex-start;
+  }
+  .status {
+    font-size: 7px;
+    white-space: normal;
+    max-width: 110px;
+  }
+  .metric-total {
+    font-size: 10px;
+  }
+  .comparison-controls {
+    gap: 8px;
+  }
+  .comparison-controls button {
+    min-width: 120px;
+  }
+  .sidebar {
+    padding: 22px 17px;
+  }
+}

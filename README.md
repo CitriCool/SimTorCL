@@ -1,16 +1,14 @@
 # SimTorCL
 
-Laboratorio 3D interactivo para explorar el efecto de un campo de viento similar a un tornado sobre una vivienda chilena de albañilería y cubierta de zinc.
-
-Construido con **Vite, Three.js y Cannon-es**, sin un framework de interfaz. La geometría, las texturas, la vegetación y las partículas se generan en código.
-
-Las tipografías DM Sans y Space Grotesk se incluyen localmente a través de Fontsource. Las licencias de las tipografías y bibliotecas se distribuyen en `public/licenses/`. La aplicación compilada no requiere Google Fonts ni otros servicios externos para funcionar.
+Laboratorio educativo 3D de viento, desprendimiento de cubiertas y daño en paredes de viviendas chilenas. La versión 2 incorpora un catálogo basado en categorías del **Censo 2024**, uniones que pueden fallar y comparaciones reproducibles.
 
 ![Interfaz del laboratorio SimTorCL](docs/simtorcl.jpg)
 
-## Ejecutar localmente
+Construido con Vite, Three.js y Cannon-es. Viviendas, texturas, vegetación y efectos se generan en código. Las tipografías se incluyen localmente; la aplicación compilada funciona sin Google Fonts ni servicios externos. Las licencias de bibliotecas y fuentes se distribuyen en `public/licenses/`.
 
-Requiere Node.js **22.12 o superior** (recomendado: Node 24 LTS) y un navegador moderno con WebGL 2.
+## Ejecutar
+
+Requiere Node.js 22.12 o superior (recomendado: Node 24) y un navegador moderno con WebGL 2.
 
 ```sh
 git clone https://github.com/CitriCool/SimTorCL.git
@@ -19,63 +17,97 @@ npm ci
 npm run dev
 ```
 
-Abre la dirección que muestra Vite, normalmente http://127.0.0.1:5173. Si ese puerto está ocupado, usa `npm run dev -- --port 5174`.
+Abre http://127.0.0.1:5173. Si el puerto está ocupado, usa `npm run dev -- --port 5174`.
 
 ```sh
-npm test          # Pruebas del campo de viento, cubierta, muros y reinicio
-npm run build    # Genera la versión estática en dist/
-npm run preview  # Sirve localmente la versión compilada
+npm test          # Catálogo, combinaciones, daños, colisiones y reproducibilidad
+npm run build    # Sitio estático en dist/
+npm run preview  # Revisión de la versión compilada
 ```
+
+## Viviendas y cubiertas
+
+| Perfil de simulación | Categoría censal de paredes     | Cubiertas disponibles                     |
+| -------------------- | ------------------------------- | ----------------------------------------- |
+| Albañilería          | Albañilería                     | Metal, fibrocemento, tejas/tejuelas, losa |
+| Entramado de madera  | Tabique forrado por ambas caras | Metal, fibrocemento, tejas/tejuelas       |
+| Entramado de acero   | Tabique forrado por ambas caras | Metal, fibrocemento, tejas/tejuelas       |
+| Hormigón armado      | Hormigón armado                 | Metal, fibrocemento, tejas/tejuelas, losa |
+
+Son tres familias con cuatro variantes ilustrativas y **14 combinaciones**. Madera y acero comparten categoría censal: no se les asignan frecuencias separadas. Las disponibilidades son decisiones del catálogo educativo, no restricciones extraídas del censo ni una certificación de factibilidad constructiva.
+
+Las cubiertas inclinadas tienen 16 planchas de metal/fibrocemento o 64 módulos de tejas. La losa es un único cuerpo pesado y plano, con cuatro apoyos predefinidos. Cada vivienda tiene cuatro fachadas divididas en tres segmentos estructurales. Los entramados incluyen 12 revestimientos independientes y el hormigón, 11 módulos de ventanas secundarias.
 
 ## Controles
 
-| Control                    | Función                                                             |
-| -------------------------- | ------------------------------------------------------------------- |
-| Iniciar / Pausar o Espacio | Controlar el tiempo de simulación                                   |
-| Reiniciar o R              | Reconstruir la casa y restablecer el tiempo, conservando parámetros |
-| Suave / Fuerte / Extremo   | Seleccionar una velocidad ilustrativa de viento                     |
-| Velocidad                  | Ajustar entre 60 y 280 km/h                                         |
-| Radio                      | Ajustar entre 4 y 12 metros                                         |
-| Resistencia                | Cambiar la fuerza necesaria para liberar planchas aún fijadas       |
-| Mostrar vórtice            | Activar la representación visual sin modificar la física            |
-| Radio de influencia        | Mostrar u ocultar el límite del campo de viento                     |
-| Botones de cámara          | Vista en perspectiva, superior y frontal                            |
-| Arrastrar / rueda          | Orbitar y acercar la cámara                                         |
+| Control                       | Función                                                                |
+| ----------------------------- | ---------------------------------------------------------------------- |
+| Sistema de paredes / cubierta | Reconstruir la casa con el perfil elegido                              |
+| Parámetros y fuentes          | Consultar valores, unidades, supuestos y fuentes censales              |
+| Velocidad / radio             | Ajustar viento de 60 a 280 km/h y campo de 4 a 12 m                    |
+| Refuerzo de uniones           | Multiplicar las capacidades base entre 50 y 200 %                      |
+| Iniciar / pausar o Espacio    | Controlar el tiempo                                                    |
+| Reiniciar o R                 | Reconstruir piezas, uniones y estadísticas, conservando los parámetros |
+| Vórtice / radio               | Cambiar ayudas gráficas, sin alterar la física                         |
+| Arrastrar / rueda / vistas    | Orbitar, acercar y elegir perspectiva, planta o frente                 |
+| Comparar perfiles             | Ejecutar 10, 20 o 30 segundos desde cero para cada perfil compatible   |
 
-Los atajos no interfieren con controles de formulario. Al cambiar de pestaña, la simulación se pausa para evitar saltos de tiempo.
+Los atajos no interfieren con formularios ni diálogos. Abrir un diálogo o cambiar de pestaña pausa el experimento interactivo. Los cambios de viento o refuerzo afectan las uniones aún intactas; reconstruir requiere reiniciar.
 
-## Modelo físico
+## Qué mide
 
-- Mundo con gravedad de 9,82 m/s² y un paso fijo de **1/60 s**, independiente de la frecuencia de renderizado. El tiempo acumulado por cuadro está limitado a 0,1 s para evitar inestabilidad; en dispositivos lentos puede avanzar más despacio que el reloj real.
-- Cuatro muros dinámicos de 800 kg por pieza. Suelos y contactos resueltos con `SAPBroadphase` y 15 iteraciones del solver.
-- 16 planchas de 0,8 kg dispuestas en dos aguas. Antes del desprendimiento son cuerpos estáticos que representan una fijación idealizada. Tras una sobrecarga sostenida de 0,12 s se convierten en cuerpos dinámicos.
-- Campo de viento móvil con una componente tangencial, una componente hacia el centro y succión vertical. Usa una presión proporcional a `0.5 × 1.225 × (velocidad / 3.6)²`, atenuada por la distancia radial.
-- La resistencia de fijación y el peso de la plancha determinan el desprendimiento. La carga sobre los muros se reduce explícitamente para conservar el comportamiento solicitado: pérdida de cubierta antes del vuelco de los muros.
-- Después de desprenderse, las planchas reciben fuerzas y momentos, caen por gravedad y colisionan con el suelo, los muros y otras planchas.
-- La fuerza se aplica antes de cada paso físico y el punto de aplicación es relativo al cuerpo.
+- Cubierta desprendida y número de piezas según el material.
+- Segmentos estructurales que perdieron conexión a la base.
+- Revestimientos o ventanas secundarias desprendidos, por separado de la estructura.
+- Uniones falladas y segmentos afectados por rotura de uniones estructurales.
+- Fachadas estables, desplazamiento e inclinación máximos de paredes.
+- Estado estructural simplificado, sin deducir colapso únicamente por perder el techo.
 
-**Alcance:** demostración educativa con coeficientes calibrados visualmente. No es un cálculo aerodinámico ni un análisis estructural. No modela anclajes de albañilería, deformaciones, rotura de materiales, presión interior ni interacción fluido-estructura. Los vanos de puertas y ventanas, frontones, tapajuntas, vegetación y cercos son decorativos, sin colisión propia. Las velocidades predefinidas no son categorías oficiales de intensidad. La masa de los muros y las cargas son parámetros ilustrativos, no valores certificados de una vivienda real.
+Una fachada es estable si sus tres segmentos siguen conectados a la base, se desplazan menos de 5 cm y se inclinan menos de 5°. Se muestra pérdida de soporte con dos o menos fachadas estables y colapso del modelo cuando al menos la mitad de los segmentos estructurales superan 45° de inclinación o descienden más de 0,8 m. Los máximos son observados durante toda la ejecución y se borran al reconstruir.
+
+## Física y alcance
+
+El motor usa un paso fijo de 1/120 s, gravedad de 9,82 m/s², un campo ilustrativo proporcional al cuadrado de la velocidad y arrastre que depende de la velocidad de los fragmentos. Las paredes reciben cargas según su orientación y superficie; se eliminó la reducción general utilizada en la versión inicial.
+
+Las uniones son enlaces rígidos idealizados entre base, segmentos de pared, cubierta y elementos secundarios. Una sobrecarga sostenida de 0,12 s rompe un enlace. Los segmentos sin camino a la base pasan a ser cuerpos dinámicos; las uniones aún intactas entre segmentos liberados se mantienen como restricciones rígidas Cannon-es. Las piezas de cubierta y revestimiento también pueden liberarse al perder sus apoyos. La losa se libera al quedar menos de tres de sus cuatro apoyos idealizados.
+
+**El censo aporta categorías; todas las masas, resistencias, geometrías y cargas son supuestos educativos.** No existe validación experimental ni cálculo continuo de tensiones, presión interior, deformaciones, armaduras o transferencia detallada de cargas entre elementos fijados. Las roturas de albañilería separan segmentos rígidos; los trazos de grietas son una representación esquemática de uniones falladas. Los vanos son visuales y los entramados usan colisionadores de caja, aunque su representación sea abierta. El piso y las fundaciones no se dañan. Una corrección de penetración protege el plano del suelo frente a fragmentos finos; no hay detección continua general de colisiones.
+
+El tiempo por cuadro se limita a 0,1 s para evitar acumulaciones inestables: un equipo lento puede avanzar más despacio que el reloj. La comparación corre en un Web Worker, siempre desde viviendas intactas, con idénticos viento, radio, refuerzo, trayectoria, dimensiones y duración. El cuadro interactivo no altera el cálculo comparativo. Se puede cancelar sin modificar el escenario.
+
+[Ver una captura del comparador](docs/comparacion.jpg).
+
+La comparación describe estos supuestos, no una clasificación real de seguridad de materiales ni una predicción de daños de una vivienda real.
+
+## Datos y documentación
+
+- [Categorías, fuentes y calibración del modelo](docs/modelo.md).
+- [Lista de tareas y ampliaciones posteriores](TODO.md).
+- [INE: glosario de vivienda del Censo 2024](https://censo2024.ine.gob.cl/wp-content/uploads/2025/05/Glosario_viviendas_y_servicios-basicos_CPV2024.pdf).
+- [INE: manual censal](https://censo2024.ine.gob.cl/wp-content/uploads/2025/03/Manual_Censal_CPV2024.pdf).
+- [INE: resultados, tabulados y microdatos](https://censo2024.ine.gob.cl/resultados/).
+
+No se cargan frecuencias nacionales, regionales ni de combinaciones de paredes y techo. La forma de la vivienda es ilustrativa: no reproduce una casa observada en el censo. Las categorías de materialidad aceptable/recuperable/irrecuperable tampoco se utilizan como resistencias al tornado.
 
 ## Estructura
 
 ```text
-index.html              Interfaz accesible en español
-src/main.js             Controles y bucle de tiempo fijo
-src/physics.js          Modelo Cannon-es independiente del navegador
-src/scene.js            Escena Three.js, vivienda y efectos procedurales
-src/style.css           Diseño adaptable a escritorio y móvil
-test/physics.test.js    Pruebas reproducibles del comportamiento físico
-.github/workflows/ci.yml  Pruebas y compilación en GitHub Actions
+src/catalog.js             Categorías censales, perfiles y parámetros con procedencia
+src/physics.js             Grafo de uniones, fuerzas, rotura, colisiones y métricas
+src/scene.js               Modelos y efectos Three.js; reconstrucción y liberación de GPU
+src/main.js                Selectores, diálogos y bucle de tiempo fijo
+src/comparison.js          Ejecuciones reproducibles independientes de la escena
+src/comparison.worker.js   Comparación en segundo plano y progreso
+src/style.css              Interfaz adaptable
+index.html                 Interfaz en español
+test/physics.test.js       Pruebas de comportamiento
+.github/workflows/ci.yml    Pruebas, compilación y artefacto dist en GitHub Actions
 ```
 
-## Distribuir
+## Distribución
 
-`npm run build` produce un sitio estático en `dist/`. La base relativa permite servirlo desde una subcarpeta, incluido GitHub Pages. Puedes publicar el contenido de esa carpeta en cualquier alojamiento estático. El repositorio incluye CI que comprueba cada cambio y guarda `dist` como artefacto; no activa un despliegue por sí solo.
+`npm run build` produce `dist/`, con rutas relativas para servir desde una subcarpeta, incluido GitHub Pages. El repositorio ejecuta pruebas y compilación en GitHub Actions y guarda el sitio como artefacto; no activa despliegue automáticamente.
 
-Los PDF originales utilizados como referencia permanecen fuera del control de versiones. `node_modules`, resultados compilados, temporales y variables de entorno también se excluyen.
+Los PDF originales de referencia, dependencias instaladas, archivos compilados, temporales y variables de entorno permanecen fuera del control de versiones.
 
-## Documentación de las bibliotecas
-
-- [Three.js](https://threejs.org/docs/)
-- [Cannon-es](https://pmndrs.github.io/cannon-es/docs/)
-- [Vite](https://vite.dev/guide/)
+Documentación de bibliotecas: [Three.js](https://threejs.org/docs/), [Cannon-es](https://pmndrs.github.io/cannon-es/docs/), [Vite](https://vite.dev/guide/).

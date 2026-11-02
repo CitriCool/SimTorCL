@@ -1,33 +1,48 @@
 import "./style.css";
-import { Simulation, FIXED_STEP, PRESETS } from "./physics.js";
+import { Simulation, FIXED_STEP } from "./physics.js";
+import { PROFILES, ROOFS, HOUSE, CENSUS, SOURCES, PRESETS } from "./catalog.js";
 import { SceneView } from "./scene.js";
 
 const $ = (id) => document.getElementById(id);
 const simulation = new Simulation();
-let view;
-let running = false;
-let accumulator = 0;
-let lastTime = null;
-let frame;
-let lastReadout = -1;
-const dialog = $("about-dialog");
+let view, frame, worker, comparisonConfig;
+let running = false,
+  accumulator = 0,
+  lastTime = null,
+  lastReadout = -1;
+const percent = (part, total) =>
+  total ? `${Math.round((part / total) * 100)}%` : "—";
+const number = (value) =>
+  value.toLocaleString("es-CL", { maximumFractionDigits: 2 });
 
 function updateReadout() {
-  const { detached, total, stable, elapsed } = simulation.stats;
-  const damage = Math.round((detached / total) * 100);
-  $("roof-count").textContent = detached;
-  $("damage-value").textContent = `${damage}%`;
-  $("damage-bar").style.width = `${damage}%`;
-  $("wall-count").textContent = stable;
-  $("wall-description").textContent =
-    stable === 4 ? "Estructura en equilibrio" : "Desplazamiento detectado";
-  const seconds = Math.floor(elapsed);
+  const s = simulation.stats;
+  $("roof-count").textContent = s.detached;
+  $("roof-total").textContent = `${s.total} ${simulation.roof.unit}`;
+  $("damage-value").textContent = percent(s.detached, s.total);
+  $("damage-bar").style.width = percent(s.detached, s.total);
+  $("wall-detached").textContent = s.wallDetached;
+  $("wall-total").textContent = s.wallTotal;
+  $("secondary-count").textContent = s.secondaryTotal
+    ? `${s.secondaryDetached}/${s.secondaryTotal} ${simulation.profile.id === "concrete" ? "ventanas desprendidas" : "revestimientos desprendidos"}`
+    : "Sin elementos secundarios separados";
+  $("wall-count").textContent = s.stable;
+  $("facade-total").textContent = s.facadeTotal;
+  $("wall-description").textContent = s.state;
+  $("wall-description").classList.toggle("damage-state", s.state !== "Estable");
+  $("connection-count").textContent = s.broken;
+  $("connection-total").textContent = s.connectionTotal;
+  $("wall-damage").textContent =
+    `${s.wallDamaged}/${s.wallTotal} paneles con uniones estructurales falladas`;
+  $("displacement").textContent = s.maxDisplacement.toFixed(2);
+  $("tilt").textContent = `Inclinación máx. ${s.maxTilt.toFixed(1)}°`;
+  const seconds = Math.floor(s.elapsed + 1e-8);
   $("elapsed").textContent =
     `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
 }
 
 function setRunning(value) {
-  if (!view) return;
+  if (!view || $("play").disabled) return;
   running = value;
   lastTime = null;
   $("status").classList.toggle("running", running);
@@ -46,12 +61,41 @@ function setRunning(value) {
   $("play").setAttribute("aria-pressed", String(running));
 }
 
-function reset() {
+function updateScenarioInfo() {
+  const { profile, roof } = simulation;
+  $("profile-title").textContent = profile.label;
+  $("profile-description").textContent = profile.description;
+  $("census-link").href = SOURCES.glossary.url;
+  $("census-link").textContent = `Censo 2024: ${profile.censusWall} ↗`;
+  $("floor-area").textContent = `${Math.round(HOUSE.width * HOUSE.depth)} m²`;
+  $("roof-spec").textContent = `${simulation.stats.total} ${roof.unit}`;
+  $("scene-label").textContent =
+    `${profile.label} + ${roof.label}`.toUpperCase();
+  $("scene").setAttribute(
+    "aria-label",
+    `Casa de ${profile.label.toLowerCase()} con ${roof.label.toLowerCase()} y tornado tridimensional`,
+  );
+  const options = Object.values(ROOFS).map((item) => {
+    const option = new Option(item.label, item.id);
+    option.disabled = !profile.roofs.includes(item.id);
+    return option;
+  });
+  $("roof").replaceChildren(...options);
+  $("roof").value = roof.id;
+  $("roof-description").textContent =
+    profile.family === "Estructura liviana"
+      ? "Losa no disponible en este perfil ilustrativo. Cambiar la selección reconstruye la vivienda."
+      : "Cambiar el sistema o la cubierta reconstruye el escenario.";
+}
+
+function reset(changes = {}) {
   setRunning(false);
-  simulation.reset();
+  simulation.reset(changes);
   accumulator = 0;
+  lastTime = null;
   lastReadout = -1;
-  view.sync();
+  view?.sync();
+  updateScenarioInfo();
   updateReadout();
   setRunning(false);
 }
@@ -64,17 +108,30 @@ function updateRange(id) {
     "--fill",
     `${((input.value - input.min) / (input.max - input.min)) * 100}%`,
   );
-  if (id === "wind") {
+  if (id === "wind")
     document.querySelectorAll("[data-preset]").forEach((button) => {
       const active = PRESETS[button.dataset.preset] === Number(input.value);
       button.classList.toggle("active", active);
       button.setAttribute("aria-pressed", String(active));
     });
-  }
   view?.sync();
 }
 
-for (const id of ["wind", "radius", "fastening"]) {
+$("profile").replaceChildren(
+  ...Object.values(PROFILES).map((p) => new Option(p.label, p.id)),
+);
+$("profile").value = simulation.config.profile;
+$("profile").addEventListener("change", () => {
+  const profile = PROFILES[$("profile").value];
+  reset({
+    profile: profile.id,
+    roof: profile.roofs.includes(simulation.config.roof)
+      ? simulation.config.roof
+      : profile.defaultRoof,
+  });
+});
+$("roof").addEventListener("change", () => reset({ roof: $("roof").value }));
+for (const id of ["wind", "radius", "reinforcement"]) {
   $(id).addEventListener("input", () => updateRange(id));
   updateRange(id);
 }
@@ -85,7 +142,7 @@ document.querySelectorAll("[data-preset]").forEach((button) =>
   }),
 );
 $("play").addEventListener("click", () => setRunning(!running));
-$("reset").addEventListener("click", () => view && reset());
+$("reset").addEventListener("click", () => reset());
 $("show-tornado").addEventListener("change", (event) => {
   if (view) view.vortex.visible = event.target.checked;
 });
@@ -101,20 +158,220 @@ document.querySelectorAll("[data-view]").forEach((button) =>
     });
   }),
 );
-$("about-button").addEventListener("click", () => dialog.showModal());
-$("close-about").addEventListener("click", () => dialog.close());
-dialog.addEventListener("click", (event) => {
-  if (event.target !== dialog) return;
-  const bounds = dialog.getBoundingClientRect();
-  if (
-    event.clientX < bounds.left || event.clientX > bounds.right ||
-    event.clientY < bounds.top || event.clientY > bounds.bottom
-  ) dialog.close();
+
+function showDialog(id) {
+  setRunning(false);
+  $(id).showModal();
+}
+$("about-button").addEventListener("click", () => showDialog("about-dialog"));
+$("close-about").addEventListener("click", () => $("about-dialog").close());
+for (const dialog of document.querySelectorAll("dialog"))
+  dialog.addEventListener("click", (event) => {
+    if (event.target !== dialog) return;
+    const bounds = dialog.getBoundingClientRect();
+    if (
+      event.clientX < bounds.left ||
+      event.clientX > bounds.right ||
+      event.clientY < bounds.top ||
+      event.clientY > bounds.bottom
+    )
+      dialog.close();
+  });
+
+$("parameters-button").addEventListener("click", () => {
+  const { profile, roof, config } = simulation;
+  $("census-description").textContent =
+    `Tipo representado: casa con acceso directo. Paredes: ${profile.censusWall}. Cubierta: ${roof.censusRoof}. ${CENSUS.scope}`;
+  $("calibration-description").textContent = CENSUS.physicalProvenance;
+  const rows = [
+    ["Perfil ilustrativo", profile.label, "Catálogo SimTorCL"],
+    [
+      "Dimensiones",
+      `${HOUSE.width} × ${HOUSE.depth} × ${HOUSE.height} m`,
+      "Supuesto educativo",
+    ],
+    [
+      "Masa superficial de paredes",
+      `${number(profile.arealMass)} kg/m²`,
+      "Supuesto educativo",
+    ],
+    [
+      "Espesor de paredes",
+      `${number(profile.thickness)} m`,
+      "Supuesto educativo",
+    ],
+    [
+      "Capacidad base de uniones de muro",
+      `${number(profile.jointPressure)} N/m²`,
+      "Supuesto educativo",
+    ],
+    [
+      "Masa superficial de cubierta",
+      `${number(roof.arealMass)} kg/m²`,
+      "Supuesto educativo",
+    ],
+    [
+      "Capacidad base de fijación de cubierta",
+      `${number(roof.fixingPressure)} N/m²`,
+      "Supuesto educativo",
+    ],
+    [
+      "Refuerzo aplicado",
+      `${config.reinforcement} %`,
+      "Control del experimento",
+    ],
+    [
+      "Base común",
+      "Plano estático; piso sin daño",
+      "Simplificación geométrica",
+    ],
+    ["Modo de daño", profile.failure, "Modelo simplificado"],
+  ];
+  if (profile.claddingPressure)
+    rows.splice(5, 0, [
+      "Capacidad de elementos secundarios",
+      `${number(profile.claddingPressure)} N/m²`,
+      "Supuesto educativo",
+    ]);
+  $("parameter-values").replaceChildren(
+    ...rows.map(([name, value, origin]) => {
+      const row = document.createElement("tr"),
+        th = document.createElement("th");
+      th.scope = "row";
+      th.textContent = name;
+      row.append(th);
+      for (const text of [value, origin]) {
+        const td = document.createElement("td");
+        td.textContent = text;
+        row.append(td);
+      }
+      return row;
+    }),
+  );
+  $("source-links").replaceChildren(
+    ...Object.values(SOURCES).map((source) => {
+      const a = document.createElement("a");
+      a.href = source.url;
+      a.target = "_blank";
+      a.rel = "noreferrer";
+      a.textContent = `${source.title} ↗ · consulta ${source.consulted}`;
+      return a;
+    }),
+  );
+  showDialog("parameters-dialog");
 });
+$("close-parameters").addEventListener("click", () =>
+  $("parameters-dialog").close(),
+);
+
+function finishComparison(message) {
+  worker?.terminate();
+  worker = null;
+  $("run-comparison").disabled = false;
+  $("comparison-duration").disabled = false;
+  $("cancel-comparison").hidden = true;
+  $("comparison-progress").textContent = message;
+}
+function renderComparison(results) {
+  const rows = results.map((result) => {
+    const row = document.createElement("tr"),
+      heading = document.createElement("th");
+    heading.scope = "row";
+    heading.textContent = PROFILES[result.profile].label;
+    row.append(heading);
+    if (result.unavailable) {
+      const td = document.createElement("td");
+      td.colSpan = 6;
+      td.textContent = "Combinación no disponible en este catálogo.";
+      row.append(td);
+      return row;
+    }
+    const s = result.stats;
+    const values = [
+      `${s.detached}/${s.total} · ${percent(s.detached, s.total)}`,
+      `${s.wallDetached}/${s.wallTotal}`,
+      s.secondaryTotal
+        ? `${s.secondaryDetached}/${s.secondaryTotal}`
+        : "No aplica",
+      `${s.broken}/${s.connectionTotal}`,
+      `${s.maxDisplacement.toFixed(2)} m / ${s.maxTilt.toFixed(1)}°`,
+      s.state,
+    ];
+    for (const value of values) {
+      const td = document.createElement("td");
+      td.textContent = value;
+      row.append(td);
+    }
+    return row;
+  });
+  $("comparison-results").replaceChildren(...rows);
+}
+$("compare-button").addEventListener("click", () => {
+  comparisonConfig = { ...simulation.config };
+  $("comparison-conditions").textContent =
+    `${ROOFS[comparisonConfig.roof].label} · ${comparisonConfig.wind} km/h · radio ${comparisonConfig.radius} m · refuerzo ${comparisonConfig.reinforcement} %. Trayectoria orbital idéntica y arranque sin daños.`;
+  $("comparison-results").replaceChildren();
+  $("comparison-progress").textContent =
+    "Cada ejecución comienza con las viviendas intactas.";
+  showDialog("comparison-dialog");
+});
+$("run-comparison").addEventListener("click", () => {
+  if (worker) return;
+  $("run-comparison").disabled = true;
+  $("comparison-duration").disabled = true;
+  $("cancel-comparison").hidden = false;
+  $("comparison-results").replaceChildren();
+  $("comparison-progress").textContent = "Calculando perfiles…";
+  try {
+    const current = new Worker(
+      new URL("./comparison.worker.js", import.meta.url),
+      { type: "module" },
+    );
+    worker = current;
+    current.onmessage = ({ data }) => {
+      if (worker !== current) return;
+      if (data.type === "progress")
+        $("comparison-progress").textContent =
+          `${data.completed}/4 perfiles procesados · ${PROFILES[data.profile].label}`;
+      if (data.type === "complete") {
+        renderComparison(data.results);
+        finishComparison(
+          "Comparación terminada. El experimento interactivo conserva su estado.",
+        );
+      }
+      if (data.type === "error")
+        finishComparison(
+          `No se pudo completar la comparación: ${data.message}`,
+        );
+    };
+    current.onerror = () => {
+      if (worker === current)
+        finishComparison(
+          "No se pudo iniciar el cálculo. Puedes volver a intentarlo.",
+        );
+    };
+    current.postMessage({
+      config: comparisonConfig,
+      seconds: Number($("comparison-duration").value),
+    });
+  } catch {
+    finishComparison("No se pudo iniciar el cálculo en segundo plano.");
+  }
+});
+$("cancel-comparison").addEventListener("click", () =>
+  finishComparison("Comparación cancelada. Puedes ejecutarla de nuevo."),
+);
+$("close-comparison").addEventListener("click", () =>
+  $("comparison-dialog").close(),
+);
+$("comparison-dialog").addEventListener("close", () => {
+  if (worker) finishComparison("Comparación cancelada al cerrar.");
+});
+
 window.addEventListener("keydown", (event) => {
   if (
-    event.target.matches("input, button, a, textarea, select") ||
-    dialog.open ||
+    event.target.matches("input,button,a,textarea,select") ||
+    document.querySelector("dialog[open]") ||
     event.ctrlKey ||
     event.altKey ||
     event.metaKey
@@ -129,7 +386,6 @@ window.addEventListener("keydown", (event) => {
 document.addEventListener("visibilitychange", () => {
   if (document.hidden && running) setRunning(false);
 });
-
 function animate(now) {
   frame = requestAnimationFrame(animate);
   const dt = lastTime === null ? 0 : Math.min((now - lastTime) / 1000, 0.1);
@@ -148,35 +404,34 @@ function animate(now) {
   }
   view.render();
 }
-
+updateScenarioInfo();
+updateReadout();
 try {
   view = new SceneView($("scene"), simulation);
   $("loading").hidden = true;
   frame = requestAnimationFrame(animate);
-  updateReadout();
 } catch (error) {
   $("loading").hidden = true;
   $("error").hidden = false;
   $("error").textContent =
-    "No fue posible iniciar la escena 3D. Usa un navegador con WebGL 2 y aceleración gráfica activada. Puedes recargar para intentarlo de nuevo.";
+    "No fue posible iniciar la escena 3D. Usa un navegador con WebGL 2 y aceleración gráfica activada.";
   $("play").disabled = true;
   $("reset").disabled = true;
   console.error("No se pudo iniciar SimTorCL:", error);
 }
-
 $("scene").addEventListener("webglcontextlost", (event) => {
   event.preventDefault();
   setRunning(false);
   cancelAnimationFrame(frame);
   $("error").hidden = false;
   $("error").textContent =
-    "Se perdió la conexión con la GPU. Recarga la página para reconstruir el escenario.";
+    "Se perdió la conexión con la GPU. Recarga para reconstruir el escenario.";
   $("play").disabled = true;
   $("reset").disabled = true;
 });
-
 if (import.meta.hot)
   import.meta.hot.dispose(() => {
     cancelAnimationFrame(frame);
+    worker?.terminate();
     view?.dispose();
   });

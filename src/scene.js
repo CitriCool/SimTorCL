@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+import { HOUSE, roofHeightAt } from "./catalog.js";
 
 function randomGenerator(seed) {
   return () => {
@@ -238,97 +239,150 @@ export class SceneView {
   }
 
   createHouse() {
-    const brick = this.material("#e6d5ba", {
-      map: this.createBrickTexture(),
-      roughness: 0.95,
+    if (this.houseRoot) {
+      this.scene.remove(this.houseRoot);
+      this.disposeObject(this.houseRoot);
+    }
+    this.meshes.clear();
+    this.houseRoot = new THREE.Group();
+    this.houseRevision = this.simulation.revision;
+    this.scene.add(this.houseRoot);
+    const { profile, roof } = this.simulation;
+    const wallMaterial = this.material(
+      profile.color,
+      profile.id === "masonry" ? { map: this.createBrickTexture() } : {},
+    );
+    const roofMaterial = this.material(roof.color, {
+      metalness: roof.id === "metal" ? 0.55 : 0.05,
+      roughness: 0.7,
     });
-    const metal = this.material("#8daba8", { metalness: 0.55, roughness: 0.5 });
-    const ribs = this.material("#b4c5b8", { metalness: 0.55, roughness: 0.4 });
+    const ribs = this.material(roof.id === "tile" ? "#bf8961" : "#b4c5b8", {
+      metalness: roof.id === "metal" ? 0.5 : 0,
+    });
     const trim = this.material("#d9d3b7");
-    const window = this.material("#9ba996", {
+    const glass = this.material("#819e98", {
       metalness: 0.35,
       roughness: 0.3,
-      emissive: "#8d7a47",
+      emissive: "#716342",
       emissiveIntensity: 0.2,
     });
+    const dark = this.material("#405e59");
     for (const piece of this.simulation.pieces) {
       const group = new THREE.Group();
-      this.box(
-        piece.size,
-        [0, 0, 0],
-        piece.kind === "wall" ? brick : metal,
-        group,
-      );
+      const [w, h, d] = piece.size;
       if (piece.kind === "roof") {
-        for (let i = 0; i < 9; i++) {
-          this.box(
-            [piece.size[0], 0.035, 0.026],
-            [0, 0.037, (i - 4) * 0.208],
-            ribs,
-            group,
-          );
+        this.box(piece.size, [0, 0, 0], roofMaterial, group);
+        if (roof.id === "metal" || roof.id === "fiber") {
+          const count = roof.id === "metal" ? 8 : 5;
+          for (let i = 0; i < count; i++)
+            this.box(
+              [w, 0.03, 0.026],
+              [0, h / 2 + 0.015, ((i - (count - 1) / 2) * d) / count],
+              ribs,
+              group,
+            );
+        } else if (roof.id === "tile") {
+          for (let i = 0; i < 3; i++)
+            this.box(
+              [w, 0.025, 0.035],
+              [0, h / 2 + 0.015, ((i - 1) * d) / 3],
+              ribs,
+              group,
+            );
+          this.box([0.03, 0.02, d], [0, h / 2 + 0.02, 0], ribs, group);
+        } else {
+          this.box([w, 0.15, 0.07], [0, h / 2 + 0.075, d / 2], trim, group);
+          this.box([w, 0.15, 0.07], [0, h / 2 + 0.075, -d / 2], trim, group);
+          this.box([0.07, 0.15, d], [-w / 2, h / 2 + 0.075, 0], trim, group);
+          this.box([0.07, 0.15, d], [w / 2, h / 2 + 0.075, 0], trim, group);
         }
-      } else if (piece.details.front) {
-        this.box([1.03, 2.17, 0.065], [0.65, -0.41, 0.16], trim, group);
-        this.box(
-          [0.87, 2.03, 0.075],
-          [0.65, -0.45, 0.195],
-          this.material("#405e59"),
+      } else if (piece.kind === "wall" && piece.details.framed) {
+        // Open visual frame, coarse box collider documented in the model notes.
+        for (const x of [-w / 2 + 0.045, 0, w / 2 - 0.045])
+          this.box([0.09, h, 0.09], [x, 0, 0], wallMaterial, group);
+        for (const y of [-h / 2 + 0.045, h / 2 - 0.045])
+          this.box([w, 0.09, 0.09], [0, y, 0], wallMaterial, group);
+        const brace = this.box(
+          [0.07, Math.hypot(h - 0.15, w - 0.15), 0.07],
+          [0, 0, 0],
+          wallMaterial,
           group,
         );
-        this.box(
-          [0.05, 0.12, 0.04],
-          [0.96, -0.4, 0.25],
-          this.material("#c6af72"),
-          group,
+        brace.rotation.z = Math.atan2(w - 0.15, h - 0.15);
+      } else if (piece.kind === "cladding" && piece.details.secondary) {
+        this.box(piece.size, [0, 0, 0], glass, group);
+        for (const x of [-w / 2, w / 2])
+          this.box([0.06, h + 0.1, 0.07], [x, 0, 0.02], trim, group);
+        for (const y of [-h / 2, h / 2])
+          this.box([w, 0.06, 0.07], [0, y, 0.02], trim, group);
+        this.box([0.04, h, 0.06], [0, 0, 0.04], trim, group);
+      } else {
+        this.box(piece.size, [0, 0, 0], wallMaterial, group);
+        if (piece.kind === "cladding") {
+          const groove = this.material(
+            profile.id === "timber" ? "#756d51" : "#889c99",
+          );
+          for (let y = -h / 2 + 0.2; y < h / 2; y += 0.24)
+            this.box([w, 0.012, 0.009], [0, y, d / 2 + 0.005], groove, group);
+        }
+      }
+      const decorated =
+        (piece.kind === "wall" &&
+          !piece.details.framed &&
+          profile.id !== "concrete") ||
+        (piece.kind === "cladding" && !piece.details.secondary);
+      const door = piece.details.front && piece.details.bay === 1;
+      if (
+        decorated ||
+        (piece.kind === "wall" && profile.id === "concrete" && door)
+      ) {
+        if (door) {
+          this.box([1.04, 2.18, 0.055], [0, -0.4, d / 2 + 0.035], trim, group);
+          this.box([0.89, 2.04, 0.06], [0, -0.44, d / 2 + 0.07], dark, group);
+          this.box([0.05, 0.1, 0.04], [0.32, -0.35, d / 2 + 0.12], trim, group);
+        } else this.addWindow(group, 0, 0.2, d / 2 + 0.035, trim, glass);
+      }
+      if (piece.kind === "wall") {
+        const points = [];
+        for (let i = 0; i < 10; i++)
+          points.push(
+            new THREE.Vector3(
+              (i % 2 ? 0.1 : -0.08) + w * 0.35,
+              -h / 2 + (i * h) / 9,
+              d / 2 + 0.025,
+            ),
+          );
+        const crack = new THREE.Line(
+          new THREE.BufferGeometry().setFromPoints(points),
+          new THREE.LineBasicMaterial({ color: "#3c2d23" }),
         );
-        this.addWindow(group, -1.55, 0.25, 0.17, trim, window);
-        this.box(
-          [1.3, 0.16, 0.7],
-          [0.65, -1.43, 0.4],
-          this.material("#9a9e89"),
-          group,
-        );
-      } else if (piece.details.side) {
-        // Rotate a window unit onto the east facade.
-        for (const z of [-1.5, 1.5]) {
-          const windowGroup = new THREE.Group();
-          windowGroup.rotation.y = Math.PI / 2;
-          windowGroup.position.set(0.18, 0.2, z);
-          this.addWindow(windowGroup, 0, 0, 0, trim, window);
-          group.add(windowGroup);
+        crack.visible = false;
+        group.add(crack);
+        group.userData.damageLine = crack;
+        if (roof.id !== "slab" && [0, 2].includes(piece.details.facade)) {
+          const worldX = (local) =>
+            piece.origin.x + Math.cos(piece.details.angle) * local;
+          const top = (local) => roofHeightAt(worldX(local)) - piece.origin.y;
+          const shape = new THREE.Shape();
+          shape.moveTo(-w / 2, h / 2);
+          shape.lineTo(w / 2, h / 2);
+          shape.lineTo(w / 2, top(w / 2));
+          // Include the ridge in the middle bay.
+          if (piece.details.bay === 1) shape.lineTo(0, top(0));
+          shape.lineTo(-w / 2, top(-w / 2));
+          shape.closePath();
+          const gable = new THREE.Mesh(
+            new THREE.ShapeGeometry(shape),
+            this.material("#bcb499", { side: THREE.DoubleSide }),
+          );
+          gable.position.z = d / 2;
+          gable.castShadow = true;
+          group.add(gable);
         }
       }
       this.meshes.set(piece, group);
-      this.scene.add(group);
+      this.houseRoot.add(group);
     }
-    // Gables and ridge cap are decorative parts of the roof structure.
-    const shape = new THREE.Shape();
-    shape.moveTo(-3.3, 3.03);
-    shape.lineTo(3.3, 3.03);
-    shape.lineTo(0, 4.27);
-    shape.closePath();
-    for (const z of [-3.22, 3.22]) {
-      const mesh = new THREE.Mesh(
-        new THREE.ShapeGeometry(shape),
-        this.material("#bcb499", { side: THREE.DoubleSide }),
-      );
-      mesh.position.z = z;
-      mesh.castShadow = true;
-      this.scene.add(mesh);
-      for (let x = -2.5; x <= 2.5; x += 0.25) {
-        const height = 1.21 - Math.abs(x) * 0.36;
-        this.box(
-          [0.024, height, 0.03],
-          [x, 3.03 + height / 2, z + Math.sign(z) * 0.01],
-          trim,
-        );
-      }
-    }
-    this.box([0.11, 0.07, 7.7], [0, 4.38, 0], trim);
-    this.box([0.12, 0.12, 7.5], [-3.55, 3.06, 0], trim);
-    this.box([0.12, 0.12, 7.5], [3.55, 3.06, 0], trim);
-    // Survey corners identify the subject of the experiment.
     const marking = this.material("#b1c7ab", {
       emissive: "#5b7d68",
       emissiveIntensity: 0.3,
@@ -339,13 +393,32 @@ export class SceneView {
           [0.8, 0.02, 0.045],
           [x - Math.sign(x) * 0.35, 0.035, z],
           marking,
+          this.houseRoot,
         );
         this.box(
           [0.045, 0.02, 0.8],
           [x, 0.035, z - Math.sign(z) * 0.35],
           marking,
+          this.houseRoot,
         );
       }
+  }
+
+  disposeObject(root) {
+    const geometries = new Set(),
+      materials = new Set(),
+      textures = new Set();
+    root.traverse((object) => {
+      if (object.geometry) geometries.add(object.geometry);
+      for (const material of [object.material].flat().filter(Boolean)) {
+        materials.add(material);
+        for (const value of Object.values(material))
+          if (value?.isTexture) textures.add(value);
+      }
+    });
+    geometries.forEach((value) => value.dispose());
+    materials.forEach((value) => value.dispose());
+    textures.forEach((value) => value.dispose());
   }
 
   addWindow(parent, x, y, z, trim, glass) {
@@ -507,9 +580,12 @@ export class SceneView {
   }
 
   sync() {
+    if (this.houseRevision !== this.simulation.revision) this.createHouse();
     for (const [piece, mesh] of this.meshes) {
       mesh.position.copy(piece.body.position);
       mesh.quaternion.copy(piece.body.quaternion);
+      if (mesh.userData.damageLine)
+        mesh.userData.damageLine.visible = piece.damage > 0;
     }
     const center = this.simulation.center;
     this.vortex.position.set(center.x, 0, center.z);

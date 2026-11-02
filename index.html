@@ -22,7 +22,7 @@
             stroke-linecap="round"
           /></svg
         ><span>SimTor<span class="brand-accent">CL</span></span
-        ><span class="version">LAB / 01</span></a
+        ><span class="version">LAB / 02</span></a
       >
       <nav aria-label="Principal">
         <span class="nav-active">Simulador</span
@@ -49,7 +49,7 @@
         <div class="eyebrow">
           <span class="tiny-cross">+</span> LABORATORIO INTERACTIVO
         </div>
-        <h1>La fuerza del viento.<br /><span>Su impacto real.</span></h1>
+        <h1>La fuerza del viento.<br /><span>Explora sus efectos.</span></h1>
         <p class="intro">
           Explora la respuesta de una vivienda chilena ante un tornado.
         </p>
@@ -59,18 +59,34 @@
             <h2><span>01</span> Escenario</h2>
             <span class="small-label">VIVIENDA</span>
           </div>
+          <label class="field-label" for="profile">Sistema de paredes</label>
+          <select id="profile" aria-describedby="profile-description"></select>
+          <label class="field-label" for="roof">Cubierta del techo</label>
+          <select id="roof" aria-describedby="roof-description"></select>
+          <p class="selection-note" id="roof-description">
+            Cambiar el sistema o la cubierta reconstruye el escenario.
+          </p>
           <div class="house-card">
             <div class="house-icon" aria-hidden="true">⌂</div>
             <div>
-              <strong>Casa de albañilería</strong>
-              <p>Muros pesados · Cubierta de zinc</p>
+              <strong id="profile-title"></strong>
+              <p id="profile-description"></p>
             </div>
-            <span class="selected-dot"></span>
           </div>
+          <a
+            class="census-link"
+            id="census-link"
+            target="_blank"
+            rel="noreferrer"
+            >Categoría del Censo 2024 ↗</a
+          >
           <div class="spec-row">
-            <span>Superficie <b>41 m²</b></span
-            ><span>Cubierta <b>16 planchas</b></span>
+            <span>Superficie <b id="floor-area"></b></span
+            ><span>Cubierta <b id="roof-spec"></b></span>
           </div>
+          <button class="details-button" id="parameters-button">
+            Parámetros y fuentes ↗
+          </button>
         </section>
 
         <section class="control-section wind-controls">
@@ -117,24 +133,28 @@
             value="8"
           />
           <div class="range-ticks"><span>4 m</span><span>12 m</span></div>
-          <label class="range-label" for="fastening"
-            >Resistencia de las fijaciones
+          <label class="range-label" for="reinforcement"
+            >Refuerzo de uniones
             <span
-              ><output id="fastening-value" for="fastening">55</output>
-              <small>N</small></span
+              ><output id="reinforcement-value" for="reinforcement">100</output>
+              <small>%</small></span
             ></label
           >
           <input
-            id="fastening"
+            id="reinforcement"
             type="range"
-            min="20"
-            max="160"
-            step="5"
-            value="55"
+            min="50"
+            max="200"
+            step="10"
+            value="100"
           />
           <div class="range-ticks">
-            <span>Débil</span><span>Reforzada</span>
+            <span>50 % · más débil</span><span>200 % · reforzada</span>
           </div>
+          <p class="selection-note">
+            Factor aplicado a las capacidades ilustrativas de las uniones de
+            techo, muros y revestimientos.
+          </p>
         </section>
 
         <section class="control-section visual-controls">
@@ -197,7 +217,7 @@
           <div class="scene-caption">
             <span class="caption-line"></span
             ><span
-              ><b>ALBAÑILERÍA + ZINC</b
+              ><b id="scene-label">ALBAÑILERÍA + ZINC</b
               ><small>Escenario modular · Escala métrica</small></span
             >
           </div>
@@ -250,30 +270,60 @@
             >
             <div>
               <strong id="roof-count">0</strong
-              ><span class="metric-total">/ 16 <small>planchas</small></span
+              ><span class="metric-total">/ <span id="roof-total"></span></span
               ><span class="metric-percentage" id="damage-value">0%</span>
             </div>
             <div class="damage-track"><span id="damage-bar"></span></div>
           </div>
           <div class="metric">
+            <span class="metric-label">PAREDES SIN SOPORTE</span>
+            <div>
+              <strong id="wall-detached">0</strong
+              ><span class="metric-total"
+                >/ <span id="wall-total"></span> <small>paneles</small></span
+              >
+            </div>
+            <span class="metric-foot" id="secondary-count"></span>
+          </div>
+          <div class="metric">
             <span class="metric-label"
-              ><span class="metric-dot teal"></span> ESTABILIDAD DE MUROS</span
+              ><span class="metric-dot teal"></span> FACHADAS ESTABLES</span
             >
             <div>
               <strong id="wall-count">4</strong
-              ><span class="metric-total">/ 4 <small>estables</small></span>
+              ><span class="metric-total"
+                >/ <span id="facade-total">4</span></span
+              >
             </div>
-            <span class="metric-foot" id="wall-description"
-              >Estructura en equilibrio</span
+            <span class="metric-foot" id="wall-description">Estable</span>
+          </div>
+          <div class="metric">
+            <span class="metric-label">UNIONES FALLADAS</span>
+            <div>
+              <strong id="connection-count">0</strong
+              ><span class="metric-total"
+                >/ <span id="connection-total"></span
+              ></span>
+            </div>
+            <span class="metric-foot" id="wall-damage"
+              >Sin rotura estructural</span
             >
           </div>
-          <div class="metric time-metric">
+          <div class="metric">
+            <span class="metric-label">MOVIMIENTO MÁX. DE MUROS</span>
+            <div>
+              <strong class="compact-value" id="displacement">0.00</strong
+              ><span class="metric-total">m</span>
+            </div>
+            <span class="metric-foot" id="tilt">Inclinación máx. 0.0°</span>
+          </div>
+          <div class="metric">
             <span class="metric-label">TIEMPO DE SIMULACIÓN</span>
             <div>
               <strong id="elapsed">00:00</strong
               ><span class="metric-total">s</span>
             </div>
-            <span class="metric-foot">Paso físico fijo · 60 Hz</span>
+            <span class="metric-foot">Paso fijo · 120 Hz</span>
           </div>
         </div>
         <div class="transport">
@@ -289,50 +339,151 @@
               <span>↺</span> Reiniciar
             </button>
           </div>
-          <div class="transport-hint"><kbd>ESPACIO</kbd> iniciar / pausar</div>
+          <button class="reset-button compare-open" id="compare-button">
+            Comparar perfiles ↗
+          </button>
         </div>
         <footer class="scene-footer">
           <span
             ><span class="footer-dot"></span> MOTOR FÍSICO ACTIVO
             <i>/</i> THREE.JS + CANNON-ES</span
-          ><span>SimTorCL <b>v1.0</b></span>
+          ><span>SimTorCL <b>v2.0</b></span>
         </footer>
       </section>
     </main>
 
     <dialog id="about-dialog" aria-labelledby="about-title">
-      <button id="close-about" class="dialog-close" aria-label="Cerrar">
+      <button
+        id="close-about"
+        class="dialog-close"
+        aria-label="Cerrar explicación"
+      >
         ×
       </button>
       <div class="eyebrow">DETRÁS DEL EXPERIMENTO</div>
-      <h2 id="about-title">Un laboratorio para explorar.</h2>
+      <h2 id="about-title">Cubierta, paredes y soporte.</h2>
       <p>
-        SimTorCL representa una vivienda de albañilería con 16 planchas de zinc
-        y un campo de viento giratorio en movimiento.
+        El catálogo distingue albañilería, entramado de madera o acero y
+        hormigón armado, a partir de categorías del Censo 2024. Las dos
+        variantes de entramado comparten categoría censal.
       </p>
       <p>
-        La succión y el arrastre aumentan con el cuadrado de la velocidad. Las
-        planchas se liberan cuando la carga supera la resistencia de sus
-        fijaciones; después responden a la gravedad, el viento y las colisiones.
-        Los muros tienen una masa de 800 kg por pieza y reciben una carga de
-        viento reducida.
+        Las piezas están fijadas por una red de uniones rígidas idealizadas. Una
+        sobrecarga sostenida de 0,12 s rompe una unión. Cuando un panel pierde
+        toda conexión con la base se libera; la cubierta y los revestimientos
+        también pueden perder sus apoyos. Después se simulan gravedad, giro,
+        arrastre y colisiones.
       </p>
       <p>
-        El vórtice visible es una ayuda gráfica: puedes ocultarlo sin cambiar
-        las fuerzas. Cambiar la resistencia afecta las fijaciones que aún están
-        intactas. Reinicia para reconstruir la vivienda.
+        La albañilería se divide en segmentos rígidos: los trazos de rotura
+        representan esquemáticamente uniones falladas, sin calcular
+        microgrietas. En entramados se separan revestimiento y estructura. En
+        hormigón se distinguen ventanas secundarias y estructura; no se modela
+        la deformación del hormigón ni de sus armaduras.
+      </p>
+      <p>
+        Una fachada es estable si todos sus paneles conservan conexión a la
+        base, se desplazan menos de 5 cm y se inclinan menos de 5°. Se indica
+        colapso del modelo si al menos la mitad de los paneles estructurales
+        superan 45° de inclinación o bajan más de 0,8 m. La pérdida de cubierta
+        por sí sola no determina colapso.
       </p>
       <div class="model-notice">
-        Es una demostración educativa. Los parámetros son ilustrativos y no
-        sustituyen un análisis de ingeniería ni representan categorías oficiales
-        de tornados.
+        El censo aporta categorías, no resistencias. Las masas, capacidades y
+        cargas son supuestos educativos, sin validación experimental. No hay
+        cálculo continuo de tensiones, presión interior ni transferencia
+        detallada de cargas entre elementos fijados.
       </div>
-      <a
-        href="https://github.com/CitriCool/SimTorCL"
-        target="_blank"
-        rel="noreferrer"
-        >Explorar el código en GitHub ↗</a
+      <p>
+        Ocultar vórtice o radio no modifica la física. Espacio inicia o pausa; R
+        reconstruye. Las comparaciones ejecutan el mismo escenario y duración en
+        cada perfil.
+      </p>
+    </dialog>
+    <dialog id="parameters-dialog" aria-labelledby="parameters-title">
+      <button
+        id="close-parameters"
+        class="dialog-close"
+        aria-label="Cerrar parámetros"
       >
+        ×
+      </button>
+      <div class="eyebrow">PROCEDENCIA DE LOS DATOS</div>
+      <h2 id="parameters-title">Parámetros y fuentes</h2>
+      <p id="census-description"></p>
+      <p id="calibration-description"></p>
+      <div class="table-scroll">
+        <table class="parameter-table">
+          <caption>
+            Valores del escenario seleccionado
+          </caption>
+          <tbody id="parameter-values"></tbody>
+        </table>
+      </div>
+      <p class="selection-note">
+        El refuerzo multiplica capacidades base. La masa de cada pieza es su
+        superficie por la masa superficial. El espesor visible de las planchas
+        también facilita la detección de colisiones.
+      </p>
+      <div class="source-links" id="source-links"></div>
+    </dialog>
+    <dialog
+      id="comparison-dialog"
+      class="comparison-dialog"
+      aria-labelledby="comparison-title"
+    >
+      <button
+        id="close-comparison"
+        class="dialog-close"
+        aria-label="Cerrar comparación"
+      >
+        ×
+      </button>
+      <div class="eyebrow">MISMO VIENTO · MISMA GEOMETRÍA · MISMO TIEMPO</div>
+      <h2 id="comparison-title">Comparar perfiles</h2>
+      <p id="comparison-conditions"></p>
+      <div class="comparison-controls">
+        <label for="comparison-duration"
+          >Duración simulada
+          <select id="comparison-duration">
+            <option value="10">10 segundos</option>
+            <option value="20" selected>20 segundos</option>
+            <option value="30">30 segundos</option>
+          </select></label
+        ><button class="primary-button" id="run-comparison">
+          Ejecutar comparación</button
+        ><button class="reset-button" id="cancel-comparison" hidden>
+          Cancelar
+        </button>
+      </div>
+      <p id="comparison-progress" role="status">
+        Cada ejecución comienza con las viviendas intactas.
+      </p>
+      <div class="table-scroll">
+        <table class="comparison-table">
+          <caption>
+            Daño al finalizar; movimiento máximo durante la ejecución
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Perfil</th>
+              <th scope="col">Cubierta</th>
+              <th scope="col">Paredes sin soporte</th>
+              <th scope="col">Secundarios</th>
+              <th scope="col">Uniones falladas</th>
+              <th scope="col">Despl. / inclinación máx.</th>
+              <th scope="col">Estado estructural</th>
+            </tr>
+          </thead>
+          <tbody id="comparison-results"></tbody>
+        </table>
+      </div>
+      <p class="selection-note">
+        Las piezas y sus propiedades son discretizaciones educativas. La
+        comparación no establece una clasificación real de seguridad entre
+        materiales. La losa solo está disponible con albañilería u hormigón en
+        este catálogo.
+      </p>
     </dialog>
     <script type="module" src="/src/main.js"></script>
   </body>
