@@ -1,3 +1,4 @@
+import { ENV_LABELS } from "./environment.js";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { HOUSE, roofHeightAt } from "./catalog.js";
@@ -346,6 +347,55 @@ export class SceneView {
       root.add(this.houseRoot);
       for (const entry of this.meshes) meshes.set(...entry);
     }
+    for (const piece of experiment.environment?.pieces ?? []) {
+      const material = this.material(
+        piece.kind === "crown"
+          ? "#7a9d67"
+          : piece.kind === "core"
+            ? "#77867f"
+            : piece.kind === "facade"
+              ? "#c0b79a"
+              : piece.kind === "window"
+                ? "#719d9f"
+                : "#947451",
+      );
+      const group = new THREE.Group();
+      let mesh;
+      if (piece.shape === "cylinder")
+        mesh = new THREE.Mesh(
+          new THREE.CylinderGeometry(
+            piece.size[0] / 2,
+            piece.size[0] / 2,
+            piece.size[1],
+            8,
+          ),
+          material,
+        );
+      else if (piece.shape === "crown") {
+        mesh = new THREE.Mesh(new THREE.IcosahedronGeometry(0.75, 1), material);
+        mesh.scale.set(1, piece.size[1] / 1.5, 1);
+      } else
+        mesh = new THREE.Mesh(new THREE.BoxGeometry(...piece.size), material);
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      group.add(mesh);
+      root.add(group);
+      meshes.set(piece, group);
+    }
+    for (const e of experiment.environment?.entities ?? []) {
+      if (e.type !== "building") continue;
+      const p = experiment.active.layout.parcels.find(
+        (p) => p.id === e.parcelId,
+      );
+      this.addParcelLabel(
+        e.id,
+        p.world.x,
+        experiment.config.buildingFloors * 3 + 1,
+        p.world.z,
+        this.districtTerrain,
+        9,
+      );
+    }
     this.simulation = experiment;
     this.houseRoot = root;
     this.meshes = meshes;
@@ -471,41 +521,46 @@ export class SceneView {
       } else if (p.type === "green") {
         this.box([p.size, 0.014, 1.2], [p.x, 0.028, p.z], pavement, root);
         this.box([1.2, 0.014, p.size], [p.x, 0.028, p.z], pavement, root);
-        for (const sign of [-1, 1]) {
-          const x = p.x + sign * p.size * 0.28,
-            z = p.z + sign * p.size * 0.27;
-          const trunk = new THREE.Mesh(
-            new THREE.CylinderGeometry(0.12, 0.19, 1.7, 6),
-            this.material("#695844"),
-          );
-          trunk.position.set(x, 0.85, z);
-          trunk.castShadow = true;
-          root.add(trunk);
-          const crown = new THREE.Mesh(
-            new THREE.IcosahedronGeometry(1.25, 0),
-            this.material(sign === 1 ? "#83a46e" : "#5b8b5e"),
-          );
-          crown.position.set(x, 2.15, z);
-          crown.scale.y = 1.3;
-          crown.castShadow = true;
-          root.add(crown);
-        }
-        for (const sign of [-1, 1]) {
-          this.box(
-            [1.8, 0.18, 0.55],
-            [p.x + sign * 2.5, 0.45, p.z + sign * 1.5],
-            this.material("#b29971"),
-            root,
-          );
-          this.box(
-            [1.8, 0.65, 0.1],
-            [p.x + sign * 2.5, 0.7, p.z + sign * 1.8],
-            this.material("#b29971"),
-            root,
-          );
-        }
+        if (!this.simulation.environment)
+          for (const sign of [-1, 1]) {
+            const x = p.x + sign * p.size * 0.28,
+              z = p.z + sign * p.size * 0.27;
+            const trunk = new THREE.Mesh(
+              new THREE.CylinderGeometry(0.12, 0.19, 1.7, 6),
+              this.material("#695844"),
+            );
+            trunk.position.set(x, 0.85, z);
+            trunk.castShadow = true;
+            root.add(trunk);
+            const crown = new THREE.Mesh(
+              new THREE.IcosahedronGeometry(1.25, 0),
+              this.material(sign === 1 ? "#83a46e" : "#5b8b5e"),
+            );
+            crown.position.set(x, 2.15, z);
+            crown.scale.y = 1.3;
+            crown.castShadow = true;
+            root.add(crown);
+          }
+        if (!this.simulation.environment)
+          for (const sign of [-1, 1]) {
+            this.box(
+              [1.8, 0.18, 0.55],
+              [p.x + sign * 2.5, 0.45, p.z + sign * 1.5],
+              this.material("#b29971"),
+              root,
+            );
+            this.box(
+              [1.8, 0.65, 0.1],
+              [p.x + sign * 2.5, 0.7, p.z + sign * 1.8],
+              this.material("#b29971"),
+              root,
+            );
+          }
       }
-      if (p.type !== "house")
+      if (
+        p.type !== "house" &&
+        !(p.type === "building" && this.simulation.environment)
+      )
         this.addParcelLabel(
           `${p.id} / ${p.type === "green" ? "VERDE" : p.type === "building" ? "RESERVA" : "LIBRE"}`,
           p.x,

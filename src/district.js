@@ -1,3 +1,4 @@
+import { UrbanEnvironment } from "./environment.js";
 import { generateNeighborhood, housePlacements } from "./urban.js";
 import * as CANNON from "cannon-es";
 import { Simulation, FIXED_STEP } from "./physics.js";
@@ -78,6 +79,10 @@ export class District {
         yaw,
       });
     }
+    this.environment =
+      this.layout && config.environment === "physical"
+        ? new UrbanEnvironment(config, this.layout, this.world)
+        : null;
     this.world.broadphase.dirty = true;
     this.updateCenter();
   }
@@ -101,11 +106,16 @@ export class District {
       simulation.config.reinforcement = this.config.reinforcement;
       simulation.prepareStep(this.center, this.elapsed);
     }
+    this.environment?.prepareStep(this.center, this.elapsed);
     this.world.step(FIXED_STEP);
+    this.environment?.finishStep();
     for (const { simulation } of this.houses) simulation.finishStep();
   }
   get pieces() {
-    return this.houses.flatMap((h) => h.simulation.pieces);
+    return [
+      ...this.houses.flatMap((h) => h.simulation.pieces),
+      ...(this.environment?.pieces ?? []),
+    ];
   }
   get profile() {
     return PROFILES[this.config.profile];
@@ -153,6 +163,7 @@ export class District {
       collapsed: rows.filter((s) => s.state === "Colapso del modelo").length,
       rows,
       progress: this.progress,
+      ...(this.environment ? { environment: this.environment.stats } : {}),
     };
   }
 }
@@ -211,6 +222,9 @@ export class Experiment {
   }
   get pieces() {
     return this.active.pieces;
+  }
+  get environment() {
+    return this.active.environment;
   }
   get center() {
     return this.active.center;

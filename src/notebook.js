@@ -1,3 +1,4 @@
+import { ENV_LABELS } from "./environment.js";
 import { Experiment } from "./district.js";
 import { PROFILES, ROOFS } from "./catalog.js";
 import { FIXED_STEP } from "./physics.js";
@@ -9,7 +10,8 @@ import {
   csv,
   damageChart,
   eventsCSV,
-  houseSimulations,
+  environmentCSV,
+  objectSimulations as houseSimulations,
   htmlReport,
   MAX_FILE_BYTES,
   normalizeName,
@@ -23,6 +25,7 @@ import { listEntries, readEntry, saveEntry } from "./library.js";
 
 const $ = (id) => document.getElementById(id);
 const labels = {
+  ...ENV_LABELS,
   wall: "Pared estructural",
   roof: "Cubierta",
   cladding: "Revestimiento / ventana",
@@ -147,6 +150,7 @@ export function setupNotebook({
     $("replay-panel").hidden = true;
     $("replay-play").textContent = "Reproducir grabación";
     if (notify) {
+      pause();
       sceneChanged();
       refresh();
       status(
@@ -170,6 +174,7 @@ export function setupNotebook({
     experiment.recorder = null;
     experiment.revision++;
     replay = record;
+    $("status-text").textContent = "Repetición visual";
     freeze(true);
     $("replay-panel").hidden = false;
     $("replay-position").max = record.frames.length - 1;
@@ -235,7 +240,7 @@ export function setupNotebook({
     const e = snapshot?.events.find((e) => e.id === $("event-list").value);
     $("event-view").disabled = !e;
     $("event-detail").textContent = e
-      ? `${e.id} · ${seconds(e.time)} · paso ${e.step}\n${e.house} · ${labels[e.kind]} #${e.pieceId}\n${e.type === "connection" ? `Unión #${e.connectionId} fallada\nDemanda al fallar: ${e.demand.toFixed(1)} N · capacidad: ${e.capacity.toFixed(1)} N` : `Pieza liberada · masa ${e.mass.toFixed(1)} kg`}\nCausa: ${e.cause === "overload" ? "sobrecarga sostenida" : "pérdida de soporte"}\nEventos anteriores relacionados: ${e.parents.join(", ") || "ninguno"}\nLas relaciones describen fallas y apoyos del grafo idealizado; no cuantifican transferencia de cargas.`
+      ? `${e.id} · ${seconds(e.time)} · paso ${e.step}\n${e.entityId ?? e.house} · ${labels[e.kind]} #${e.pieceId}\n${e.type === "connection" ? `Unión #${e.connectionId} fallada\nDemanda al fallar: ${e.demand.toFixed(1)} ${e.unit ?? "N"} · capacidad: ${e.capacity.toFixed(1)} ${e.unit ?? "N"}` : `Pieza liberada · masa ${e.mass.toFixed(1)} kg`}\nCausa: ${e.cause === "overload" ? "sobrecarga sostenida" : "pérdida de soporte"}\nEventos anteriores relacionados: ${e.parents.join(", ") || "ninguno"}\nLas relaciones describen fallas y apoyos del grafo idealizado; no cuantifican transferencia de cargas.`
       : "No hay eventos para este filtro. Ejecuta la simulación para registrar fallas.";
   }
   function events() {
@@ -276,11 +281,12 @@ export function setupNotebook({
       h = owner();
     if (!p) return;
     const material =
-      p.kind === "roof"
+      p.details.material ??
+      (p.kind === "roof"
         ? h.simulation.roof.label
         : p.kind === "cladding"
           ? `${p.details.secondary ? "Ventana secundaria" : "Revestimiento"} de ${h.simulation.profile.label}`
-          : h.simulation.profile.label;
+          : h.simulation.profile.label);
     const displacement = p.body.position.distanceTo(p.origin);
     const tilt =
       (Math.acos(
@@ -300,7 +306,7 @@ export function setupNotebook({
         : "";
     $("piece-detail").textContent =
       movement +
-      `${h.label} · ${labels[p.kind]} #${p.id}\nMaterial / sistema: ${material}\nMasa: ${p.mass.toFixed(1)} kg · superficie: ${p.area.toFixed(2)} m²\nEstado actual: ${p.detached ? "liberada" : "con soporte"} · ${p.damage} uniones ${p.kind === "wall" ? "estructurales " : ""}falladas\nPosición: ${p.body.position
+      `${p.entityId ?? h.label} · ${labels[p.kind]} #${p.id}\nMaterial / sistema: ${material}\nMasa: ${p.mass.toFixed(1)} kg · superficie: ${p.area.toFixed(2)} m²\nEstado actual: ${p.detached ? "liberada" : "con soporte"} · ${p.damage} uniones ${p.kind === "wall" ? "estructurales " : ""}falladas\nPosición: ${p.body.position
         .toArray()
         .map((n) => n.toFixed(2))
         .join(", ")} m\n${
@@ -310,13 +316,17 @@ export function setupNotebook({
               .toArray()
               .map((n) => n.toFixed(1))
               .join(", ")} N\nDemanda de la pieza: ${p.demand.toFixed(1)} N`
-      }\nConexiones (capacidades con el refuerzo actual):\n${p.connections.map((c) => `#${c.id} ${labels[c.kind]} · ${c.broken ? "fallada" : "intacta"} · ${((c.capacity * experiment.config.reinforcement) / 100).toFixed(1)} N · a ${c.b ? (c.a === p ? c.b.id : c.a.id) : "base"}`).join("\n")}\nMáximos históricos de paredes: ${(replayStats ?? experiment.stats).maxDisplacement.toFixed(2)} m / ${(replayStats ?? experiment.stats).maxTilt.toFixed(1)}°.`;
+      }\nConexiones (capacidades con el refuerzo actual):\n${p.connections.map((c) => `#${c.id} ${labels[c.kind] ?? c.kind} · ${c.broken ? "fallada" : "intacta"} · ${((c.capacity * experiment.config.reinforcement) / 100).toFixed(1)} ${c.unit ?? "N"} · a ${c.b ? (c.a === p ? c.b.id : c.a.id) : "base"}`).join("\n")}\nMáximos históricos de paredes: ${(replayStats ?? experiment.stats).maxDisplacement.toFixed(2)} m / ${(replayStats ?? experiment.stats).maxTilt.toFixed(1)}°.`;
   }
   function pieces() {
     const previous = $("inspect-piece").value;
     $("inspect-piece").replaceChildren(
       ...(owner()?.simulation.pieces ?? []).map(
-        (p) => new Option(`#${p.id} · ${labels[p.kind]}`, String(p.id)),
+        (p) =>
+          new Option(
+            `${p.entityId ? p.entityId + " · " : ""}#${p.id} · ${labels[p.kind]}`,
+            String(p.id),
+          ),
       ),
     );
     if ([...$("inspect-piece").options].some((o) => o.value === previous))
@@ -325,6 +335,7 @@ export function setupNotebook({
   }
   function populate() {
     $("export-parcels").disabled = !snapshot.layout;
+    $("export-environment").disabled = !snapshot.results.environment;
     houses($("event-house"), true);
     houses($("inspect-house"));
     $("damage-chart").innerHTML = damageChart(snapshot);
@@ -477,6 +488,16 @@ export function setupNotebook({
       download(
         `${filename(name())}-eventos.csv`,
         eventsCSV(current()),
+        "text/csv;charset=utf-8",
+      ),
+    ),
+  );
+  $("export-environment").addEventListener(
+    "click",
+    attempt(() =>
+      download(
+        `${filename(name())}-objetos.csv`,
+        environmentCSV(current()),
         "text/csv;charset=utf-8",
       ),
     ),
@@ -705,6 +726,42 @@ export function setupNotebook({
       }
     }
     $("runs-results").replaceChildren(table);
+    if (comparison.some((r) => r.stats.environment)) {
+      const title = document.createElement("h3");
+      title.textContent = "Objetos urbanos";
+      const extra = document.createElement("table"),
+        head = document.createElement("tr");
+      for (const text of [
+        "Escenario",
+        "Objeto",
+        "Parcela",
+        "Piezas liberadas",
+        "Estado",
+      ]) {
+        const th = document.createElement("th");
+        th.scope = "col";
+        th.textContent = text;
+        head.append(th);
+      }
+      extra.append(head);
+      for (const r of comparison)
+        for (const row of r.stats.environment?.rows ?? []) {
+          const tr = document.createElement("tr");
+          for (const value of [
+            r.label,
+            row.id,
+            row.parcelId,
+            `${row.detached}/${row.total}`,
+            row.state,
+          ]) {
+            const td = document.createElement("td");
+            td.textContent = value;
+            tr.append(td);
+          }
+          extra.append(tr);
+        }
+      $("runs-results").append(title, extra);
+    }
   }
   $("compare-runs").addEventListener(
     "click",
@@ -773,6 +830,11 @@ export function setupNotebook({
         "uniones_falladas",
         "tiempo_s",
         "estado",
+        "tipo_resultado",
+        "objeto_urbano",
+        "parcela",
+        "piezas_liberadas",
+        "piezas_total",
       ],
     ];
     for (const r of comparison)
@@ -791,6 +853,30 @@ export function setupNotebook({
           s.broken,
           s.elapsed,
           s.state,
+          "vivienda",
+          "",
+          s.parcelId ?? "",
+          "",
+          "",
+        ]);
+    for (const r of comparison)
+      for (const row of r.stats.environment?.rows ?? [])
+        rows.push([
+          r.label,
+          "",
+          JSON.stringify(r.config),
+          "",
+          "",
+          "",
+          "",
+          "",
+          r.stats.elapsed,
+          row.state,
+          "entorno",
+          row.id,
+          row.parcelId,
+          row.detached,
+          row.total,
         ]);
     download("simtorcl-comparacion.csv", csv(rows), "text/csv;charset=utf-8");
   });

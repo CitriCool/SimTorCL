@@ -95,6 +95,7 @@ No se cargan frecuencias nacionales, regionales ni de combinaciones de paredes y
 ```text
 src/catalog.js             Categorías censales, perfiles y parámetros con procedencia
 src/physics.js             Grafo de uniones, fuerzas, rotura, colisiones y métricas
+src/environment.js         Modelos de árboles, bancos y edificios; procedencia y daño
 src/urban.js               Geometría urbana, semilla y asignación de usos
 src/urban-ui.js            Formulario e inventario de parcelas
 src/scene.js               Modelos y efectos Three.js; reconstrucción y liberación de GPU
@@ -140,7 +141,7 @@ El cuaderno permite guardar, cargar, duplicar y nombrar configuraciones y ejecuc
 
 La biblioteca se conserva en el navegador y requiere exportación JSON para trasladarse a otro equipo. La repetición usa fotogramas muestreados y permite recuperar la ejecución pausada anterior. El recálculo reproduce los pasos y controles iniciales. Las importaciones requieren un modelo compatible y se limitan a 40 MB.
 
-[Guía del cuaderno, formato, migración y límites](docs/experimentos.md). Las 53 pruebas cubren física, manzanas, persistencia del formato, eventos, exportación y reproducción.
+[Guía del cuaderno, formato, migración y límites](docs/experimentos.md). Las 62 pruebas cubren física, manzanas, persistencia del formato, eventos, exportación y reproducción.
 
 ![Cuaderno de experimentos](docs/experimentos.png)
 
@@ -153,3 +154,13 @@ Las viviendas participan en la física; las reservas azules representan espacios
 [Guía del generador y sus límites](docs/barrio.md).
 
 ![Barrio configurable](docs/barrio.png)
+
+## Entorno físico (v2.4)
+
+En Barrio configurable se pueden generar árboles y bancos con uniones rompibles y edificios de 2 a 5 pisos con estructura fija y envolvente desprendible. Comparten el mundo de colisiones con las viviendas y aparecen en inspección, eventos, resultados, CSV, fotogramas e informes. El formulario incluye una prueba reproducible de parque y edificio.
+
+Las referencias oficiales se distinguen de las propiedades mecánicas educativas pendientes de calibración. El suelo permanece fijo, no se recalcula el viento por obstáculos y los contactos no añaden roturas al receptor. Los archivos antiguos conservan su modo visual al migrar al esquema 3.
+
+[Alcance, fuentes, prueba y compatibilidad](docs/entorno-fisico.md).
+
+![Entorno urbano físico](docs/entorno-fisico.png)

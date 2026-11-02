@@ -96,8 +96,7 @@
               Configurar barrio ↗
             </button>
             <p class="selection-note">
-              Viviendas, parques visuales y parcelas reservadas para futuros
-              edificios. Distribución sintética.
+              Viviendas y entorno urbano configurable. Distribución sintética.
             </p>
           </div>
           <label class="field-label" for="profile">Sistema de paredes</label>
@@ -424,9 +423,10 @@
           <label for="parcel-inspect">Enfocar parcela</label
           ><select id="parcel-inspect"></select>
           <p class="selection-note">
-            P: parcela. C: vivienda con simulación de daño. Reservas azules:
-            espacios para futuros edificios. Árboles y mobiliario de parques son
-            visuales. Calles, parques y reservas no modifican el viento.
+            P: parcela. C: vivienda. En modo físico, E identifica edificios con
+            estructura fija y envolvente desprendible; árboles y bancos tienen
+            uniones rompibles. El modo visual conserva las reservas. El viento
+            no cambia por obstáculos.
           </p>
           <details>
             <summary>Ver inventario de parcelas</summary>
@@ -442,6 +442,55 @@
                   </tr>
                 </thead>
                 <tbody id="parcel-rows"></tbody>
+              </table>
+            </div>
+          </details>
+        </section>
+        <section
+          id="environment-results"
+          hidden
+          aria-label="Resultados del entorno urbano"
+        >
+          <div class="eyebrow">ÁRBOLES · MOBILIARIO · EDIFICIOS</div>
+          <h3>Daño del entorno urbano</h3>
+          <p id="environment-summary" role="status"></p>
+          <p class="selection-note">
+            Los edificios tienen estructura fija y envolvente desprendible. Los
+            objetos pueden colisionar. El suelo permanece fijo y el viento no se
+            recalcula por obstáculos. El contacto no añade roturas al receptor.
+          </p>
+          <div class="table-scroll">
+            <table class="comparison-table">
+              <thead>
+                <tr>
+                  <th>Objeto</th>
+                  <th>Tipo</th>
+                  <th>Parcela</th>
+                  <th>Piezas liberadas</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody id="environment-rows"></tbody>
+            </table>
+          </div>
+          <details>
+            <summary>Fuentes y parámetros del modelo</summary>
+            <p>
+              Las fuentes oficiales respaldan la clasificación y orientan el
+              estudio. Las propiedades mecánicas siguientes son supuestos
+              educativos, pendientes de calibración; no provienen del Censo.
+            </p>
+            <div id="environment-sources" class="source-links"></div>
+            <div class="table-scroll">
+              <table class="comparison-table">
+                <thead>
+                  <tr>
+                    <th>Propiedad</th>
+                    <th>Valor y unidad</th>
+                    <th>Procedencia</th>
+                  </tr>
+                </thead>
+                <tbody id="environment-parameters"></tbody>
               </table>
             </div>
           </details>
@@ -481,7 +530,7 @@
           <span
             ><span class="footer-dot"></span> MOTOR FÍSICO ACTIVO
             <i>/</i> THREE.JS + CANNON-ES</span
-          ><span>SimTorCL <b>v2.3</b></span>
+          ><span>SimTorCL <b>v2.4</b></span>
         </footer>
       </section>
     </main>
@@ -506,6 +555,27 @@
       </p>
       <form id="urban-form">
         <div class="urban-form-grid">
+          <label for="urban-environment"
+            >Interacción del entorno<select
+              id="urban-environment"
+              data-urban="environment"
+            >
+              <option value="physical">
+                Árboles, bancos y edificios físicos
+              </option>
+              <option value="visual">Visual / compatible con v2.3</option>
+            </select></label
+          ><label for="urban-buildingFloors"
+            >Pisos de los edificios<select
+              id="urban-buildingFloors"
+              data-urban="buildingFloors"
+            >
+              <option value="2">2 pisos</option>
+              <option value="3">3 pisos</option>
+              <option value="4">4 pisos</option>
+              <option value="5">5 pisos</option>
+            </select></label
+          >
           <label for="urban-rows"
             >Filas<select id="urban-rows" data-urban="rows">
               <option value="2">2</option>
@@ -588,6 +658,13 @@
               required
           /></label>
         </div>
+        <button id="urban-demo" type="button" class="details-button">
+          Generar prueba: parque y edificio · viento 280 km/h
+        </button>
+        <p class="selection-note">
+          La prueba comienza desde cero: 2 × 2 parcelas, semilla 38, radio 12 m,
+          refuerzo 100 %, entorno físico y edificios de 3 pisos.
+        </p>
         <button id="urban-new-seed" type="button" class="details-button">
           Crear otra semilla
         </button>
@@ -844,6 +921,8 @@
         <div class="notebook-actions">
           <button class="reset-button" id="export-results">
             CSV de viviendas</button
+          ><button class="reset-button" id="export-environment">
+            CSV de objetos urbanos</button
           ><button class="reset-button" id="export-parcels">
             CSV de parcelas</button
           ><button class="reset-button" id="export-components">

@@ -92,4 +92,24 @@ Las etapas de generación urbana, edificios y zonas verdes siguen pendientes seg
 - [x] Inventario, enfoque, CSV de parcelas e inclusión del plano en informes.
 - [x] Esquema 2 con plano validado y compatibilidad con ejecuciones v2.2.
 - [x] Pruebas de geometría, física urbana, reproducibilidad y migración.
-- [ ] Siguiente entrega: editor manual por parcela con deshacer y rehacer (URB-06/07).
+- [ ] Pendiente: editor manual por parcela con deshacer y rehacer (URB-06/07).
+
+## Prioridad del usuario tras probar el barrio
+
+- [ ] Registrar fuentes oficiales por tipología y propiedad, con unidad, sección y nivel de evidencia.
+- [x] Integrar árboles y mobiliario en la física, con sus modos de fallo y resultados educativos.
+- [x] Crear una primera versión de edificios con estructura fija y envolvente desprendible; efectos y límites documentados.
+- [x] Verificar guardado, repetición, recálculo y colisiones de los objetos nuevos. El daño adicional por impacto permanece pendiente.
+
+El editor manual queda después de estas prioridades. Ver [alcance y fuentes localizadas](docs/pendientes-fisicos.md).
+
+## Entrega de entorno físico (v2.4)
+
+- [x] Registro de fuentes, evidencia, unidades y calibración pendiente.
+- [x] Árboles y bancos físicos, momentos de anclaje y fallos de uniones.
+- [x] Edificios residenciales de 2 a 5 pisos con núcleo fijo y envolvente desprendible.
+- [x] Mundo de colisiones común, inspección, eventos y resultados separados de viviendas.
+- [x] Inventario urbano versionado, esquema 3 y migración visual de archivos antiguos.
+- [x] CSV por objeto y unidades de fuerza/momento en eventos; informes con procedencia.
+- [ ] Calibración numérica con fuentes técnicas y validación experimental.
+- [ ] Colapso estructural de edificios, rotura adicional por impacto, daño de suelo y acoplamiento aerodinámico.

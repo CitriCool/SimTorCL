@@ -194,3 +194,9 @@ export function housePlacements(config, layout = null) {
     profileOffset: i % 4,
   }));
 }
+
+export function parcelTypeLabel(type, config) {
+  return type === "building" && config.environment === "physical"
+    ? "Edificio residencial"
+    : PARCEL_TYPES[type];
+}

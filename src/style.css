@@ -1594,6 +1594,29 @@ dialog .selection-note {
   border: 1px solid var(--line);
   border-radius: 5px;
 }
+#environment-results {
+  margin: 20px 0;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+}
+#environment-results h3 {
+  font: 500 20px var(--mono);
+  margin: 12px 0;
+}
+#environment-results p {
+  font-size: 12px;
+  line-height: 1.8;
+}
+#environment-results .table-scroll {
+  max-height: 300px;
+}
+#environment-results summary {
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--teal);
+  padding: 12px 0;
+}
 #urban-results h3 {
   font: 500 20px var(--mono);
   margin: 12px 0;

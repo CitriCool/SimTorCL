@@ -1,4 +1,6 @@
-# Generador de barrio (v2.3)
+# Generador de barrio (base v2.3)
+
+Actualización v2.4: el modo físico genera árboles, bancos y edificios; el modo visual conserva las reservas descritas aquí. Consulta [su alcance y fuentes](entorno-fisico.md).
 
 Selecciona **Barrio configurable** en Escala del experimento y abre **Configurar barrio**. Esta es la primera entrega de generación urbana: construye el plano y asigna usos a las parcelas. El editor para modificar objetos individualmente y el catálogo de edificios siguen pendientes.
 

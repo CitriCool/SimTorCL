@@ -1,3 +1,4 @@
+import { ENV_MODEL } from "./environment.js";
 import { setupUrban } from "./urban-ui.js";
 import "./style.css";
 import { FIXED_STEP } from "./physics.js";
@@ -60,6 +61,34 @@ function updateReadout() {
       });
     }
   }
+  const env = s.environment;
+  if (env) {
+    const names = { tree: "Árbol", bench: "Banco", building: "Edificio" };
+    const fallen = env.rows.filter(
+      (r) => r.type === "tree" && r.anchorFailed,
+    ).length;
+    $("environment-summary").textContent =
+      `${env.detached}/${env.total} piezas liberadas · ${env.broken}/${env.connectionTotal} uniones falladas · ${fallen} ${fallen === 1 ? "árbol" : "árboles"} con anclaje fallado.`;
+    for (const r of env.rows) {
+      let tr = document.getElementById(`environment-row-${r.id}`);
+      if (!tr) {
+        tr = document.createElement("tr");
+        tr.id = `environment-row-${r.id}`;
+        for (let i = 0; i < 5; i++) tr.append(document.createElement("td"));
+        $("environment-rows").append(tr);
+      }
+      const values = [
+        r.id,
+        names[r.type],
+        r.parcelId,
+        `${r.detached}/${r.total}`,
+        r.state,
+      ];
+      [...tr.children].forEach((td, i) => {
+        if (td.textContent !== values[i]) td.textContent = values[i];
+      });
+    }
+  }
   const seconds = Math.floor(s.elapsed + 1e-8);
   $("elapsed").textContent =
     `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
@@ -87,6 +116,49 @@ function setRunning(value) {
 
 function updateScenarioInfo() {
   urban?.refresh();
+  $("environment-results").hidden = !simulation.environment;
+  $("environment-rows").replaceChildren();
+  if (simulation.environment) {
+    const names = {
+      treeHeight: "Altura de árbol",
+      woodDensity: "Densidad de madera",
+      treeAnchor: "Anclaje de árbol",
+      treeWeakAnchor: "Anclaje reducido de árbol",
+      branchJoint: "Unión de rama",
+      crownJoint: "Unión de copa",
+      benchAnchor: "Anclaje de banco",
+      benchJoint: "Unión de mobiliario",
+      storeyHeight: "Altura de piso",
+      buildingWidth: "Envolvente de edificio",
+      concreteDensity: "Densidad del núcleo fijo",
+      facadeMass: "Masa superficial de fachada",
+      windowMass: "Masa superficial de ventana",
+      facadeFixing: "Fijación de fachada",
+      windowFixing: "Fijación de ventana",
+      roofFixing: "Fijación de cubierta",
+    };
+    $("environment-sources").replaceChildren(
+      ...ENV_MODEL.sources.map((s) => {
+        const a = document.createElement("a");
+        a.href = s.url;
+        a.target = "_blank";
+        a.rel = "noreferrer";
+        a.textContent = `${s.institution}: ${s.title} · ${s.status} ↗`;
+        return a;
+      }),
+    );
+    $("environment-parameters").replaceChildren(
+      ...Object.entries(ENV_MODEL.parameters).map(([key, p]) => {
+        const tr = document.createElement("tr");
+        for (const value of [names[key], `${p.value} ${p.unit}`, p.status]) {
+          const td = document.createElement("td");
+          td.textContent = value;
+          tr.append(td);
+        }
+        return tr;
+      }),
+    );
+  }
   for (const id of ["mode", "distribution", "spacing", "trajectory", "profile"])
     $(id).value = simulation.config[id];
   for (const id of ["wind", "radius", "reinforcement"]) {

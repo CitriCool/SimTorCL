@@ -1,3 +1,4 @@
+import { ENV_MODEL, ENV_LABELS, environmentBlueprint } from "./environment.js";
 import {
   URBAN_DEFAULTS,
   validateUrban,
@@ -15,9 +16,9 @@ import {
 
 import { RULES, FIXED_STEP } from "./physics.js";
 
-export const APP_VERSION = "2.3.0";
+export const APP_VERSION = "2.4.0";
 
-export const SCHEMA_VERSION = 2;
+export const SCHEMA_VERSION = 3;
 
 export const MAX_FILE_BYTES = 40 * 1024 * 1024;
 
@@ -94,6 +95,8 @@ export const CONFIG_KEYS = [
   "spacing",
   "trajectory",
   ...Object.keys(URBAN_DEFAULTS),
+  "environment",
+  "buildingFloors",
 ];
 
 export function cleanConfig(input = {}) {
@@ -103,6 +106,8 @@ export function cleanConfig(input = {}) {
   const config = {
     ...DEFAULTS,
     ...URBAN_DEFAULTS,
+    environment: "physical",
+    buildingFloors: 3,
     mode: "single",
     distribution: "mixed",
     spacing: 13,
@@ -114,6 +119,13 @@ export function cleanConfig(input = {}) {
 
   validateConfig(config);
   validateUrban(config);
+  if (
+    !["physical", "visual"].includes(config.environment) ||
+    !Number.isInteger(config.buildingFloors) ||
+    config.buildingFloors < 2 ||
+    config.buildingFloors > 5
+  )
+    throw new RangeError("Configuración del entorno inválida.");
 
   if (
     !["single", "block9", "block16", "neighborhood"].includes(config.mode) ||
@@ -151,6 +163,18 @@ export function houseSimulations(experiment) {
       simulation: h.simulation,
     })) ?? [{ label: "C01", simulation: experiment.active }]
   );
+}
+
+export function objectSimulations(experiment) {
+  const houses = houseSimulations(experiment);
+  return experiment.environment
+    ? [...houses, { label: "ENV", simulation: experiment.environment }]
+    : houses;
+}
+export function environmentModel(config) {
+  return config.mode === "neighborhood" && config.environment === "physical"
+    ? ENV_MODEL
+    : null;
 }
 
 export class RunRecorder {
@@ -202,7 +226,7 @@ export class RunRecorder {
   }
 
   tick(experiment) {
-    for (const { label, simulation } of houseSimulations(experiment)) {
+    for (const { label, simulation } of objectSimulations(experiment)) {
       const offset = this.offsets.get(label) ?? 0;
 
       for (const event of simulation.events.slice(offset))
@@ -230,6 +254,10 @@ export class RunRecorder {
       appVersion: APP_VERSION,
       modelId: MODEL_ID,
       model: clone(MODEL),
+      environmentModel: clone(environmentModel(this.initial)),
+      environmentInventory: experiment.environment
+        ? environmentBlueprint(this.initial, experiment.active.layout)
+        : null,
       name: normalizeName(name),
       startedAt: this.startedAt,
       savedAt: new Date().toISOString(),
@@ -253,7 +281,10 @@ export const normalizeName = (name) =>
     .trim()
     .slice(0, 80) || "Experimento";
 
-export function configurationDocument(config, name) {
+export function configurationDocument(config = {}, name) {
+  const initial = cleanConfig(config),
+    layout =
+      initial.mode === "neighborhood" ? generateNeighborhood(initial) : null;
   return {
     format: "simtorcl-experiment",
     schemaVersion: SCHEMA_VERSION,
@@ -261,11 +292,14 @@ export function configurationDocument(config, name) {
     appVersion: APP_VERSION,
     modelId: MODEL_ID,
     model: clone(MODEL),
+    environmentModel: clone(environmentModel(initial)),
+    environmentInventory: environmentModel(initial)
+      ? environmentBlueprint(initial, layout)
+      : null,
     name: normalizeName(name),
     savedAt: new Date().toISOString(),
-    initial: cleanConfig(config),
-    layout:
-      config.mode === "neighborhood" ? generateNeighborhood(config) : null,
+    initial,
+    layout,
   };
 }
 
@@ -280,6 +314,7 @@ export function shareLink(base, config, name) {
       JSON.stringify({
         schemaVersion: SCHEMA_VERSION,
         modelId: MODEL_ID,
+        environmentVersion: environmentModel(config)?.version ?? null,
         name: normalizeName(name),
         config: cleanConfig(config),
       }),
@@ -297,11 +332,23 @@ export function parseShareHash(hash) {
     throw new Error("Enlace de configuración inválido.");
   }
   if (
-    ![1, SCHEMA_VERSION].includes(data.schemaVersion) ||
+    ![1, 2, SCHEMA_VERSION].includes(data.schemaVersion) ||
     data.modelId !== MODEL_ID
   )
     throw new Error("El enlace usa otra versión del modelo.");
-  return { config: cleanConfig(data.config), name: normalizeName(data.name) };
+  if (
+    data.schemaVersion === 3 &&
+    (data.environmentVersion ?? null) !==
+      (environmentModel(data.config)?.version ?? null)
+  )
+    throw new Error("El enlace usa otro modelo urbano.");
+  return {
+    config: cleanConfig({
+      ...data.config,
+      ...(data.schemaVersion < 3 ? { environment: "visual" } : {}),
+    }),
+    name: normalizeName(data.name),
+  };
 }
 
 function finiteTree(value, depth = 0) {
@@ -378,8 +425,16 @@ export function parseDocument(text) {
   if (record?.format === "simtorcl-experiment" && record.schemaVersion === 1) {
     if (record.initial?.mode === "neighborhood")
       throw new Error("Un barrio requiere el esquema 2.");
-    record = { ...record, schemaVersion: SCHEMA_VERSION, layout: null };
+    record = { ...record, schemaVersion: 2, layout: null };
   }
+  if (record?.format === "simtorcl-experiment" && record.schemaVersion === 2)
+    record = {
+      ...record,
+      schemaVersion: SCHEMA_VERSION,
+      initial: { ...record.initial, environment: "visual" },
+      environmentModel: null,
+      environmentInventory: null,
+    };
   if (
     !record ||
     record.format !== "simtorcl-experiment" ||
@@ -397,10 +452,23 @@ export function parseDocument(text) {
 
   record.initial = cleanConfig(record.initial);
   record.name = normalizeName(record.name);
+  if (
+    canonical(record.environmentModel) !==
+    canonical(environmentModel(record.initial))
+  )
+    throw new Error("El archivo usa otro modelo de entorno urbano.");
   const expectedLayout =
     record.initial.mode === "neighborhood"
       ? generateNeighborhood(record.initial)
       : null;
+  const envBlueprint = environmentBlueprint(record.initial, expectedLayout);
+  if (
+    canonical(record.environmentInventory) !==
+    canonical(environmentModel(record.initial) ? envBlueprint : null)
+  )
+    throw new Error(
+      "La geometría o propiedades de los objetos urbanos no coinciden con esta versión.",
+    );
   if (canonical(record.layout) !== canonical(expectedLayout))
     throw new Error(
       "La distribución guardada no coincide con la semilla y los parámetros del barrio.",
@@ -450,6 +518,36 @@ export function parseDocument(text) {
 
   const base = Object.keys(PROFILES).indexOf(record.initial.profile);
   function checkStateShape(stats, step) {
+    if (environmentModel(record.initial)) {
+      const env = stats.environment;
+      if (
+        !env ||
+        env.total !== envBlueprint.pieces.length ||
+        !count(env.detached, env.total) ||
+        !count(env.broken, env.connectionTotal) ||
+        env.connectionTotal !==
+          envBlueprint.pieces.filter((p) => p.capacity !== null).length ||
+        !Array.isArray(env.rows) ||
+        env.rows.length !== envBlueprint.entities.length
+      )
+        throw new Error("Resultados del entorno urbano inválidos.");
+      env.rows.forEach((r, i) => {
+        const e = envBlueprint.entities[i];
+        if (
+          r.id !== e.id ||
+          r.type !== e.type ||
+          r.parcelId !== e.parcelId ||
+          r.total !== e.pieces.length ||
+          !count(r.detached, r.total) ||
+          typeof r.state !== "string"
+        )
+          throw new Error("Estado de objeto urbano inválido.");
+      });
+      if (env.rows.reduce((n, r) => n + r.detached, 0) !== env.detached)
+        throw new Error("Recuento urbano inconsistente.");
+    } else if (stats.environment)
+      throw new Error("El archivo contiene física urbana no declarada.");
+
     if (Math.abs(stats.elapsed - step * FIXED_STEP) > 1e-6)
       throw new Error("El reloj no coincide con los pasos guardados.");
     if (record.initial.mode === "single") {
@@ -498,9 +596,13 @@ export function parseDocument(text) {
     );
   });
 
-  const expectedPieces = pieceCounts.reduce((a, b) => a + b, 0);
+  const expectedPieces =
+    pieceCounts.reduce((a, b) => a + b, 0) + envBlueprint.pieces.length;
 
-  const ids = new Set();
+  const ids = new Set(),
+    envConnections = envBlueprint.pieces.filter((p) => p.capacity !== null),
+    envBroken = new Set(),
+    envReleased = new Set();
   last = -1;
 
   for (const event of record.events) {
@@ -509,19 +611,28 @@ export function parseDocument(text) {
       typeof event.id !== "string" ||
       event.id.length > 40 ||
       ids.has(event.id) ||
-      !/^C\d{2}$/.test(event.house) ||
-      Number(event.house.slice(1)) < 1 ||
-      Number(event.house.slice(1)) > homes ||
+      (!/^C\d{2}$/.test(event.house) && event.house !== "ENV") ||
+      (event.house !== "ENV" && Number(event.house.slice(1)) < 1) ||
+      (event.house !== "ENV" && Number(event.house.slice(1)) > homes) ||
       !count(event.step, record.steps) ||
       event.step < last ||
       !Number.isFinite(event.time) ||
       Math.abs(event.time - event.step * FIXED_STEP) > 1e-6 ||
       !["connection", "release"].includes(event.type) ||
-      !["roof", "wall", "cladding", "base", "corner"].includes(event.kind) ||
+      ![
+        "roof",
+        "wall",
+        "cladding",
+        "base",
+        "corner",
+        ...(event.house === "ENV" ? Object.keys(ENV_LABELS) : []),
+      ].includes(event.kind) ||
       !["overload", "support"].includes(event.cause) ||
       !count(
         event.pieceId,
-        pieceCounts[Number(event.house.slice(1)) - 1] - 1,
+        (event.house === "ENV"
+          ? envBlueprint.pieces.length
+          : pieceCounts[Number(event.house.slice(1)) - 1]) - 1,
       ) ||
       !Array.isArray(event.parents) ||
       event.parents.some((id) => !ids.has(id))
@@ -536,7 +647,7 @@ export function parseDocument(text) {
 
     if (
       event.type === "connection" &&
-      (!count(event.connectionId, 200) ||
+      (!count(event.connectionId, event.house === "ENV" ? 5000 : 200) ||
         !Number.isFinite(event.capacity) ||
         event.capacity < 0 ||
         !Number.isFinite(event.demand) ||
@@ -544,6 +655,36 @@ export function parseDocument(text) {
     )
       throw new Error("Carga o capacidad inválida.");
 
+    if (event.house === "ENV") {
+      const p = envBlueprint.pieces[event.pieceId];
+      if (event.type === "connection") {
+        const connection = envConnections[event.connectionId],
+          factor =
+            configAt(record, Math.max(0, event.step - 1)).reinforcement / 100;
+        if (
+          !connection ||
+          connection.id !== event.pieceId ||
+          envBroken.has(event.connectionId) ||
+          event.otherPieceId !== connection.parentId ||
+          Math.abs(event.capacity - connection.capacity * factor) > 1e-6
+        )
+          throw new Error("Unión urbana inconsistente.");
+        envBroken.add(event.connectionId);
+      } else {
+        if (envReleased.has(event.pieceId) || event.mass !== p?.mass)
+          throw new Error("Liberación urbana inconsistente.");
+        envReleased.add(event.pieceId);
+      }
+
+      if (
+        !p ||
+        p.entityId !== event.entityId ||
+        p.parcelId !== event.parcelId ||
+        p.kind !== event.kind ||
+        (event.type === "connection" && event.unit !== p.unit)
+      )
+        throw new Error("Identidad o unidades de evento urbano inválidas.");
+    }
     ids.add(event.id);
     last = event.step;
   }
@@ -608,7 +749,7 @@ export function applyFrame(experiment, record, index) {
       .map((e) => [`${e.house}:${e.connectionId}`, e]),
   );
 
-  for (const { label, simulation } of houseSimulations(experiment)) {
+  for (const { label, simulation } of objectSimulations(experiment)) {
     simulation.elapsed = frame.step * FIXED_STEP;
 
     for (const c of simulation.connections)
@@ -704,6 +845,8 @@ export function componentsCSV(record, experiment) {
       "vivienda",
       "pieza_id",
       "tipo",
+      "objeto_id",
+      "parcela",
       "masa_kg",
       "superficie_m2",
       "x_m",
@@ -713,12 +856,14 @@ export function componentsCSV(record, experiment) {
       "uniones_falladas",
       "uniones_estructurales_falladas_en_muro",
     ],
-    ...houseSimulations(experiment).flatMap(({ label, simulation }) =>
+    ...objectSimulations(experiment).flatMap(({ label, simulation }) =>
       simulation.pieces.map((p) => [
         record.name,
         label,
         p.id,
         p.kind,
+        p.entityId ?? "",
+        p.parcelId ?? "",
         p.mass,
         p.area,
         ...p.body.position.toArray(),
@@ -741,8 +886,11 @@ export function eventsCSV(record) {
       "pieza_id",
       "union_id",
       "causa",
-      "demanda_N",
-      "capacidad_N",
+      "demanda",
+      "capacidad",
+      "unidad",
+      "objeto_id",
+      "parcela",
       "eventos_relacionados",
     ],
     ...record.events.map((e) => [
@@ -756,6 +904,9 @@ export function eventsCSV(record) {
       e.cause,
       e.demand ?? "",
       e.capacity ?? "",
+      e.type === "connection" ? (e.unit ?? "N") : "",
+      e.entityId ?? "",
+      e.parcelId ?? "",
       e.parents.join(" | "),
     ]),
   ]);
@@ -815,6 +966,32 @@ export function damageChart(record) {
   return `<svg viewBox="-45 0 670 150" role="img" aria-label="Proporción de cubierta y paredes sin soporte durante el tiempo simulado"><text x="-42" y="15" fill="currentColor" font-size="12">100 %</text><text x="-28" y="124" fill="currentColor" font-size="12">0 %</text><path d="M0 10H600M0 10V120H600" fill="none" stroke="#91a99b"/><polyline points="${points("detached")}" fill="none" stroke="#e3a16f" stroke-width="3"/><polyline points="${points("wallDetached")}" fill="none" stroke="#74d2b5" stroke-width="3"/><text x="4" y="145" fill="currentColor" font-size="12">0 s</text><text x="520" y="145" fill="currentColor" font-size="12">${(record.steps * FIXED_STEP).toFixed(2)} s</text></svg>`;
 }
 
+export function environmentCSV(record) {
+  const env = record.results.environment;
+  if (!env)
+    throw new Error("Este experimento no tiene objetos urbanos físicos.");
+  return csv([
+    [
+      "objeto",
+      "tipo",
+      "parcela",
+      "piezas_liberadas",
+      "piezas_total",
+      "anclaje_arbol_fallado",
+      "estado",
+    ],
+    ...env.rows.map((r) => [
+      r.id,
+      r.type,
+      r.parcelId,
+      r.detached,
+      r.total,
+      r.anchorFailed ? 1 : 0,
+      r.state,
+    ]),
+  ]);
+}
+
 export function htmlReport(record, image = "") {
   const e = escapeHTML,
     s = record.results,
@@ -827,9 +1004,12 @@ export function htmlReport(record, image = "") {
     : "";
 
   const plan = record.layout
-    ? `<h2>Plano del barrio</h2><p>Semilla ${record.initial.seed} · ${record.initial.rows} × ${record.initial.columns} parcelas · orientación ${record.initial.orientation}°. Reservas para edificios y vegetación sin simulación de daño.</p><table><tr><th>Parcela</th><th>Uso</th><th>Superficie m²</th><th>Centro X, Z (m)</th></tr>${record.layout.parcels.map((p) => `<tr><td>${e(p.id)}</td><td>${e({ house: "Vivienda", green: "Área verde", building: "Reserva para edificio", vacant: "Parcela libre" }[p.type])}</td><td>${p.area}</td><td>${p.world.x.toFixed(2)}, ${p.world.z.toFixed(2)}</td></tr>`).join("")}</table>`
+    ? `<h2>Plano del barrio</h2><p>Semilla ${record.initial.seed} · ${record.initial.rows} × ${record.initial.columns} parcelas · orientación ${record.initial.orientation}°. ${record.initial.environment === "physical" ? "Edificios con estructura fija y envolvente desprendible; árboles y bancos con uniones rompibles." : "Reservas y vegetación visuales."}</p><table><tr><th>Parcela</th><th>Uso</th><th>Superficie m²</th><th>Centro X, Z (m)</th></tr>${record.layout.parcels.map((p) => `<tr><td>${e(p.id)}</td><td>${e({ house: "Vivienda", green: "Área verde", building: "Reserva para edificio", vacant: "Parcela libre" }[p.type])}</td><td>${p.area}</td><td>${p.world.x.toFixed(2)}, ${p.world.z.toFixed(2)}</td></tr>`).join("")}</table>`
     : "";
-  return `<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${e(record.name)} · SimTorCL</title><style>body{font:15px system-ui;line-height:1.6;max-width:1100px;margin:40px auto;padding:20px;color:#19392e}table{border-collapse:collapse;width:100%}td,th{padding:8px;text-align:left;border-bottom:1px solid #ccc}img{max-width:100%}svg{width:100%;background:#17231e;color:#dfece3;border-radius:8px;padding:12px}pre{white-space:pre-wrap}small{color:#52665a}@media print{body{margin:0}}</style><h1>${e(record.name)}</h1><p>SimTorCL ${APP_VERSION} · esquema ${SCHEMA_VERSION} · modelo ${MODEL_ID}</p><p>Tiempo simulado: ${s.elapsed.toFixed(2)} s · tiempo real activo: ${record.realSeconds.toFixed(2)} s. Los periodos en pausa se excluyen.</p><p>Modelo educativo con propiedades ilustrativas, sin validación experimental. La geometría urbana sintética no representa distribuciones censales. Informe de resultados declarados de una ejecución; una importación no recalcula ni certifica los datos.</p>${screenshot}<p>La imagen corresponde a la vista al exportar; las tablas y curvas describen la ejecución completa.</p><h2>Daño durante la ejecución</h2><p>Naranja: cubierta desprendida. Verde: paredes sin soporte. Curvas muestreadas, de 0 a 100 %.</p>${damageChart(record)}<h2>Resultados por vivienda</h2><table><tr><th>Casa</th><th>Perfil</th><th>Cubierta</th><th>Paredes sin soporte</th><th>Uniones falladas</th><th>Movimiento máximo de paredes</th><th>Estado</th></tr>${rows.map((r) => `<tr><td>${e(r.label)}</td><td>${e(r.profile)}</td><td>${r.detached}/${r.total}</td><td>${r.wallDetached}/${r.wallTotal}</td><td>${r.broken}/${r.connectionTotal}</td><td>${r.maxDisplacement.toFixed(2)} m / ${r.maxTilt.toFixed(1)}°</td><td>${e(r.state)}</td></tr>`).join("")}</table>${plan}<h2>Configuración inicial</h2><pre>${e(JSON.stringify(record.initial, null, 2))}</pre><h2>Cambios durante la ejecución</h2><pre>${e(JSON.stringify(record.changes, null, 2))}</pre><h2>Eventos</h2><p>${record.events.length} eventos. El archivo JSON y el CSV de eventos conservan todos los identificadores y relaciones.</p><table><tr><th>Tiempo</th><th>Casa</th><th>Evento</th><th>Causa</th></tr>${record.events
+  const urban = record.environmentModel
+    ? `<h2>Objetos urbanos</h2><p>${e(record.environmentModel.scope)} Propiedades mecánicas educativas; las referencias oficiales no son fuentes de estas capacidades.</p><table><tr><th>Objeto</th><th>Parcela</th><th>Piezas liberadas</th><th>Estado</th></tr>${(s.environment?.rows ?? []).map((r) => `<tr><td>${e(r.id)}</td><td>${e(r.parcelId)}</td><td>${r.detached}/${r.total}</td><td>${e(r.state)}</td></tr>`).join("")}</table><h2>Procedencia del entorno urbano</h2><pre>${e(JSON.stringify(record.environmentModel, null, 2))}</pre><details><summary>Geometría y propiedades por pieza (m, kg, m²; capacidad con su unidad)</summary><pre>${e(JSON.stringify(record.environmentInventory, null, 2))}</pre></details>`
+    : "";
+  return `<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${e(record.name)} · SimTorCL</title><style>body{font:15px system-ui;line-height:1.6;max-width:1100px;margin:40px auto;padding:20px;color:#19392e}table{border-collapse:collapse;width:100%}td,th{padding:8px;text-align:left;border-bottom:1px solid #ccc}img{max-width:100%}svg{width:100%;background:#17231e;color:#dfece3;border-radius:8px;padding:12px}pre{white-space:pre-wrap}small{color:#52665a}@media print{body{margin:0}}</style><h1>${e(record.name)}</h1><p>SimTorCL ${APP_VERSION} · esquema ${SCHEMA_VERSION} · modelo ${MODEL_ID}</p><p>Tiempo simulado: ${s.elapsed.toFixed(2)} s · tiempo real activo: ${record.realSeconds.toFixed(2)} s. Los periodos en pausa se excluyen.</p><p>Modelo educativo con propiedades ilustrativas, sin validación experimental. La geometría urbana sintética no representa distribuciones censales. Informe de resultados declarados de una ejecución; una importación no recalcula ni certifica los datos.</p>${screenshot}<p>La imagen corresponde a la vista al exportar; las tablas y curvas describen la ejecución completa.</p><h2>Daño durante la ejecución</h2><p>Naranja: cubierta desprendida. Verde: paredes sin soporte. Curvas muestreadas, de 0 a 100 %.</p>${damageChart(record)}<h2>Resultados por vivienda</h2><table><tr><th>Casa</th><th>Perfil</th><th>Cubierta</th><th>Paredes sin soporte</th><th>Uniones falladas</th><th>Movimiento máximo de paredes</th><th>Estado</th></tr>${rows.map((r) => `<tr><td>${e(r.label)}</td><td>${e(r.profile)}</td><td>${r.detached}/${r.total}</td><td>${r.wallDetached}/${r.wallTotal}</td><td>${r.broken}/${r.connectionTotal}</td><td>${r.maxDisplacement.toFixed(2)} m / ${r.maxTilt.toFixed(1)}°</td><td>${e(r.state)}</td></tr>`).join("")}</table>${plan}${urban}<h2>Configuración inicial</h2><pre>${e(JSON.stringify(record.initial, null, 2))}</pre><h2>Cambios durante la ejecución</h2><pre>${e(JSON.stringify(record.changes, null, 2))}</pre><h2>Eventos</h2><p>${record.events.length} eventos. El archivo JSON y el CSV de eventos conservan todos los identificadores y relaciones.</p><table><tr><th>Tiempo</th><th>Casa</th><th>Evento</th><th>Causa</th></tr>${record.events
     .slice(0, 200)
     .map(
       (v) =>

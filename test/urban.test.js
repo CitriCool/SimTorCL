@@ -146,6 +146,7 @@ test("rotation preserves parcel identities and profiles while rotating the actua
 test("only residential lots add physical bodies; park and building reservations do not add simulated structures", () => {
   const e = new Experiment({
     mode: "neighborhood",
+    environment: "visual",
     greenPercent: 50,
     buildingPercent: 25,
     density: 25,
@@ -180,7 +181,7 @@ test("urban JSON, CSV, links, frames and recalculation preserve the generated pl
   advance(e, 60);
   const r = decode(e.document("Barrio reproducible")),
     copy = new Experiment(r.initial, { record: false });
-  assert.equal(r.schemaVersion, 2);
+  assert.equal(r.schemaVersion, 3);
   assert.deepEqual(r.layout, e.active.layout);
   assert.deepEqual(recalculate(r), r.results);
   applyFrame(copy, r, r.frames.length - 1);
@@ -229,7 +230,7 @@ test("v2.2 execution files migrate without changing their physical results", () 
       "utf8",
     ),
   );
-  assert.equal(legacy.schemaVersion, 2);
+  assert.equal(legacy.schemaVersion, 3);
   assert.equal(legacy.layout, null);
   assert.deepEqual(recalculate(legacy), legacy.results);
 });

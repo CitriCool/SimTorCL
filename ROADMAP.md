@@ -6,6 +6,12 @@ Objetivo: construir un laboratorio educativo que permita generar entornos urbano
 
 Prioridades: **P0** base necesaria para trabajar con confianza; **P1** ampliación del laboratorio; **P2** mayor respaldo físico y territorial; **P3** análisis avanzado sujeto a datos. La secuencia expresa dependencias, no fechas ni estimaciones de duración.
 
+## Prioridad revisada tras probar v2.3
+
+Antes del editor manual, abordar el [entorno físico y el catálogo con procedencia](docs/pendientes-fisicos.md): fuentes por tipología y parámetro, árboles y mobiliario con daño, y edificios con interacción física. Diferenciar colisiones, daño por impacto, efecto aerodinámico y daño del terreno. En v2.3 los parques eran visuales y las parcelas azules eran reservas; el avance y las limitaciones actuales se detallan a continuación.
+
+Primera implementación v2.4: [entorno físico urbano](docs/entorno-fisico.md). Incluye árboles y bancos con uniones rompibles, edificios residenciales de 2 a 5 pisos con núcleo fijo y envolvente desprendible, colisiones, registro y procedencia. Las capacidades mecánicas siguen siendo educativas. Permanecen pendientes calibración técnica, colapso estructural de edificios, rotura adicional por impacto, daño de suelo y modificación del campo de viento.
+
 ## 0. Base disponible — completada
 
 - [x] **BASE-01** Catálogo vinculado a categorías del Censo 2024: albañilería, entramado de madera/acero y hormigón armado; fuentes y supuestos visibles.
@@ -14,7 +20,7 @@ Prioridades: **P0** base necesaria para trabajar con confianza; **P1** ampliaci�
 - [x] **BASE-04** Mundo físico compartido, colisiones de fragmentos entre viviendas y tres trayectorias lineales del tornado a velocidad fija.
 - [x] **BASE-05** Resultados por casa y agregados, identificación de viviendas, enfoque de cámara y colores de daño por lote.
 - [x] **BASE-06** Comparación determinista de perfiles individuales con condiciones comunes, cancelación, pausa y reinicio.
-- [x] **BASE-07** Interfaz adaptable, documentación, 53 pruebas automatizadas y compilación comprobadas; código en GitHub.
+- [x] **BASE-07** Interfaz adaptable, documentación, 62 pruebas automatizadas y compilación comprobadas; código en GitHub.
 
 Límites actuales: trazados sintéticos; propiedades físicas ilustrativas; ausencia de daño adicional por impacto; viento sin apantallamiento ni canalización por edificios; sin presión interior ni validación experimental. Las zonas verdes decorativas actuales no tienen un modelo físico de vegetación.
 
@@ -65,9 +71,9 @@ La generación visual y la configuración son P1. La respuesta estructural requi
 - [ ] **EDI-03** Distinguir edificios residenciales, comerciales, galpones y equipamientos; definir qué tipologías tendrá cada primera entrega.
 - [ ] **EDI-04** Parametrizar cubiertas, fachadas, ventanas, balcones, parapetos y equipos de techo como componentes identificables.
 - [ ] **EDI-05** Definir el modelo resistente por tipología: muros, pórticos u otra idealización respaldada; evitar tratar un edificio como una casa simplemente escalada.
-- [ ] **EDI-06** Distinguir daño en envolvente, elementos secundarios, conexiones y estructura principal.
+- [x] **EDI-06** Distinguir daño en envolvente, elementos secundarios, conexiones y estructura principal.
 - [ ] **EDI-07** Incorporar resultados por edificio y, cuando el modelo lo permita, por piso o fachada.
-- [ ] **EDI-08** Incluir edificios y viviendas en un mismo mundo físico y evaluar colisiones de sus fragmentos con el entorno.
+- [x] **EDI-08** Incluir edificios y viviendas en un mismo mundo físico y evaluar colisiones de sus fragmentos con el entorno.
 - [ ] **EDI-09** Incorporar casas de adobe y viviendas de emergencia con geometría, uniones y comportamiento propios.
 - [ ] **EDI-10** Ampliar variaciones de planta, altura, pendiente y geometría de cubierta de las viviendas, registrando las fuentes de cada variante.
 - [ ] **EDI-11** Definir cuándo se modelan piso, base, anclajes y fundación y cuándo permanecen idealizados.
@@ -82,7 +88,7 @@ Primero se incorporan a la generación y edición 3D; después, por separado, su
 - [ ] **VER-02** Configurar superficie, ubicación, distribución y densidad de árboles, arbustos y setos, respetando accesos y huellas de edificios.
 - [ ] **VER-03** Definir árboles por clases de tamaño y geometría: altura, tronco y copa; asignar identificadores a los elementos físicos.
 - [ ] **VER-04** Incorporar reglas de distribución reproducibles y edición manual de zonas y vegetación.
-- [ ] **VER-05** Distinguir vegetación visual, obstáculos con colisión y vegetación con daño físico; permitir elegir el nivel de detalle.
+- [x] **VER-05** Distinguir vegetación visual, obstáculos con colisión y vegetación con daño físico; permitir elegir el nivel de detalle.
 - [ ] **VER-06** Modelar de forma simplificada rotura de ramas, caída de árboles y fallo de anclaje, con parámetros y fuentes documentados.
 - [ ] **VER-07** Permitir colisiones de árboles y ramas con edificios, otras plantas e infraestructura, e integrar sus eventos y daños.
 - [ ] **VER-08** Investigar y validar el arrastre, la porosidad y la influencia de copas y setos sobre el campo de viento.

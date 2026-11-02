@@ -1,11 +1,16 @@
 import { cleanConfig } from "./records.js";
-import { generateNeighborhood, PARCEL_TYPES, URBAN_DEFAULTS } from "./urban.js";
+import {
+  generateNeighborhood,
+  PARCEL_TYPES,
+  URBAN_DEFAULTS,
+  parcelTypeLabel,
+} from "./urban.js";
 const $ = (id) => document.getElementById(id);
 const area = (n) =>
   n.toLocaleString("es-CL", { maximumFractionDigits: 0 }) + " m²";
 const count = (n, one, many) => `${n} ${n === 1 ? one : many}`;
-const description = (layout) =>
-  `${count(layout.parcels.length, "parcela", "parcelas")} · ${count(layout.counts.house, "vivienda", "viviendas")} · ${count(layout.counts.building, "reserva para edificio", "reservas para edificios")} · ${count(layout.counts.green, "área verde", "áreas verdes")} · ${count(layout.counts.vacant, "libre", "libres")}. Superficie del barrio: ${area(layout.areas.total)}; parcelas verdes: ${area(layout.areas.green)}.`;
+const description = (layout, config) =>
+  `${count(layout.parcels.length, "parcela", "parcelas")} · ${count(layout.counts.house, "vivienda", "viviendas")} · ${count(layout.counts.building, config?.environment === "physical" ? "edificio" : "reserva para edificio", config?.environment === "physical" ? "edificios" : "reservas para edificios")} · ${count(layout.counts.green, "área verde", "áreas verdes")} · ${count(layout.counts.vacant, "libre", "libres")}. Superficie del barrio: ${area(layout.areas.total)}; parcelas verdes: ${area(layout.areas.green)}.`;
 
 export function setupUrban({ experiment, getView, pause, reset }) {
   const fields = [...document.querySelectorAll("[data-urban]")];
@@ -14,14 +19,22 @@ export function setupUrban({ experiment, getView, pause, reset }) {
       ...experiment.config,
       mode: "neighborhood",
       ...Object.fromEntries(
-        fields.map((f) => [f.dataset.urban, Number(f.value)]),
+        fields.map((f) => [
+          f.dataset.urban,
+          f.dataset.urban === "environment" ? f.value : Number(f.value),
+        ]),
       ),
     });
   }
   function preview() {
     try {
+      $("urban-buildingPercent").parentElement.firstChild.textContent =
+        read().environment === "physical"
+          ? "Parcelas con edificios (%)"
+          : "Reservas para edificios (%)";
       $("urban-form-status").textContent = description(
         generateNeighborhood(read()),
+        read(),
       );
       $("urban-apply").disabled = false;
     } catch (error) {
@@ -48,6 +61,27 @@ export function setupUrban({ experiment, getView, pause, reset }) {
       $("urban-form-status").textContent = error.message;
     }
   });
+  $("urban-demo").addEventListener("click", () => {
+    reset({
+      ...experiment.config,
+      mode: "neighborhood",
+      environment: "physical",
+      buildingFloors: 3,
+      rows: 2,
+      columns: 2,
+      lotSize: 12,
+      roadWidth: 4,
+      orientation: 0,
+      seed: 38,
+      density: 100,
+      greenPercent: 25,
+      buildingPercent: 25,
+      wind: 280,
+      radius: 12,
+      reinforcement: 100,
+    });
+    $("urban-dialog").close();
+  });
   $("urban-new-seed").addEventListener("click", () => {
     $("urban-seed").value = crypto.getRandomValues(new Uint32Array(1))[0];
     preview();
@@ -73,7 +107,7 @@ export function setupUrban({ experiment, getView, pause, reset }) {
       $("spacing-label").hidden = isUrban;
       $("urban-results").hidden = !isUrban;
       if (!layout) return;
-      $("urban-summary").textContent = description(layout);
+      $("urban-summary").textContent = description(layout, experiment.config);
       $("urban-config-summary").textContent =
         `${experiment.config.rows} × ${experiment.config.columns} parcelas · ${experiment.config.orientation}° · semilla ${layout.seed}`;
       const houses = new Map(
@@ -84,7 +118,7 @@ export function setupUrban({ experiment, getView, pause, reset }) {
         ...layout.parcels.map(
           (p) =>
             new Option(
-              `${p.id} · ${PARCEL_TYPES[p.type]}${houses.has(p.id) ? " · " + houses.get(p.id) : ""}`,
+              `${p.id} · ${parcelTypeLabel(p.type, experiment.config)}${houses.has(p.id) ? " · " + houses.get(p.id) : ""}`,
               p.id,
             ),
         ),
@@ -94,7 +128,7 @@ export function setupUrban({ experiment, getView, pause, reset }) {
           const tr = document.createElement("tr");
           for (const value of [
             p.id,
-            PARCEL_TYPES[p.type],
+            parcelTypeLabel(p.type, experiment.config),
             houses.get(p.id) ?? "—",
             area(p.area),
             `${p.world.x.toFixed(1)}, ${p.world.z.toFixed(1)}`,
