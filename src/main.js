@@ -1,4 +1,5 @@
 import { ENV_MODEL } from "./environment.js";
+import { refreshParameterLibrary } from "./parameters-ui.js";
 import { setupUrban } from "./urban-ui.js";
 import "./style.css";
 import { FIXED_STEP } from "./physics.js";
@@ -376,6 +377,7 @@ for (const dialog of document.querySelectorAll("dialog"))
   });
 
 $("parameters-button").addEventListener("click", () => {
+  refreshParameterLibrary(simulation.config);
   const { profile, roof, config } = simulation;
   $("census-description").textContent =
     `Tipo representado: casa con acceso directo. Paredes: ${profile.censusWall}. Cubierta: ${roof.censusRoof}. ${CENSUS.scope}`;

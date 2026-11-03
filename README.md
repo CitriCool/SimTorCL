@@ -6,6 +6,12 @@ Laboratorio educativo 3D de viento, desprendimiento de cubiertas y daño en pare
 
 Construido con Vite, Three.js y Cannon-es. Viviendas, texturas, vegetación y efectos se generan en código. Las tipografías se incluyen localmente; la aplicación compilada funciona sin Google Fonts ni servicios externos. Las licencias de bibliotecas y fuentes se distribuyen en `public/licenses/`.
 
+## Biblioteca y comprobación (v2.5)
+
+Desde **Parámetros y fuentes** se puede explorar y exportar la biblioteca versionada: 73 parámetros base y 16 adicionales en barrios con entorno físico. Las nuevas configuraciones, ejecuciones e informes conservan su procedencia. Una comprobación analítica contrasta 10 magnitudes de presión y carga con referencias fijas y permite descargar errores y tolerancias. Los archivos antiguos conservan su modelo y resultados sin atribuirles evidencia nueva.
+
+Las ecuaciones tienen referencias consultadas; los valores mecánicos siguen siendo supuestos educativos pendientes de calibración. Detalles en [biblioteca de parámetros](docs/parametros.md).
+
 ## Ejecutar
 
 Requiere Node.js 22.12 o superior (recomendado: Node 24) y un navegador moderno con WebGL 2.
@@ -141,7 +147,7 @@ El cuaderno permite guardar, cargar, duplicar y nombrar configuraciones y ejecuc
 
 La biblioteca se conserva en el navegador y requiere exportación JSON para trasladarse a otro equipo. La repetición usa fotogramas muestreados y permite recuperar la ejecución pausada anterior. El recálculo reproduce los pasos y controles iniciales. Las importaciones requieren un modelo compatible y se limitan a 40 MB.
 
-[Guía del cuaderno, formato, migración y límites](docs/experimentos.md). Las 62 pruebas cubren física, manzanas, persistencia del formato, eventos, exportación y reproducción.
+[Guía del cuaderno, formato, migración y límites](docs/experimentos.md). Las 68 pruebas cubren física, manzanas, persistencia del formato, eventos, exportación y reproducción.
 
 ![Cuaderno de experimentos](docs/experimentos.png)
 
@@ -159,7 +165,7 @@ Las viviendas participan en la física; las reservas azules representan espacios
 
 En Barrio configurable se pueden generar árboles y bancos con uniones rompibles y edificios de 2 a 5 pisos con estructura fija y envolvente desprendible. Comparten el mundo de colisiones con las viviendas y aparecen en inspección, eventos, resultados, CSV, fotogramas e informes. El formulario incluye una prueba reproducible de parque y edificio.
 
-Las referencias oficiales se distinguen de las propiedades mecánicas educativas pendientes de calibración. El suelo permanece fijo, no se recalcula el viento por obstáculos y los contactos no añaden roturas al receptor. Los archivos antiguos conservan su modo visual al migrar al esquema 3.
+Las referencias oficiales se distinguen de las propiedades mecánicas educativas pendientes de calibración. El suelo permanece fijo, no se recalcula el viento por obstáculos y los contactos no añaden roturas al receptor. Los archivos de esquemas 1 y 2 conservan su modo visual; el esquema 3 conserva el entorno físico declarado. El esquema actual 4 añade la biblioteca de procedencia.
 
 [Alcance, fuentes, prueba y compatibilidad](docs/entorno-fisico.md).
 

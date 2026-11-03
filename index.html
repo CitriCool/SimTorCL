@@ -530,7 +530,7 @@
           <span
             ><span class="footer-dot"></span> MOTOR FÍSICO ACTIVO
             <i>/</i> THREE.JS + CANNON-ES</span
-          ><span>SimTorCL <b>v2.4</b></span>
+          ><span>SimTorCL <b>v2.5</b></span>
         </footer>
       </section>
     </main>
@@ -761,6 +761,91 @@
         también facilita la detección de colisiones.
       </p>
       <div class="source-links" id="source-links"></div>
+      <hr />
+      <h3>Biblioteca de parámetros del modelo actual</h3>
+      <p>
+        Consulta los valores declarados de viviendas, viento, cálculo y entorno
+        físico activo. Las ecuaciones tienen referencias separadas de los
+        valores: ninguna resistencia mecánica de esta entrega está calibrada con
+        ensayos.
+      </p>
+      <details id="library-details">
+        <summary>Explorar parámetros y procedencia</summary>
+        <div class="notebook-filters">
+          <label for="library-group"
+            >Grupo<select id="library-group"></select
+          ></label>
+          <label for="library-search"
+            >Buscar propiedad<input
+              id="library-search"
+              type="search"
+              placeholder="Ej.: anclaje, masa, viento"
+          /></label>
+        </div>
+        <p id="library-count" role="status"></p>
+        <div class="table-scroll library-table">
+          <table class="parameter-table">
+            <thead>
+              <tr>
+                <th>Propiedad</th>
+                <th>Valor</th>
+                <th>Evidencia</th>
+                <th>Aplicación y límites</th>
+              </tr>
+            </thead>
+            <tbody id="library-rows"></tbody>
+          </table>
+        </div>
+        <details>
+          <summary>Fuentes y alcance de cada referencia</summary>
+          <div class="source-links" id="library-sources"></div>
+        </details>
+      </details>
+      <div class="notebook-actions">
+        <button class="reset-button" id="library-json">
+          Descargar biblioteca JSON
+        </button>
+        <button class="reset-button" id="library-csv">
+          Descargar parámetros CSV
+        </button>
+      </div>
+      <h3>Comprobación analítica del cálculo</h3>
+      <p>
+        Referencia: 36 km/h = 10 m/s, densidad asumida 1,225 kg/m³, área 2 m² y
+        Cd supuesto 0,7. Se esperan 61,25 Pa de presión dinámica y 85,75 N de
+        arrastre. También se comprueban componentes, velocidad doble, viento
+        cero y límite del campo sintético.
+      </p>
+      <p class="selection-note">
+        Esta prueba verifica operaciones y unidades. No valida daño estructural,
+        resistencias, colisiones ni el comportamiento de un tornado real. No
+        modifica la simulación.
+      </p>
+      <div class="notebook-actions">
+        <button class="primary-button" id="reference-run">
+          Ejecutar comprobación
+        </button>
+        <button class="reset-button" id="reference-export" disabled>
+          Descargar comprobación JSON
+        </button>
+      </div>
+      <p id="reference-status" role="status">
+        Comprobación todavía no ejecutada.
+      </p>
+      <div id="reference-results" class="table-scroll" hidden>
+        <table class="parameter-table">
+          <thead>
+            <tr>
+              <th>Magnitud</th>
+              <th>Referencia</th>
+              <th>Resultado</th>
+              <th>Error absoluto</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="reference-rows"></tbody>
+        </table>
+      </div>
     </dialog>
     <dialog
       id="comparison-dialog"

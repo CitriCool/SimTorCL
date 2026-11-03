@@ -1833,6 +1833,37 @@ dialog .selection-note {
 .replay-panel output {
   float: right;
 }
+.library-table {
+  max-height: 360px;
+  overflow: auto;
+}
+#parameters-dialog {
+  width: min(880px, 90vw);
+  box-sizing: border-box;
+}
+.library-table table {
+  min-width: 680px;
+}
+.library-table th,
+#reference-results th {
+  width: auto;
+}
+.library-table td {
+  white-space: pre-line;
+}
+#library-sources {
+  display: block;
+}
+#library-sources p {
+  margin: 12px 0;
+}
+#library-search {
+  width: 100%;
+  box-sizing: border-box;
+}
+#reference-results table {
+  min-width: 580px;
+}
 @media (max-width: 600px) {
   .notebook-dialog {
     padding: 28px 16px;

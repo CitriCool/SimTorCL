@@ -40,3 +40,5 @@ El esquema 3 incorpora `environmentModel` y `environmentInventory`, además de l
 Los esquemas 1 y 2 se migran con `environment: "visual"`; las viviendas y la geometría de parcelas conservan sus condiciones anteriores. Las nuevas ejecuciones físicas requieren comenzar desde una configuración física. Los fotogramas incluyen las piezas urbanas, pero no permiten continuar la física desde un fotograma.
 
 La versión `urban-environment-1` debe cambiar cuando se altere su algoritmo o calibración. Toda evolución de propiedades numéricas necesita conservar la procedencia y las condiciones de aplicación. Siguen pendientes la calibración con datos técnicos, los modelos de colapso de edificios, el daño adicional por impactos, la deformación del suelo y el acoplamiento aerodinámico.
+
+Desde v2.5, el esquema 4 añade la [biblioteca de procedencia](parametros.md), sin modificar `urban-environment-1`. Los archivos de esquema 3 conservan su entorno físico y migran sin añadir una biblioteca histórica inexistente.

@@ -1,6 +1,6 @@
 # SimTorCL: roadmap de funcionalidades
 
-Plan maestro actualizado el 2 de noviembre de 2026. Reúne las funcionalidades conversadas, lo ya implementado y la incorporación de edificios y zonas verdes a la generación urbana 3D. Es un plan de desarrollo: las casillas pendientes no representan capacidades disponibles.
+Plan maestro actualizado el 3 de noviembre de 2026. Reúne las funcionalidades conversadas, lo ya implementado y la incorporación de edificios y zonas verdes a la generación urbana 3D. Es un plan de desarrollo: las casillas pendientes no representan capacidades disponibles.
 
 Objetivo: construir un laboratorio educativo que permita generar entornos urbanos, experimentar con viento y daños, explicar los resultados y repetir las comparaciones. La evolución hacia análisis técnico dependerá de datos y validación específicos.
 
@@ -12,6 +12,8 @@ Antes del editor manual, abordar el [entorno físico y el catálogo con proceden
 
 Primera implementación v2.4: [entorno físico urbano](docs/entorno-fisico.md). Incluye árboles y bancos con uniones rompibles, edificios residenciales de 2 a 5 pisos con núcleo fijo y envolvente desprendible, colisiones, registro y procedencia. Las capacidades mecánicas siguen siendo educativas. Permanecen pendientes calibración técnica, colapso estructural de edificios, rotura adicional por impacto, daño de suelo y modificación del campo de viento.
 
+Avance v2.5: [biblioteca versionada y comprobación analítica](docs/parametros.md), con 73 parámetros del modelo base y 16 del entorno, procedencia exportable y preservada en archivos. Caso de presión y cargas con referencias fijas, errores y tolerancias. VAL-01/02/04/10 tienen avance parcial: siguen pendientes resistencias con fuente técnica, casos experimentales y validación física.
+
 ## 0. Base disponible — completada
 
 - [x] **BASE-01** Catálogo vinculado a categorías del Censo 2024: albañilería, entramado de madera/acero y hormigón armado; fuentes y supuestos visibles.
@@ -20,9 +22,9 @@ Primera implementación v2.4: [entorno físico urbano](docs/entorno-fisico.md). 
 - [x] **BASE-04** Mundo físico compartido, colisiones de fragmentos entre viviendas y tres trayectorias lineales del tornado a velocidad fija.
 - [x] **BASE-05** Resultados por casa y agregados, identificación de viviendas, enfoque de cámara y colores de daño por lote.
 - [x] **BASE-06** Comparación determinista de perfiles individuales con condiciones comunes, cancelación, pausa y reinicio.
-- [x] **BASE-07** Interfaz adaptable, documentación, 62 pruebas automatizadas y compilación comprobadas; código en GitHub.
+- [x] **BASE-07** Interfaz adaptable, documentación, 68 pruebas automatizadas y compilación comprobadas; código en GitHub.
 
-Límites actuales: trazados sintéticos; propiedades físicas ilustrativas; ausencia de daño adicional por impacto; viento sin apantallamiento ni canalización por edificios; sin presión interior ni validación experimental. Las zonas verdes decorativas actuales no tienen un modelo físico de vegetación.
+Límites actuales: trazados sintéticos; propiedades físicas ilustrativas; ausencia de daño adicional por impacto; viento sin apantallamiento ni canalización por edificios; sin presión interior ni validación experimental. El modo visual conserva vegetación decorativa; el modo físico incluye uniones rompibles de árboles y bancos.
 
 ## 1. Experimentos reproducibles y explicación del daño — P0
 
@@ -129,6 +131,8 @@ La identificación de fuentes y las pruebas empiezan desde la primera etapa. Las
 - [ ] **VAL-08** Estudiar estabilidad de resultados frente al paso temporal, discretización de piezas y aproximaciones de colisión.
 - [ ] **VAL-09** Investigar funciones de fragilidad por tipología e intensidad, diferenciando las estimadas con datos de las generadas por un modelo educativo.
 - [ ] **VAL-10** Mantener visible el nivel de respaldo de cada módulo y evitar presentar resultados no validados como predicciones de una construcción real.
+
+Estado v2.5: biblioteca `parameters-1` y caso `pressure-reference-1` disponibles. Las casillas de esta etapa permanecen pendientes porque su alcance completo incluye datos técnicos y validación que esta comprobación analítica no sustituye.
 
 Criterio de salida: todo resultado técnico puede vincularse a su versión, fuentes, hipótesis, evaluación de error e incertidumbres pendientes.
 

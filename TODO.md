@@ -2,9 +2,9 @@
 
 Plan futuro consolidado: [ROADMAP.md](ROADMAP.md). Este archivo conserva el detalle de las entregas anteriores y sus pendientes.
 
-Lista de trabajo acordada a partir de la revisión del Censo 2024 y del alcance físico actual. Actualizada el 2 de noviembre de 2026.
+Lista de trabajo acordada a partir de la revisión del Censo 2024 y del alcance físico actual. Actualizada el 3 de noviembre de 2026.
 
-Estado actual: versión 2.1 implementada con tres familias y cuatro variantes, 14 combinaciones de cubierta, uniones rompibles, pérdida de soporte en paredes, elementos secundarios separados y comparación reproducible. Las grietas son trazos esquemáticos de uniones falladas; no hay cálculo continuo de tensiones. Pasaron 33 pruebas locales y la compilación, incluyendo el modo manzana. Se verificaron la escena, selectores, reinicio, fuentes, comparación, cancelación y diseño móvil en navegador. El censo aporta categorías; los valores físicos siguen siendo supuestos educativos. Detalles en [docs/modelo.md](docs/modelo.md).
+Entrega inicial: versión 2.1 implementada con tres familias y cuatro variantes, 14 combinaciones de cubierta, uniones rompibles, pérdida de soporte en paredes, elementos secundarios separados y comparación reproducible. Las grietas son trazos esquemáticos de uniones falladas; no hay cálculo continuo de tensiones. Pasaron 33 pruebas locales y la compilación, incluyendo el modo manzana. Se verificaron la escena, selectores, reinicio, fuentes, comparación, cancelación y diseño móvil en navegador. El censo aporta categorías; los valores físicos siguen siendo supuestos educativos. Detalles en [docs/modelo.md](docs/modelo.md).
 
 1. **Entrega 1: base censal y definición de los modelos**
    - [x] Registrar las categorías oficiales del Censo 2024, distinguiendo tipo de vivienda y materialidad de paredes, cubierta y piso.
@@ -113,3 +113,16 @@ El editor manual queda después de estas prioridades. Ver [alcance y fuentes loc
 - [x] CSV por objeto y unidades de fuerza/momento en eventos; informes con procedencia.
 - [ ] Calibración numérica con fuentes técnicas y validación experimental.
 - [ ] Colapso estructural de edificios, rotura adicional por impacto, daño de suelo y acoplamiento aerodinámico.
+
+## Biblioteca y comprobación (v2.5)
+
+- [x] Biblioteca `parameters-1`: 73 parámetros base y 16 del entorno, con unidades, origen, aplicación y estado de evidencia.
+- [x] Exploración por grupo y búsqueda; exportación completa JSON/CSV desde Parámetros y fuentes.
+- [x] Copia de procedencia en configuraciones, ejecuciones e informes; esquema 4 y migración sin atribución retrospectiva.
+- [x] Caso analítico con 10 verificaciones de presión, cargas, unidades y límites, errores y tolerancias exportables.
+- [x] Fuentes de ecuaciones separadas de propiedades; no se atribuyen resistencias a la NASA ni al Censo.
+- [x] 68 pruebas y compilación; compatibilidad exacta de una ejecución física v2.4 dañada.
+- [ ] Extraer propiedades de fuentes técnicas completas y definir su aplicación por tipología.
+- [ ] Primer caso de validación física independiente, métricas de error y estudios de sensibilidad.
+
+Detalle: [biblioteca, caso y límites](docs/parametros.md). VAL-01/02/04/10 mantienen avance parcial; esta entrega no completa la calibración física.

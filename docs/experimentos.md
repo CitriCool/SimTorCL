@@ -1,4 +1,4 @@
-# Cuaderno de experimentos (desde v2.2; esquema actual 3)
+# Cuaderno de experimentos (desde v2.2; esquema actual 4)
 
 Abre **Cuaderno de experimentos**, debajo de los controles de simulación. El escenario se pausa al abrirlo.
 
@@ -49,7 +49,7 @@ La captura corresponde a la vista al exportar, que puede ser un fotograma interm
 
 ## Formato y límites
 
-El contenedor tiene `format: "simtorcl-experiment"`, `schemaVersion: 3`, `kind: "configuration"` o `"run"`, `modelId`, `model`, `name`, `initial`, `layout` y metadatos de fecha y versión. Una ejecución agrega `startedAt`, `changes`, `steps`, `realSeconds`, `results`, `events` y `frames`.
+El contenedor tiene `format: "simtorcl-experiment"`, `schemaVersion: 4`, `kind: "configuration"` o `"run"`, `modelId`, `model`, `name`, `initial`, `layout` y metadatos de fecha y versión. Una ejecución agrega `startedAt`, `changes`, `steps`, `realSeconds`, `results`, `events` y `frames`.
 
 `model` identifica el algoritmo y registra catálogo, geometría, unidades, reglas, parámetros del motor/campo y fuentes. La identificación es una huella de compatibilidad, no una firma de autenticidad. Cambios del algoritmo requieren actualizar su versión. Una importación no certifica resultados: el recálculo permite contrastarlos.
 
@@ -76,3 +76,5 @@ La migración completa parámetros omitidos con los valores predeterminados actu
 El reloj simulado cuenta pasos de 1/120 s. El reloj real activo cuenta tiempo de pantalla mientras la simulación está en marcha, excluyendo pausas y pestañas ocultas. El ritmo medio es tiempo simulado dividido por tiempo real activo; puede ser menor que 1× si el equipo limita el avance.
 
 El esquema 3 incorpora `environmentModel` y `environmentInventory`. Los esquemas 1 y 2 se migran preservando el entorno visual anterior, para conservar los resultados. Los nuevos objetos físicos tienen identificadores de entidad y parcela, capacidad con unidad N o N·m, eventos, poses y resultados propios. Consulta [Entorno físico](entorno-fisico.md).
+
+El esquema 4 incorpora `parameterLibrary`, una copia de la biblioteca de propiedades y procedencia. Los esquemas 1–3 migran con ese campo en `null`, sin añadir evidencia retrospectiva; los informes lo indican y conservan la versión de aplicación original. La nueva biblioteca y su comprobación analítica se consultan en **Parámetros y fuentes**. Consulta [alcance, fuentes y criterio](parametros.md).

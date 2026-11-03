@@ -1,4 +1,5 @@
 import * as CANNON from "cannon-es";
+import { dynamicPressure } from "./aerodynamics.js";
 import {
   DEFAULTS,
   PRESETS,
@@ -29,7 +30,7 @@ export function windAt(position, center, config, area = 1) {
   const attenuation =
     (1 - distance / config.radius) ** 1.15 *
     Math.max(0, 1 - Math.max(0, position.y ?? 0) / 32);
-  const load = 0.5 * 1.225 * (config.wind / 3.6) ** 2 * area * attenuation;
+  const load = dynamicPressure(config.wind / 3.6) * area * attenuation;
   const inverse = 1 / Math.max(distance, 0.25);
   return new CANNON.Vec3(
     (-dz * 0.85 - dx * 0.18) * inverse * load,
