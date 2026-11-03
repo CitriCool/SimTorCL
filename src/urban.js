@@ -1,4 +1,5 @@
-// Synthetic planning geometry. Reservations and landscaping have no damage model.
+import { normalizeSitePlan, applySitePlan } from "./site-plan.js";
+// Synthetic planning geometry; the optional manual plan overrides parcel uses.
 export const URBAN_VERSION = "urban-grid-v1";
 export const URBAN_DEFAULTS = Object.freeze({
   rows: 3,
@@ -141,7 +142,7 @@ export function generateNeighborhood(input) {
       width,
       depth: c.roadWidth,
     });
-  return {
+  const layout = {
     version: URBAN_VERSION,
     seed: c.seed,
     yaw,
@@ -171,6 +172,8 @@ export function generateNeighborhood(input) {
       green: green * c.lotSize ** 2,
     },
   };
+  const plan = normalizeSitePlan(c.sitePlan, c);
+  return plan ? applySitePlan(layout, plan) : layout;
 }
 
 export function housePlacements(config, layout = null) {
@@ -185,6 +188,9 @@ export function housePlacements(config, layout = null) {
         yaw: p.houseYaw,
         parcelId: p.id,
         profileOffset: p.profileOffset,
+        ...(p.objectId
+          ? { objectId: p.objectId, profile: p.houseProfile, roof: p.houseRoof }
+          : {}),
       }));
   const side = config.mode === "block9" ? 3 : 4;
   return Array.from({ length: side * side }, (_, i) => ({

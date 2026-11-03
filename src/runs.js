@@ -40,6 +40,10 @@ export function* compareScenarios(config, key, value, seconds = 20) {
 
   const first = cleanConfig(config),
     second = cleanConfig({ ...config, [key]: value });
+  if (first.sitePlan && ["distribution", "roof", "lotSize"].includes(key))
+    throw new Error(
+      "El plano manual conserva las propiedades de cada objeto. Compara refuerzo, recorrido u orientación; para cambiar objetos utiliza el editor.",
+    );
   if (first.mode === "neighborhood" && key === "spacing")
     throw new Error(
       "El barrio usa lado de parcela, veredas y ancho de calle para definir las separaciones.",

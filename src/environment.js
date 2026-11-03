@@ -104,17 +104,26 @@ export function environmentBlueprint(config, layout) {
     shape = "box",
     rotation = [0, 0, 0],
   ) {
-    const local = rotatePoint(pos[0], pos[2], layout.yaw),
+    const objectYaw = ((p.objectRotation ?? 0) * Math.PI) / 180;
+    const turned = objectYaw
+      ? rotatePoint(pos[0] - p.x, pos[2] - p.z, objectYaw)
+      : null;
+    const local = rotatePoint(
+        turned ? p.x + turned.x : pos[0],
+        turned ? p.z + turned.z : pos[2],
+        layout.yaw,
+      ),
       def = {
         id: pieces.length,
         entityId: e.id,
+        ...(p.objectId ? { objectId: p.objectId } : {}),
         entityType: e.type,
         parcelId: p.id,
         kind,
         size,
         position: [local.x, pos[1], local.z],
         rotation: [...rotation],
-        yaw: layout.yaw,
+        yaw: layout.yaw + objectYaw,
         mass,
         area,
         parentId: parent?.id ?? null,
@@ -139,7 +148,7 @@ export function environmentBlueprint(config, layout) {
   for (const p of layout.parcels) {
     if (p.type === "green")
       for (const [i, sign] of [-1, 1].entries()) {
-        const e = entity(`V-${p.id}-T${i + 1}`, "tree", p),
+        const e = entity(`V-${p.objectId ?? p.id}-T${i + 1}`, "tree", p),
           x = p.x + sign * p.size * 0.28,
           z = p.z + sign * p.size * 0.27;
         const trunk = part(
@@ -184,7 +193,7 @@ export function environmentBlueprint(config, layout) {
             "crown",
           );
         }
-        const b = entity(`M-${p.id}-B${i + 1}`, "bench", p),
+        const b = entity(`M-${p.objectId ?? p.id}-B${i + 1}`, "bench", p),
           bx = p.x + sign * 2.5,
           bz = p.z + sign * 1.5;
         const frame = part(
@@ -223,8 +232,9 @@ export function environmentBlueprint(config, layout) {
         );
       }
     if (p.type === "building") {
-      const e = entity(`E-${p.id}`, "building", p),
-        height = config.buildingFloors * V.storeyHeight;
+      const floors = p.buildingFloors ?? config.buildingFloors;
+      const e = entity(`E-${p.objectId ?? p.id}`, "building", p),
+        height = floors * V.storeyHeight;
       const core = part(
         e,
         p,
@@ -234,7 +244,7 @@ export function environmentBlueprint(config, layout) {
         7 * height * 7 * V.concreteDensity,
         0,
       );
-      for (let floor = 0; floor < config.buildingFloors; floor++)
+      for (let floor = 0; floor < floors; floor++)
         for (let face = 0; face < 4; face++) {
           const angle = (face * Math.PI) / 2,
             normal = [Math.sin(angle), Math.cos(angle)],

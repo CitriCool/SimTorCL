@@ -103,6 +103,7 @@ export function setupNotebook({
     "radius",
     "reinforcement",
     "urban-open",
+    "editor-open",
     ...Array.from(document.querySelectorAll("[data-preset]")),
   ];
   let disabled = [];
@@ -279,7 +280,11 @@ export function setupNotebook({
   function inspectDetail() {
     const p = piece(),
       h = owner();
-    if (!p) return;
+    $("inspect-focus").disabled = !p;
+    if (!p) {
+      $("piece-detail").textContent = "No hay piezas en esta selección.";
+      return;
+    }
     const material =
       p.details.material ??
       (p.kind === "roof"
@@ -306,7 +311,7 @@ export function setupNotebook({
         : "";
     $("piece-detail").textContent =
       movement +
-      `${p.entityId ?? h.label} · ${labels[p.kind]} #${p.id}\nMaterial / sistema: ${material}\nMasa: ${p.mass.toFixed(1)} kg · superficie: ${p.area.toFixed(2)} m²\nEstado actual: ${p.detached ? "liberada" : "con soporte"} · ${p.damage} uniones ${p.kind === "wall" ? "estructurales " : ""}falladas\nPosición: ${p.body.position
+      `${p.entityId ?? p.objectId ?? h.label} · ${labels[p.kind]} #${p.id}${p.parcelId ? " · " + p.parcelId : ""}\nMaterial / sistema: ${material}\nMasa: ${p.mass.toFixed(1)} kg · superficie: ${p.area.toFixed(2)} m²\nEstado actual: ${p.detached ? "liberada" : "con soporte"} · ${p.damage} uniones ${p.kind === "wall" ? "estructurales " : ""}falladas\nPosición: ${p.body.position
         .toArray()
         .map((n) => n.toFixed(2))
         .join(", ")} m\n${
@@ -347,6 +352,17 @@ export function setupNotebook({
     if (c.mode === "neighborhood")
       $("run-conditions").textContent =
         `Barrio: ${c.rows} × ${c.columns} parcelas · semilla ${c.seed} · parcela ${c.lotSize} m · calles ${c.roadWidth} m · orientación ${c.orientation}° · ${PROFILES[c.profile].label} / ${ROOFS[c.roof].label} · ocupación residencial ${c.density} %, verdes ${c.greenPercent} %, reservas ${c.buildingPercent} % · ${c.wind} km/h · radio ${c.radius} m · refuerzo A ${c.reinforcement} %.`;
+    if (c.sitePlan)
+      $("run-conditions").textContent =
+        `Plano manual: ${c.rows} × ${c.columns} parcelas, propiedades por objeto conservadas · ${c.wind} km/h · radio ${c.radius} m · refuerzo A ${c.reinforcement} %.`;
+    for (const option of $("run-variable").options)
+      option.disabled =
+        !!c.sitePlan &&
+        ["distribution", "roof", "lotSize"].includes(option.value);
+    if ($("run-variable").selectedOptions[0]?.disabled) {
+      $("run-variable").value = "reinforcement";
+      choices();
+    }
     $("verify-run").disabled = !snapshot.steps;
   }
   $("notebook-open").addEventListener(

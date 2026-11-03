@@ -170,7 +170,7 @@ export function parameterLibrary(model, environment = null) {
         p.value,
         p.unit,
         "Entorno urbano",
-        "urban-environment-1",
+        environment.version,
         "illustrative",
         key === "treeHeight"
           ? "Referencia nominal: la geometría real se conserva en el inventario de piezas; este valor no controla por sí solo la altura de la copa."

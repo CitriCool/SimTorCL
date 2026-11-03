@@ -1,33 +1,33 @@
 # Plan integrado: construir, simular y entender
 
-Actualizado el 3 de noviembre de 2026. Integra la propuesta de una interfaz didáctica con los pendientes del [roadmap maestro](../ROADMAP.md). Es un plan de trabajo: el editor por arrastre aún no está implementado. La versión disponible es v2.5.
+Actualizado el 3 de noviembre de 2026. Integra la propuesta de una interfaz didáctica con los pendientes del [roadmap maestro](../ROADMAP.md). B2 está implementada en v2.6; B3 y las etapas posteriores conservan sus pendientes. Consulta [uso, formato y límites del editor](editor.md).
 
 ## Punto de partida
 
 Ya existen viviendas y cubiertas configurables, generación de barrios, árboles y bancos con uniones rompibles, edificios residenciales de 2 a 5 pisos con núcleo fijo, biblioteca de experimentos, eventos, inspección, repetición, comparaciones y exportaciones. La biblioteca de parámetros y el caso analítico de v2.5 aportan trazabilidad y verificación numérica; las resistencias siguen pendientes de calibración física.
 
-La prioridad inmediata pasa a ser el editor sobre las parcelas actuales. El respaldo técnico continúa durante su desarrollo y en las entregas posteriores. Los pendientes físicos no se eliminan ni se consideran resueltos por mejorar la interfaz.
+El editor sobre las parcelas actuales está disponible en B2 (v2.6); la siguiente entrega es B3. El respaldo técnico continúa durante su desarrollo y en las entregas posteriores. Los pendientes físicos no se eliminan ni se consideran resueltos por mejorar la interfaz.
 
-## B2: construir la manzana — siguiente entrega
+## B2: construir la manzana — implementada en v2.6
 
 Relacionada con URB-06/07, UX-01/02/06 y PRO-01/08/09.
 
-- [ ] Dar protagonismo al terreno, con paleta de infraestructuras y panel de propiedades del objeto seleccionado. Ofrecer vista superior para colocar y perspectiva para revisar.
-- [ ] Permitir arrastrar una casa, edificio o área verde sobre una parcela. Inicialmente el parque conserva su conjunto de árboles y bancos; la colocación independiente de estos objetos corresponde a B3.
-- [ ] Ofrecer también seleccionar el elemento y después su destino, mediante clic, toque o controles de teclado. El arrastre no será la única forma de construir.
-- [ ] Mostrar una vista previa con ajuste a la parcela/cuadrícula. Indicar ubicación válida o inválida mediante texto o símbolos además del color; impedir superposición indebida con construcciones, accesos y calles.
-- [ ] Seleccionar, mover, rotar, duplicar y eliminar objetos; permitir deshacer y rehacer. Una colocación inválida conserva el objeto y la distribución anterior.
-- [ ] Configurar por objeto los atributos disponibles: perfil y cubierta de viviendas, pisos de edificios y tipo de uso de parcela. Los controles deben respetar las combinaciones y límites físicos del catálogo.
-- [ ] Separar el modo de edición del cálculo y de la repetición. Editar requiere un escenario intacto; ofrecer guardar resultados antes de reconstruir y explicar qué acción los descarta.
-- [ ] Guardar explícitamente el plano manual con identificadores, posiciones, orientaciones y propiedades. La semilla conserva su papel en la generación inicial; no sustituye la geometría editada.
-- [ ] Versionar el formato de experimento y validar las ediciones antes de sustituir el escenario activo. Conservar importación, repetición y recálculo de los archivos anteriores.
-- [ ] Verificar colocación, selección, deshacer/rehacer, reglas geométricas, estabilidad sin viento y correspondencia entre representación, colisión y piezas físicas. Comprobar guardado/carga con geometría idéntica en escritorio y móvil.
+- [x] Dar protagonismo al terreno, con paleta de infraestructuras y panel de propiedades del objeto seleccionado. Ofrecer vista superior para colocar y perspectiva para revisar.
+- [x] Permitir arrastrar una casa, edificio o área verde sobre una parcela. Inicialmente el parque conserva su conjunto de árboles y bancos; la colocación independiente de estos objetos corresponde a B3.
+- [x] Ofrecer también seleccionar el elemento y después su destino, mediante clic, toque o controles de teclado. El arrastre no será la única forma de construir.
+- [x] Mostrar una vista previa con ajuste a la parcela/cuadrícula. Indicar ubicación válida o inválida mediante texto o símbolos además del color; impedir superposición indebida con construcciones, accesos y calles.
+- [x] Seleccionar, mover, rotar, duplicar y eliminar objetos; permitir deshacer y rehacer. Una colocación inválida conserva el objeto y la distribución anterior.
+- [x] Configurar por objeto los atributos disponibles: perfil y cubierta de viviendas, pisos de edificios y tipo de uso de parcela. Los controles deben respetar las combinaciones y límites físicos del catálogo.
+- [x] Separar el modo de edición del cálculo y de la repetición. Editar requiere un escenario intacto; ofrecer guardar resultados antes de reconstruir y explicar qué acción los descarta.
+- [x] Guardar explícitamente el plano manual con identificadores, posiciones, orientaciones y propiedades. La semilla conserva su papel en la generación inicial; no sustituye la geometría editada.
+- [x] Versionar el formato de experimento y validar las ediciones antes de sustituir el escenario activo. Conservar importación, repetición y recálculo de los archivos anteriores.
+- [x] Verificar colocación, selección, deshacer/rehacer, reglas geométricas, estabilidad sin viento y correspondencia entre representación, colisión y piezas físicas. Comprobar guardado/carga con geometría idéntica en escritorio y móvil.
 
 **Criterio de cierre:** crear una manzana con casa, edificio y parque, corregir una acción, guardar y cargar sin alterar sus propiedades, y simularla con los controles existentes. La edición no exige que ya existan trayectorias libres ni calles editables.
 
 ## B3: preparar la simulación y entender el daño
 
-Relacionada con URB-08/09, VER-02/04, FIS-08/09, UX-03/04/05 y PRO-12. Reutiliza EXP-06 a EXP-10, ya disponibles, y las amplía al plano editado.
+Relacionada con URB-08/09/12, VER-02/04, FIS-08/09, UX-03/04/05 y PRO-12. Reutiliza EXP-06 a EXP-10, ya disponibles, y las amplía al plano editado.
 
 - [ ] Ampliar la paleta a árboles y bancos colocados individualmente, con identificadores persistentes, geometría válida y participación en el inventario y la física. Añadir otras especies o mobiliario cuando exista su modelo definido.
 - [ ] Permitir dibujar y guardar la trayectoria sobre el terreno; controlar intensidad, traslación y duración de forma comprensible y con unidades.
@@ -75,4 +75,4 @@ Se mantienen en el roadmap completo:
 - Respuesta de suelo y fundaciones, diferenciando contactos con el plano, fallo de anclaje y deformación real (FIS-12, EDI-11, GEO-07).
 - Costos, escombros, pérdida de uso, recuperación, exposición y comparación de mitigaciones cuando existan modelos y datos de consecuencias (CON-01 a CON-07).
 
-La secuencia expresa prioridades y dependencias, sin comprometer fechas. Todas las casillas de este documento describen trabajo pendiente.
+La secuencia expresa prioridades y dependencias, sin comprometer fechas. Las casillas marcadas corresponden al alcance B2 verificado en v2.6; las abiertas conservan trabajo pendiente.

@@ -345,7 +345,10 @@ export class SceneView {
       this.meshes = new Map();
       this.createOneHouse();
       root.add(this.houseRoot);
-      for (const entry of this.meshes) meshes.set(...entry);
+      for (const [piece, mesh] of this.meshes) {
+        mesh.userData.parcelId = house.parcelId;
+        meshes.set(piece, mesh);
+      }
     }
     for (const piece of experiment.environment?.pieces ?? []) {
       const material = this.material(
@@ -379,6 +382,7 @@ export class SceneView {
       mesh.castShadow = true;
       mesh.receiveShadow = true;
       group.add(mesh);
+      group.userData.parcelId = piece.parcelId;
       root.add(group);
       meshes.set(piece, group);
     }
@@ -390,7 +394,7 @@ export class SceneView {
       this.addParcelLabel(
         e.id,
         p.world.x,
-        experiment.config.buildingFloors * 3 + 1,
+        (p.buildingFloors ?? experiment.config.buildingFloors) * 3 + 1,
         p.world.z,
         this.districtTerrain,
         9,
@@ -924,6 +928,79 @@ export class SceneView {
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(width, height, false);
+  }
+
+  pickParcel(clientX, clientY, useObjects = true) {
+    const layout = this.simulation.active?.layout;
+    if (!layout) return null;
+    const rect = this.canvas.getBoundingClientRect();
+    if (
+      !rect.width ||
+      clientX < rect.left ||
+      clientX > rect.right ||
+      clientY < rect.top ||
+      clientY > rect.bottom
+    )
+      return null;
+    const ray = new THREE.Raycaster();
+    ray.setFromCamera(
+      new THREE.Vector2(
+        ((clientX - rect.left) / rect.width) * 2 - 1,
+        (-(clientY - rect.top) / rect.height) * 2 + 1,
+      ),
+      this.camera,
+    );
+    if (useObjects) {
+      for (const hit of ray.intersectObjects([...this.meshes.values()], true)) {
+        let object = hit.object;
+        while (object && !object.userData.parcelId) object = object.parent;
+        if (object?.userData.parcelId) return object.userData.parcelId;
+      }
+    }
+    const point = ray.ray.intersectPlane(
+      new THREE.Plane(new THREE.Vector3(0, 1, 0), 0),
+      new THREE.Vector3(),
+    );
+    if (!point) return null;
+    const x = Math.cos(layout.yaw) * point.x - Math.sin(layout.yaw) * point.z;
+    const z = Math.sin(layout.yaw) * point.x + Math.cos(layout.yaw) * point.z;
+    return (
+      layout.parcels.find(
+        (p) =>
+          Math.abs(p.x - x) <= p.size / 2 && Math.abs(p.z - z) <= p.size / 2,
+      )?.id ?? null
+    );
+  }
+
+  highlightParcel(id, state = "selected") {
+    const p = this.simulation.active?.layout?.parcels.find((p) => p.id === id);
+    if (!p) {
+      if (this.editorMarker) this.editorMarker.visible = false;
+      return;
+    }
+    if (!this.editorMarker) {
+      this.editorMarker = new THREE.Mesh(
+        new THREE.BoxGeometry(1, 0.12, 1),
+        new THREE.MeshBasicMaterial({
+          color: "#7edbd0",
+          wireframe: true,
+          depthTest: false,
+        }),
+      );
+      this.editorMarker.renderOrder = 20;
+      this.scene.add(this.editorMarker);
+    }
+    this.editorMarker.visible = true;
+    this.editorMarker.scale.set(p.size, 1, p.size);
+    this.editorMarker.position.set(p.world.x, 0.12, p.world.z);
+    this.editorMarker.rotation.y = this.simulation.active.layout.yaw;
+    this.editorMarker.material.color.set(
+      state === "invalid"
+        ? "#ff9a7e"
+        : state === "valid"
+          ? "#e6dc8d"
+          : "#7edbd0",
+    );
   }
 
   sync() {

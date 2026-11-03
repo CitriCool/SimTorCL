@@ -14,7 +14,7 @@ Primera implementación v2.4: [entorno físico urbano](docs/entorno-fisico.md). 
 
 Avance v2.5: [biblioteca versionada y comprobación analítica](docs/parametros.md), con 73 parámetros del modelo base y 16 del entorno, procedencia exportable y preservada en archivos. Caso de presión y cargas con referencias fijas, errores y tolerancias. VAL-01/02/04/10 tienen avance parcial: siguen pendientes resistencias con fuente técnica, casos experimentales y validación física.
 
-Próxima entrega B2: editor sobre las parcelas existentes, con paleta de infraestructuras, colocación por arrastre o selección, propiedades por objeto, deshacer/rehacer y guardado reproducible. Después se amplían la colocación independiente de árboles y mobiliario, las trayectorias dibujadas y la explicación visual de resultados. Calles y terrenos de forma libre se abordan en una entrega posterior. El desglose y sus criterios están en [el plan integrado del editor](docs/editor-didactico.md).
+Entrega B2 implementada en v2.6: [editor de manzanas](docs/editor.md) sobre las parcelas existentes, con paleta de infraestructuras, colocación por arrastre o selección, propiedades por objeto, deshacer/rehacer y guardado reproducible. Después se amplían la colocación independiente de árboles y mobiliario, las trayectorias dibujadas y la explicación visual de resultados. Calles y terrenos de forma libre se abordan en una entrega posterior. El desglose y sus criterios están en [el plan integrado del editor](docs/editor-didactico.md).
 
 ## 0. Base disponible — completada
 
@@ -24,7 +24,7 @@ Próxima entrega B2: editor sobre las parcelas existentes, con paleta de infraes
 - [x] **BASE-04** Mundo físico compartido, colisiones de fragmentos entre viviendas y tres trayectorias lineales del tornado a velocidad fija.
 - [x] **BASE-05** Resultados por casa y agregados, identificación de viviendas, enfoque de cámara y colores de daño por lote.
 - [x] **BASE-06** Comparación determinista de perfiles individuales con condiciones comunes, cancelación, pausa y reinicio.
-- [x] **BASE-07** Interfaz adaptable, documentación, 68 pruebas automatizadas y compilación comprobadas; código en GitHub.
+- [x] **BASE-07** Interfaz adaptable, documentación, 78 pruebas automatizadas y compilación comprobadas; código en GitHub.
 
 Límites actuales: trazados sintéticos; propiedades físicas ilustrativas; ausencia de daño adicional por impacto; viento sin apantallamiento ni canalización por edificios; sin presión interior ni validación experimental. El modo visual conserva vegetación decorativa; el modo físico incluye uniones rompibles de árboles y bancos.
 
@@ -49,25 +49,26 @@ Criterio de salida: otra persona puede cargar una configuración, repetirla con 
 
 ## 2. Generación urbana 3D y editor de escenarios — P1
 
-Depende del formato de experimento de la etapa 1. Primera entrega B1 disponible en v2.3: [generador de barrio y alcance](docs/barrio.md). El editor y las configuraciones por objeto siguen pendientes.
+Depende del formato de experimento de la etapa 1. Primera entrega B1 disponible en v2.3: [generador de barrio y alcance](docs/barrio.md). El editor y las propiedades por objeto están disponibles desde [v2.6](docs/editor.md) sobre la cuadrícula actual; permanecen pendientes objetos verdes independientes y calles de forma libre.
 
 - [x] **URB-01** Generalizar las cuadrículas actuales a manzanas de tamaño y forma configurables, con calles perimetrales, interiores y orientación definidas.
 - [x] **URB-02** Incorporar parcelas, veredas, accesos, patios, retranqueos y separación entre construcciones.
 - [ ] **URB-03** Configurar densidad, ocupación de suelo, proporción de tipos de construcción y proporción de zonas verdes; identificar las distribuciones manuales o sintéticas.
 - [x] **URB-04** Incorporar una semilla de generación para reconstruir exactamente el mismo barrio.
 - [x] **URB-05** Evitar superposición entre volúmenes, parcelas, calles, zonas verdes y accesos mediante reglas geométricas explícitas.
-- [ ] **URB-06** Crear un editor con paleta para arrastrar, colocar, mover, rotar, duplicar y eliminar construcciones y zonas verdes, con ajuste a parcelas/cuadrícula y deshacer/rehacer. Ampliar después a árboles y mobiliario independientes.
-- [ ] **URB-07** Permitir configurar cada parcela y objeto desde su selección: perfil y cubierta de casas, pisos de edificios y propiedades disponibles de áreas verdes, conservando identificadores y límites del catálogo físico.
+- [x] **URB-06** Crear un editor con paleta para arrastrar, colocar, mover, rotar, duplicar y eliminar construcciones y zonas verdes, con ajuste a parcelas/cuadrícula y deshacer/rehacer. La colocación independiente de árboles y mobiliario sigue en URB-12.
+- [x] **URB-07** Permitir configurar cada parcela y objeto desde su selección: perfil y cubierta de casas, pisos de edificios y propiedades disponibles de áreas verdes, conservando identificadores y límites del catálogo físico.
 - [ ] **URB-08** Añadir escenarios predefinidos: residencial de baja altura, barrio mixto, entorno con edificios y barrio con parque; incluir un ejemplo guiado de viviendas reforzadas.
-- [ ] **URB-09** Permitir repetir comparaciones sobre la misma geometría, conservando identidades de edificios, parcelas y elementos del terreno.
+- [x] **URB-09** Permitir repetir comparaciones sobre la misma geometría, conservando identidades de edificios, parcelas y elementos del terreno.
 - [ ] **URB-10** Diferenciar visualización, geometría de colisión y modelo resistente de cada objeto del catálogo.
 - [ ] **URB-11** Ampliar el editor a calles, parcelas y terrenos de forma libre, con reglas de acceso, separación y geometría válidas; conservar la reconstrucción reproducible.
+- [ ] **URB-12** Extender la paleta a árboles y mobiliario colocados individualmente, con identidades, reglas de geometría y modelo físico propios.
 
 Alcance de B1: cuadrículas rectangulares de 2 a 4 filas y columnas; parcelas, veredas y accesos simples; proporciones de usos, reservas para edificios y parques visuales. URB-03 tiene avance parcial: faltan proporciones por variante constructiva y control independiente de ocupación edificada.
 
-Alcance previsto de B2: edición sobre la cuadrícula actual, vista previa de colocación válida/inválida, propiedades por objeto y alternativas al arrastre para teclado y pantalla táctil. El plano editado debe guardarse explícitamente: la semilla por sí sola no representa los cambios manuales. El formato se versionará para conservar geometría, propiedades y resultados de los archivos existentes. Un objeto rechazado no reemplaza ni elimina el anterior. Las reglas de URB-05 deben comprobar también los cambios manuales.
+Alcance de B2 disponible en v2.6: edición sobre la cuadrícula actual, vista previa de colocación válida/inválida, propiedades por objeto y alternativas al arrastre para teclado y pantalla táctil. El plano editado debe guardarse explícitamente: la semilla por sí sola no representa los cambios manuales. El esquema 5 conserva geometría y propiedades manuales, con migración de archivos anteriores. Un objeto rechazado no reemplaza ni elimina el anterior. Las reglas de URB-05 deben comprobar también los cambios manuales.
 
-Criterio de salida de la etapa completa, aún pendiente: un escenario mixto puede generarse, editarse, guardarse y regenerarse con posiciones y parámetros idénticos, sin solapamientos no intencionados.
+Criterio de salida de B2 cumplido sobre la cuadrícula actual; la etapa completa incorpora las ampliaciones pendientes: un escenario mixto puede generarse, editarse, guardarse y regenerarse con posiciones y parámetros idénticos, sin solapamientos no intencionados.
 
 ## 3. Edificios y ampliación del catálogo construido — P1 / P2
 
@@ -211,18 +212,18 @@ Estos ítems coordinan capacidades ya identificadas en URB, EXP, FIS y PRO; sus 
 - [ ] **UX-03** Ofrecer ayudas breves según la acción, una guía inicial y ejemplos listos para modificar, reutilizando URB-08 y PRO-12.
 - [ ] **UX-04** Explicar daños al seleccionar una pieza o recorrer la línea de tiempo, a partir de los eventos registrados de EXP-06/07/09; distinguir causas calculadas, datos ausentes y límites del modelo.
 - [ ] **UX-05** Facilitar la lectura visual del estado inicial y dañado y de las alternativas comparadas, reutilizando EXP-09/10 y URB-09; conservar geometría e identidades cuando solo se modifica el refuerzo.
-- [ ] **UX-06** Diferenciar edición, cálculo y repetición. Bloquear transformaciones mientras corre la física o se reproduce una grabación; volver al diseño requiere una reconstrucción intacta explícita y conservar o descartar resultados mediante acciones claras.
+- [x] **UX-06** Diferenciar edición, cálculo y repetición. Bloquear transformaciones mientras corre la física o se reproduce una grabación; volver al diseño requiere una reconstrucción intacta explícita y conservar o descartar resultados mediante acciones claras.
 
 Criterio de salida inicial: una persona puede colocar una casa, un edificio y un parque con arrastre o selección, corregir una acción con deshacer, guardar el barrio, ejecutar un recorrido y consultar una explicación de daño sin abrir parámetros avanzados. El mismo barrio editado se recupera con idéntica geometría y propiedades.
 
 ## Orden integrado de las próximas entregas
 
-Punto de partida: A completada; B1 disponible; C y D tienen avances parciales en v2.4/v2.5. Se conservan todas las tareas pendientes anteriores y se reorganizan las próximas entregas:
+Punto de partida: A y B1/B2 disponibles; C y D tienen avances parciales en v2.4/v2.5. B2 se cerró en v2.6 para casas, edificios y parques como conjunto; el detalle figura en [el editor](docs/editor.md). Se conservan todas las tareas pendientes anteriores y se reorganizan las próximas entregas:
 
 | Orden | Entrega | Alcance principal | Condición para cerrar |
 | --- | --- | --- | --- |
-| 1 | B2 · Construir | Editor por parcelas, arrastre/selección, propiedades, deshacer/rehacer, guardado; URB-06/07, UX-01/02/06, PRO-01/08 | Barrio mixto editable, sin solapamientos indebidos, guardable y reproducible; compatibilidad histórica |
-| 2 | B3 · Simular y entender | Objetos verdes independientes, ejemplos guiados, trayectorias dibujadas, controles de duración/intensidad y explicación visual; URB-08/09, VER-02/04, FIS-08/09, UX-03/04/05 | Recorrido guardable, eventos explicables y comparación con la misma geometría editada |
+| Completada en v2.6 | B2 · Construir | Editor por parcelas, arrastre/selección, propiedades, deshacer/rehacer, guardado; URB-06/07, UX-01/02/06, PRO-01/08 | Barrio mixto editable, sin solapamientos indebidos, guardable y reproducible; compatibilidad histórica |
+| Siguiente | B3 · Simular y entender | Objetos verdes independientes, ejemplos guiados, trayectorias dibujadas, controles de duración/intensidad y explicación visual; URB-08/09/12, VER-02/04, FIS-08/09, UX-03/04/05 | Recorrido guardable, eventos explicables y comparación con la misma geometría editada |
 | 3 | C · Interacción física | Nuevas roturas por impacto y cadenas causales; ampliar árboles, mobiliario y edificios; FIS-01/02, EDI y VER pendientes | Pruebas por mecanismo, origen/receptor de impactos y límites físicos documentados |
 | Transversal desde B2 | D · Respaldo y validación | Fuentes por propiedad, calibración, caso físico de referencia, error, sensibilidad y estabilidad; VAL-01 a VAL-05/08/10 | Evidencia y criterios específicos para cada capacidad que se incorpore |
 | 4 | B4 / E · Escala y territorio | Calles y terrenos libres, catálogo ampliado, rendimiento, datos por región/comuna e importación geográfica; URB-03/11, EDI, VER, GEO y PRO | Geometría válida, procedencia y distinción entre datos observados y supuestos |

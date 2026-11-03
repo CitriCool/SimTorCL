@@ -6,6 +6,16 @@ Laboratorio educativo 3D de viento, desprendimiento de cubiertas y daño en pare
 
 Construido con Vite, Three.js y Cannon-es. Viviendas, texturas, vegetación y efectos se generan en código. Las tipografías se incluyen localmente; la aplicación compilada funciona sin Google Fonts ni servicios externos. Las licencias de bibliotecas y fuentes se distribuyen en `public/licenses/`.
 
+## Editor de manzanas (v2.6)
+
+Abre **Construir mi manzana** para arrastrar casas, edificios y parques sobre parcelas libres, mover, girar, duplicar o eliminar objetos y deshacer/rehacer. Puedes configurar el perfil y cubierta de cada casa y los pisos de cada edificio. La colocación por clic, teclado y toque ofrece una alternativa al arrastre.
+
+El editor utiliza un borrador independiente: guarda el diseño en biblioteca o JSON y aplícalo para simular desde cero. Si hay resultados anteriores, permite conservarlos antes de reconstruir. Las identidades y propiedades manuales se mantienen al guardar, cargar, repetir y recalcular. Las calles permanecen fijas; los árboles y bancos del parque se mueven como conjunto.
+
+![Editor de una manzana mixta](docs/editor-manzana.png)
+
+Consulta [uso, compatibilidad y límites](docs/editor.md) y el [ejemplo importable](docs/examples/manzana-editor-v2.6.json).
+
 ## Biblioteca y comprobación (v2.5)
 
 Desde **Parámetros y fuentes** se puede explorar y exportar la biblioteca versionada: 73 parámetros base y 16 adicionales en barrios con entorno físico. Las nuevas configuraciones, ejecuciones e informes conservan su procedencia. Una comprobación analítica contrasta 10 magnitudes de presión y carga con referencias fijas y permite descargar errores y tolerancias. Los archivos antiguos conservan su modelo y resultados sin atribuirles evidencia nueva.
@@ -147,7 +157,7 @@ El cuaderno permite guardar, cargar, duplicar y nombrar configuraciones y ejecuc
 
 La biblioteca se conserva en el navegador y requiere exportación JSON para trasladarse a otro equipo. La repetición usa fotogramas muestreados y permite recuperar la ejecución pausada anterior. El recálculo reproduce los pasos y controles iniciales. Las importaciones requieren un modelo compatible y se limitan a 40 MB.
 
-[Guía del cuaderno, formato, migración y límites](docs/experimentos.md). Las 68 pruebas cubren física, manzanas, persistencia del formato, eventos, exportación y reproducción.
+[Guía del cuaderno, formato, migración y límites](docs/experimentos.md). Las 78 pruebas cubren física, manzanas, persistencia del formato, eventos, exportación y reproducción.
 
 ![Cuaderno de experimentos](docs/experimentos.png)
 

@@ -16,10 +16,11 @@ import {
 
 import { RULES, FIXED_STEP } from "./physics.js";
 import { parameterLibrary } from "./parameters.js";
+import { normalizeSitePlan } from "./site-plan.js";
 
-export const APP_VERSION = "2.5.0";
+export const APP_VERSION = "2.6.0";
 
-export const SCHEMA_VERSION = 4;
+export const SCHEMA_VERSION = 5;
 
 export const MAX_FILE_BYTES = 40 * 1024 * 1024;
 
@@ -98,6 +99,7 @@ export const CONFIG_KEYS = [
   ...Object.keys(URBAN_DEFAULTS),
   "environment",
   "buildingFloors",
+  "sitePlan",
 ];
 
 export function cleanConfig(input = {}) {
@@ -109,6 +111,7 @@ export function cleanConfig(input = {}) {
     ...URBAN_DEFAULTS,
     environment: "physical",
     buildingFloors: 3,
+    sitePlan: null,
     mode: "single",
     distribution: "mixed",
     spacing: 13,
@@ -120,6 +123,7 @@ export function cleanConfig(input = {}) {
 
   validateConfig(config);
   validateUrban(config);
+  config.sitePlan = normalizeSitePlan(config.sitePlan, config);
   if (
     !["physical", "visual"].includes(config.environment) ||
     !Number.isInteger(config.buildingFloors) ||
@@ -174,7 +178,13 @@ export function objectSimulations(experiment) {
 }
 export function environmentModel(config) {
   return config.mode === "neighborhood" && config.environment === "physical"
-    ? ENV_MODEL
+    ? config.sitePlan
+      ? {
+          ...ENV_MODEL,
+          version: "urban-environment-editor-1",
+          geometry: "parcel-quarter-turn-v1",
+        }
+      : ENV_MODEL
     : null;
 }
 
@@ -233,6 +243,12 @@ export class RunRecorder {
       for (const event of simulation.events.slice(offset))
         this.events.push({
           ...clone(event),
+          ...(simulation.pieces[event.pieceId]?.objectId
+            ? {
+                objectId: simulation.pieces[event.pieceId].objectId,
+                parcelId: simulation.pieces[event.pieceId].parcelId,
+              }
+            : {}),
           id: `${label}:E${event.id}`,
           house: label,
           parents: event.parents.map((id) => `${label}:E${id}`),
@@ -327,7 +343,7 @@ export function shareLink(base, config, name) {
 
 export function parseShareHash(hash) {
   if (!hash.startsWith("#simtorcl=")) return null;
-  if (hash.length > 5000) throw new Error("Enlace demasiado largo.");
+  if (hash.length > 20000) throw new Error("Enlace demasiado largo.");
   let data;
   try {
     data = JSON.parse(decodeURIComponent(hash.slice(10)));
@@ -335,7 +351,7 @@ export function parseShareHash(hash) {
     throw new Error("Enlace de configuración inválido.");
   }
   if (
-    ![1, 2, 3, SCHEMA_VERSION].includes(data.schemaVersion) ||
+    ![1, 2, 3, 4, SCHEMA_VERSION].includes(data.schemaVersion) ||
     data.modelId !== MODEL_ID
   )
     throw new Error("El enlace usa otra versión del modelo.");
@@ -441,8 +457,14 @@ export function parseDocument(text) {
   if (record?.format === "simtorcl-experiment" && record.schemaVersion === 3)
     record = {
       ...record,
-      schemaVersion: SCHEMA_VERSION,
+      schemaVersion: 4,
       parameterLibrary: null,
+    };
+  if (record?.format === "simtorcl-experiment" && record.schemaVersion === 4)
+    record = {
+      ...record,
+      schemaVersion: SCHEMA_VERSION,
+      initial: { ...record.initial, sitePlan: null },
     };
   if (
     !record ||
@@ -593,6 +615,7 @@ export function parseDocument(text) {
     stats.rows.forEach((r, i) => {
       if (
         (expectedLayout && r.parcelId !== plans[i].parcelId) ||
+        (record.initial.sitePlan && r.objectId !== plans[i].objectId) ||
         r.id !== i ||
         r.label !== `C${String(i + 1).padStart(2, "0")}` ||
         typeof r.profile !== "string" ||
@@ -607,12 +630,13 @@ export function parseDocument(text) {
   const pieceCounts = Array.from({ length: homes }, (_v, i) => {
     const p =
       PROFILES[
-        record.initial.mode !== "single" &&
-        record.initial.distribution === "mixed"
-          ? Object.keys(PROFILES)[(base + plans[i].profileOffset) % 4]
-          : record.initial.profile
+        plans[i].profile ??
+          (record.initial.mode !== "single" &&
+          record.initial.distribution === "mixed"
+            ? Object.keys(PROFILES)[(base + plans[i].profileOffset) % 4]
+            : record.initial.profile)
       ];
-    const roof = ROOFS[record.initial.roof];
+    const roof = ROOFS[plans[i].roof ?? record.initial.roof];
     return (
       12 +
       (p.claddingPressure ? (p.id === "concrete" ? 11 : 12) : 0) +
@@ -630,6 +654,15 @@ export function parseDocument(text) {
   last = -1;
 
   for (const event of record.events) {
+    if (record.initial.sitePlan && event.house !== "ENV") {
+      const plan = plans[Number(event.house?.slice(1)) - 1];
+      if (
+        !plan ||
+        event.objectId !== plan.objectId ||
+        event.parcelId !== plan.parcelId
+      )
+        throw new Error("Identidad de objeto o parcela en evento inválida.");
+    }
     if (
       !event ||
       typeof event.id !== "string" ||
@@ -705,6 +738,7 @@ export function parseDocument(text) {
         p.entityId !== event.entityId ||
         p.parcelId !== event.parcelId ||
         p.kind !== event.kind ||
+        (record.initial.sitePlan && p.objectId !== event.objectId) ||
         (event.type === "connection" && event.unit !== p.unit)
       )
         throw new Error("Identidad o unidades de evento urbano inválidas.");
@@ -826,6 +860,7 @@ export function resultsCSV(record) {
       "inclinacion_max_grados",
       "tiempo_simulado_s",
       "estado",
+      "objeto_id",
     ],
   ];
 
@@ -857,6 +892,7 @@ export function resultsCSV(record) {
       r.maxTilt,
       r.elapsed,
       r.state,
+      r.objectId ?? "",
     ]);
 
   return csv(rows);
@@ -886,7 +922,7 @@ export function componentsCSV(record, experiment) {
         label,
         p.id,
         p.kind,
-        p.entityId ?? "",
+        p.entityId ?? p.objectId ?? "",
         p.parcelId ?? "",
         p.mass,
         p.area,
@@ -929,7 +965,7 @@ export function eventsCSV(record) {
       e.demand ?? "",
       e.capacity ?? "",
       e.type === "connection" ? (e.unit ?? "N") : "",
-      e.entityId ?? "",
+      e.entityId ?? e.objectId ?? "",
       e.parcelId ?? "",
       e.parents.join(" | "),
     ]),
@@ -952,6 +988,12 @@ export function parcelsCSV(record) {
       "centro_z_m",
       "orientacion_grados",
       "semilla",
+      "origen_distribucion",
+      "objeto_id",
+      "rotacion_objeto_grados",
+      "perfil_casa",
+      "cubierta_casa",
+      "pisos_edificio",
     ],
     ...record.layout.parcels.map((p) => [
       p.id,
@@ -962,6 +1004,12 @@ export function parcelsCSV(record) {
       p.world.z,
       record.initial.orientation,
       record.initial.seed,
+      record.initial.sitePlan ? "manual" : "generado",
+      p.objectId ?? "",
+      p.objectRotation ?? "",
+      p.houseProfile ?? "",
+      p.houseRoof ?? "",
+      p.buildingFloors ?? "",
     ]),
   ]);
 }
@@ -1028,7 +1076,7 @@ export function htmlReport(record, image = "") {
     : "";
 
   const plan = record.layout
-    ? `<h2>Plano del barrio</h2><p>Semilla ${record.initial.seed} · ${record.initial.rows} × ${record.initial.columns} parcelas · orientación ${record.initial.orientation}°. ${record.initial.environment === "physical" ? "Edificios con estructura fija y envolvente desprendible; árboles y bancos con uniones rompibles." : "Reservas y vegetación visuales."}</p><table><tr><th>Parcela</th><th>Uso</th><th>Superficie m²</th><th>Centro X, Z (m)</th></tr>${record.layout.parcels.map((p) => `<tr><td>${e(p.id)}</td><td>${e({ house: "Vivienda", green: "Área verde", building: "Reserva para edificio", vacant: "Parcela libre" }[p.type])}</td><td>${p.area}</td><td>${p.world.x.toFixed(2)}, ${p.world.z.toFixed(2)}</td></tr>`).join("")}</table>`
+    ? `<h2>Plano del barrio</h2><p>${record.initial.sitePlan ? "Distribución manual; propiedades por objeto conservadas. Semilla de origen " : "Distribución generada. Semilla "}${record.initial.seed} · ${record.initial.rows} × ${record.initial.columns} parcelas · orientación ${record.initial.orientation}°. ${record.initial.environment === "physical" ? "Edificios con estructura fija y envolvente desprendible; árboles y bancos con uniones rompibles." : "Reservas y vegetación visuales."}</p><table><tr><th>Parcela</th><th>Uso</th><th>Superficie m²</th><th>Centro X, Z (m)</th></tr>${record.layout.parcels.map((p) => `<tr><td>${e(p.id)}</td><td>${e({ house: "Vivienda", green: "Área verde", building: record.initial.environment === "physical" ? "Edificio residencial" : "Reserva para edificio", vacant: "Parcela libre" }[p.type])}</td><td>${p.area}</td><td>${p.world.x.toFixed(2)}, ${p.world.z.toFixed(2)}</td></tr>`).join("")}</table>${record.initial.sitePlan ? `<h3>Objetos del diseño manual</h3><pre>${e(JSON.stringify(record.initial.sitePlan, null, 2))}</pre>` : ""}`
     : "";
   const urban = record.environmentModel
     ? `<h2>Objetos urbanos</h2><p>${e(record.environmentModel.scope)} Propiedades mecánicas educativas; las referencias oficiales no son fuentes de estas capacidades.</p><table><tr><th>Objeto</th><th>Parcela</th><th>Piezas liberadas</th><th>Estado</th></tr>${(s.environment?.rows ?? []).map((r) => `<tr><td>${e(r.id)}</td><td>${e(r.parcelId)}</td><td>${r.detached}/${r.total}</td><td>${e(r.state)}</td></tr>`).join("")}</table><h2>Procedencia del entorno urbano</h2><pre>${e(JSON.stringify(record.environmentModel, null, 2))}</pre><details><summary>Geometría y propiedades por pieza (m, kg, m²; capacidad con su unidad)</summary><pre>${e(JSON.stringify(record.environmentInventory, null, 2))}</pre></details>`

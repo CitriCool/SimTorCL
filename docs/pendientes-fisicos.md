@@ -56,3 +56,5 @@ Criterio de aceptación: el edificio ocupa su parcela sin solapamientos indebido
 Esta prioridad reúne VAL-01/04/10 (respaldo), VER-03/05/06/07 (vegetación), EDI-01/03/04/05/06/07/08 (edificios), FIS-01/02 (impactos) y CFD-03/04/08 (viento y obstáculos). Las casillas permanecen pendientes hasta implementar y verificar cada capacidad.
 
 Avance de procedencia v2.5: [biblioteca versionada y comprobación analítica](parametros.md). Existe registro exportable de los parámetros declarados; la extracción de resistencias de fuentes completas y la validación experimental siguen pendientes.
+
+El editor sobre parcelas está disponible desde [v2.6](editor.md). La edición no incorpora calibración, rotura adicional por impacto ni un nuevo modelo de colapso de edificios; esos pendientes se mantienen.

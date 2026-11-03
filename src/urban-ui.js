@@ -18,6 +18,7 @@ export function setupUrban({ experiment, getView, pause, reset }) {
     return cleanConfig({
       ...experiment.config,
       mode: "neighborhood",
+      sitePlan: null,
       ...Object.fromEntries(
         fields.map((f) => [
           f.dataset.urban,
@@ -65,6 +66,7 @@ export function setupUrban({ experiment, getView, pause, reset }) {
     reset({
       ...experiment.config,
       mode: "neighborhood",
+      sitePlan: null,
       environment: "physical",
       buildingFloors: 3,
       rows: 2,
@@ -109,7 +111,7 @@ export function setupUrban({ experiment, getView, pause, reset }) {
       if (!layout) return;
       $("urban-summary").textContent = description(layout, experiment.config);
       $("urban-config-summary").textContent =
-        `${experiment.config.rows} × ${experiment.config.columns} parcelas · ${experiment.config.orientation}° · semilla ${layout.seed}`;
+        `${experiment.config.rows} × ${experiment.config.columns} parcelas · ${experiment.config.orientation}° · ${experiment.config.sitePlan ? "distribución manual" : "semilla " + layout.seed}`;
       const houses = new Map(
         experiment.houses.map((h) => [h.parcelId, h.label]),
       );

@@ -53,6 +53,12 @@
         <p class="intro">
           Explora la respuesta de una vivienda chilena ante un tornado.
         </p>
+        <button class="primary-button editor-entry" id="editor-open">
+          ⌂ Construir mi manzana
+        </button>
+        <p class="selection-note" id="editor-open-note">
+          Coloca casas, edificios y parques en un plano 3D.
+        </p>
 
         <section class="control-section">
           <div class="section-heading">
@@ -530,7 +536,7 @@
           <span
             ><span class="footer-dot"></span> MOTOR FÍSICO ACTIVO
             <i>/</i> THREE.JS + CANNON-ES</span
-          ><span>SimTorCL <b>v2.5</b></span>
+          ><span>SimTorCL <b>v2.6</b></span>
         </footer>
       </section>
     </main>
@@ -673,6 +679,11 @@
           cantidades se redondean hacia abajo; la ocupación residencial, hacia
           arriba. Siempre queda al menos una vivienda. Una misma semilla y los
           mismos parámetros reproducen el mismo plano.
+        </p>
+        <p class="selection-note">
+          Generar un barrio o la prueba sustituye el plano manual y comienza
+          desde cero. Conserva tu diseño y resultados en el cuaderno antes de
+          regenerar. El editor permite cambiar objetos sin regenerar las calles.
         </p>
         <p id="urban-form-status" role="status"></p>
         <button id="urban-apply" class="primary-button" type="submit">
@@ -1124,6 +1135,191 @@
           constituyen validación física.
         </p>
       </section>
+    </dialog>
+    <dialog
+      id="editor-dialog"
+      class="editor-dialog"
+      aria-labelledby="editor-title"
+    >
+      <button class="dialog-close" id="editor-close" aria-label="Cerrar editor">
+        ×
+      </button>
+      <div class="eyebrow">TU BARRIO, PARCELA A PARCELA</div>
+      <h2 id="editor-title">Construye tu manzana</h2>
+      <ol class="editor-steps" aria-label="Pasos del experimento">
+        <li aria-current="step">1 · Construir</li>
+        <li>2 · Simular</li>
+        <li>3 · Entender</li>
+      </ol>
+      <p class="editor-intro">
+        Arrastra una infraestructura a una parcela libre o selecciónala y toca
+        su destino. Para mover un objeto, arrástralo o usa «Mover».
+      </p>
+      <div class="editor-layout">
+        <section
+          class="editor-palette"
+          aria-label="Infraestructuras disponibles"
+        >
+          <h3>¿Qué quieres añadir?</h3>
+          <button
+            type="button"
+            draggable="true"
+            data-editor-type="house"
+            aria-pressed="false"
+          >
+            <span aria-hidden="true">⌂</span><strong>Casa</strong
+            ><small>Paredes y cubierta configurables</small>
+          </button>
+          <button
+            type="button"
+            draggable="true"
+            data-editor-type="building"
+            aria-pressed="false"
+          >
+            <span aria-hidden="true">▥</span><strong>Edificio</strong
+            ><small>Residencial · 2 a 5 pisos</small>
+          </button>
+          <button
+            type="button"
+            draggable="true"
+            data-editor-type="green"
+            aria-pressed="false"
+          >
+            <span aria-hidden="true">♣</span><strong>Parque</strong
+            ><small>Dos árboles y dos bancas</small>
+          </button>
+          <p class="selection-note">
+            Un objeto principal por parcela. El parque se mueve como conjunto.
+            Las calles permanecen fijas.
+          </p>
+        </section>
+        <section class="editor-plan" aria-label="Plano de construcción">
+          <div class="editor-tools">
+            <button type="button" id="editor-select" aria-pressed="true">
+              Seleccionar
+            </button>
+            <button type="button" id="editor-orbit" aria-pressed="false">
+              Orbitar
+            </button>
+            <button type="button" id="editor-top">Vista superior</button>
+            <button type="button" id="editor-perspective">Perspectiva</button>
+            <button type="button" id="editor-undo" disabled>↶ Deshacer</button>
+            <button type="button" id="editor-redo" disabled>↷ Rehacer</button>
+          </div>
+          <div class="editor-viewport">
+            <canvas
+              id="editor-scene"
+              aria-label="Plano tridimensional editable de la manzana"
+            ></canvas
+            ><span class="editor-canvas-tag">BORRADOR · SIN VIENTO</span>
+          </div>
+          <p id="editor-summary" class="selection-note"></p>
+          <details class="editor-grid-details">
+            <summary>Elegir parcela por botones · teclado y móvil</summary>
+            <p class="selection-note">
+              Las flechas recorren las parcelas. Pulsa Enter para seleccionar o
+              colocar el elemento elegido.
+            </p>
+            <div
+              id="editor-grid"
+              class="editor-grid"
+              aria-label="Parcelas editables"
+            ></div>
+          </details>
+        </section>
+        <section
+          class="editor-properties"
+          aria-label="Propiedades de la selección"
+        >
+          <h3>Tu selección</h3>
+          <p id="editor-selected">Selecciona una parcela.</p>
+          <div class="editor-object-actions">
+            <button type="button" id="editor-move" disabled>Mover</button
+            ><button type="button" id="editor-duplicate" disabled>
+              Duplicar</button
+            ><button type="button" id="editor-rotate" disabled>Girar 90°</button
+            ><button type="button" id="editor-remove" disabled>Eliminar</button>
+          </div>
+          <form id="editor-properties-form" hidden>
+            <div id="editor-house-fields">
+              <label for="editor-profile">Paredes de esta casa</label
+              ><select id="editor-profile"></select
+              ><label for="editor-roof">Cubierta de esta casa</label
+              ><select id="editor-roof"></select>
+            </div>
+            <div id="editor-building-fields">
+              <label for="editor-floors">Pisos de este edificio</label
+              ><select id="editor-floors">
+                <option value="2">2 pisos</option>
+                <option value="3">3 pisos</option>
+                <option value="4">4 pisos</option>
+                <option value="5">5 pisos</option>
+              </select>
+            </div>
+            <label for="editor-rotation">Orientación del objeto</label
+            ><select id="editor-rotation">
+              <option value="0">0°</option>
+              <option value="90">90°</option>
+              <option value="180">180°</option>
+              <option value="270">270°</option>
+            </select>
+            <button class="reset-button" type="submit">
+              Aplicar propiedades
+            </button>
+          </form>
+          <p class="selection-note">
+            La vivienda, el edificio y el parque conservan su identidad al
+            moverlos. Las propiedades físicas son educativas; el núcleo del
+            edificio permanece fijo.
+          </p>
+        </section>
+      </div>
+      <p
+        id="editor-status"
+        class="editor-status"
+        role="status"
+        aria-live="polite"
+      >
+        Elige una infraestructura o selecciona una parcela.
+      </p>
+      <div class="editor-save">
+        <label for="editor-name"
+          >Nombre de la manzana<input
+            id="editor-name"
+            maxlength="80"
+            value="Mi manzana"
+        /></label>
+        <button class="reset-button" id="editor-save">
+          Guardar diseño en biblioteca
+        </button>
+        <button class="reset-button" id="editor-export">
+          Descargar diseño JSON
+        </button>
+        <button class="primary-button" id="editor-apply">
+          Usar esta manzana →
+        </button>
+      </div>
+      <div id="editor-replace" class="editor-replace" hidden>
+        <p>
+          Aplicar el diseño reconstruye el experimento desde cero. Tu ejecución
+          pausada sigue intacta hasta elegir una opción.
+        </p>
+        <div class="notebook-actions">
+          <button class="primary-button" id="editor-backup-apply">
+            Guardar ejecución anterior y aplicar</button
+          ><button class="reset-button" id="editor-discard-apply">
+            Aplicar sin conservar resultados</button
+          ><button class="reset-button" id="editor-keep-editing">
+            Seguir editando
+          </button>
+        </div>
+      </div>
+      <p class="selection-note">
+        Cerrar el editor conserva el experimento original y descarta el borrador
+        no guardado. Para cambiar las dimensiones de la cuadrícula, utiliza
+        «Configurar barrio». Las fuentes y supuestos se consultan en «Parámetros
+        y fuentes».
+      </p>
     </dialog>
     <script type="module" src="/src/main.js"></script>
   </body>

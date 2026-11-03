@@ -2,7 +2,7 @@
 
 Plan futuro consolidado: [ROADMAP.md](ROADMAP.md). Este archivo conserva el detalle de las entregas anteriores y sus pendientes.
 
-Prioridad actual: [editor didáctico y pendientes integrados](docs/editor-didactico.md). La próxima entrega es construir por arrastre o selección sobre las parcelas existentes, con propiedades por objeto, deshacer/rehacer y guardado. La calibración técnica sigue en paralelo; los pendientes físicos se conservan.
+Prioridad actual: [editor didáctico y pendientes integrados](docs/editor-didactico.md). El editor por arrastre o selección sobre parcelas está disponible en v2.6, con propiedades por objeto, deshacer/rehacer y guardado. La siguiente entrega amplía objetos independientes, recorridos y explicaciones visuales. La calibración técnica sigue en paralelo; los pendientes físicos se conservan.
 
 Lista de trabajo acordada a partir de la revisión del Censo 2024 y del alcance físico actual. Actualizada el 3 de noviembre de 2026.
 
@@ -84,7 +84,7 @@ Fuentes para la preparación del catálogo:
 - [x] Verificación automatizada: 43 pruebas y compilación.
 - [x] Revisión en navegador: guardar, duplicar, renombrar, importar, repetir, recuperar la ejecución previa, comparar y exportar un informe con imagen.
 
-Las etapas de generación urbana, edificios y zonas verdes siguen pendientes según sus dependencias en el roadmap.
+Las ampliaciones de generación urbana, edificios y zonas verdes se detallan en las entregas siguientes y en el roadmap.
 
 ## Entrega B1: generador de barrio (v2.3)
 
@@ -94,7 +94,7 @@ Las etapas de generación urbana, edificios y zonas verdes siguen pendientes seg
 - [x] Inventario, enfoque, CSV de parcelas e inclusión del plano en informes.
 - [x] Esquema 2 con plano validado y compatibilidad con ejecuciones v2.2.
 - [x] Pruebas de geometría, física urbana, reproducibilidad y migración.
-- [ ] Pendiente: editor manual por parcela con deshacer y rehacer (URB-06/07).
+- [x] Editor manual por parcela con deshacer y rehacer (URB-06/07), disponible desde v2.6.
 
 ## Prioridad del usuario tras probar el barrio
 
@@ -103,7 +103,7 @@ Las etapas de generación urbana, edificios y zonas verdes siguen pendientes seg
 - [x] Crear una primera versión de edificios con estructura fija y envolvente desprendible; efectos y límites documentados.
 - [x] Verificar guardado, repetición, recálculo y colisiones de los objetos nuevos. El daño adicional por impacto permanece pendiente.
 
-La física inicial y la biblioteca ya están disponibles en v2.4/v2.5. Se adelanta ahora el editor manual; la calibración y los mecanismos físicos restantes continúan según el [plan integrado](docs/editor-didactico.md). Ver también [alcance y fuentes localizadas](docs/pendientes-fisicos.md).
+La física inicial y la biblioteca ya están disponibles en v2.4/v2.5. El editor manual está disponible en v2.6; la calibración y los mecanismos físicos restantes continúan según el [plan integrado](docs/editor-didactico.md). Ver también [alcance y fuentes localizadas](docs/pendientes-fisicos.md).
 
 ## Entrega de entorno físico (v2.4)
 
@@ -129,13 +129,26 @@ La física inicial y la biblioteca ya están disponibles en v2.4/v2.5. Se adelan
 
 Detalle: [biblioteca, caso y límites](docs/parametros.md). VAL-01/02/04/10 mantienen avance parcial; esta entrega no completa la calibración física.
 
-## Próximas entregas integradas — pendientes
+## Editor de manzanas (v2.6)
 
-- [ ] **B2 · Construir:** paleta de casas, edificios y parques, colocación por arrastre o selección, ajuste a parcelas, prevención de solapamientos, selección y transformación, propiedades por objeto, deshacer/rehacer y guardado compatible. URB-06/07, UX-01/02/06, PRO-01/08/09.
-- [ ] **B3 · Simular y entender:** árboles y bancos independientes, ejemplos guiados, trayectorias dibujadas y controles de duración/intensidad; explicación de eventos, revisión visual y comparación sobre el mismo plano editado. URB-08/09, VER-02/04, FIS-08/09, UX-03/04/05, PRO-12.
+- [x] Borrador 3D independiente, paleta y arrastre de casas, edificios y parques a parcelas libres.
+- [x] Movimiento, giro, duplicado, eliminación, deshacer/rehacer y colocación por clic, toque y teclado.
+- [x] Propiedades por objeto, identidades persistentes y reglas contra destinos ocupados o fuera del plano.
+- [x] Guardado en biblioteca/JSON, esquema 5, repetición, recálculo y migración histórica.
+- [x] Conservación de la ejecución anterior al aplicar mediante guardado explícito; edición bloqueada durante repetición.
+- [x] 78 pruebas, compilación y revisión en navegador de edición, persistencia, respaldo y móvil.
+- [ ] Árboles y bancos independientes, recorridos dibujados, guía inicial y explicación visual ampliada (B3).
+- [ ] Calles y parcelas de forma libre (B4), además de los pendientes físicos y de validación.
+
+Detalle y ejemplo: [editor v2.6](docs/editor.md).
+
+## Entregas integradas — estado actual
+
+- [x] **B2 · Construir:** paleta de casas, edificios y parques, colocación por arrastre o selección, ajuste a parcelas, prevención de solapamientos, selección y transformación, propiedades por objeto, deshacer/rehacer y guardado compatible. URB-06/07, UX-01/02/06, PRO-01/08/09.
+- [ ] **B3 · Simular y entender:** árboles y bancos independientes, ejemplos guiados, trayectorias dibujadas y controles de duración/intensidad; explicación de eventos, revisión visual y comparación sobre el mismo plano editado. URB-08/09/12, VER-02/04, FIS-08/09, UX-03/04/05, PRO-12.
 - [ ] **C · Física:** nuevas roturas por impacto y cadenas causales, modelos de edificios y vegetación ampliados, cargas y uniones más completas. FIS-01 a FIS-07/11, EDI y VER pendientes.
 - [ ] **D · Transversal desde B2:** fuentes técnicas por parámetro, calibración, caso físico de referencia, errores, sensibilidad y estabilidad. VAL-01 a VAL-05/08/10.
 - [ ] **B4 / E · Escala y territorio:** calles y terrenos libres, mayor catálogo, rendimiento, datos por región/comuna e inventarios geográficos. URB-03/11, EDI, VER, GEO y PRO.
 - [ ] **E / F · Análisis avanzado:** incertidumbre y fragilidad, viento urbano/CFD, suelo y fundaciones y modelos de consecuencias. VAL-06/07/09, CFD, FIS-12, EDI-11, GEO-07 y CON.
 
-La navegación prevista será **Construir → Simular → Entender**. Los parámetros avanzados se despliegan cuando se necesitan; fuentes, supuestos y alcance permanecen accesibles. Esta lista organiza el trabajo y no declara implementadas las funciones del editor. Desglose y criterios de cierre: [plan integrado](docs/editor-didactico.md).
+La navegación prevista será **Construir → Simular → Entender**. Los parámetros avanzados se despliegan cuando se necesitan; fuentes, supuestos y alcance permanecen accesibles. B2 ya está implementada; las casillas abiertas conservan el trabajo pendiente. Desglose y criterios de cierre: [plan integrado](docs/editor-didactico.md).

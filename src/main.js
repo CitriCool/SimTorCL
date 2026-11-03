@@ -1,4 +1,5 @@
 import { ENV_MODEL } from "./environment.js";
+import { setupEditor } from "./editor-ui.js";
 import { refreshParameterLibrary } from "./parameters-ui.js";
 import { setupUrban } from "./urban-ui.js";
 import "./style.css";
@@ -10,7 +11,7 @@ import { SceneView } from "./scene.js";
 
 const $ = (id) => document.getElementById(id);
 const simulation = new Experiment();
-let view, frame, worker, comparisonConfig, notebook, urban;
+let view, frame, worker, comparisonConfig, notebook, urban, editor;
 let running = false,
   accumulator = 0,
   lastTime = null,
@@ -26,7 +27,7 @@ function updateReadout() {
   $("roof-total").textContent =
     `${s.total} ${simulation.houses ? "piezas" : simulation.roof.unit}`;
   $("damage-value").textContent = percent(s.detached, s.total);
-  $("damage-bar").style.width = percent(s.detached, s.total);
+  $("damage-bar").style.width = s.total ? percent(s.detached, s.total) : "0%";
   $("wall-detached").textContent = s.wallDetached;
   $("wall-total").textContent = s.wallTotal;
   $("secondary-count").textContent = s.secondaryTotal
@@ -167,6 +168,8 @@ function updateScenarioInfo() {
     paintRange(id);
   }
   const { profile, roof } = simulation;
+  for (const id of ["profile", "roof", "distribution"])
+    $(id).disabled = !!simulation.config.sitePlan || !!notebook?.replaying;
   const district = !!simulation.houses;
   $("district-controls").hidden = !district;
   $("district-results").hidden = !district;
@@ -228,7 +231,9 @@ function updateScenarioInfo() {
       `${simulation.houses.length} viviendas · ${simulation.config.distribution === "mixed" ? "mezcla ilustrativa" : profile.label}`;
     $("scene-label").textContent =
       (simulation.config.mode === "neighborhood"
-        ? "BARRIO SINTÉTICO · "
+        ? simulation.config.sitePlan
+          ? "TU MANZANA · "
+          : "BARRIO SINTÉTICO · "
         : "MANZANA ILUSTRATIVA · ") +
       simulation.houses.length +
       " CASAS";
@@ -237,6 +242,12 @@ function updateScenarioInfo() {
         ? "Mezcla determinista de cuatro variantes, sin proporciones censales."
         : profile.description;
     $("census-link").textContent = "Fuentes de las categorías de vivienda ↗";
+  }
+  if (simulation.config.sitePlan) {
+    $("profile-title").textContent =
+      `${simulation.houses.length} casas configuradas por objeto`;
+    $("profile-description").textContent =
+      "El plano conserva el perfil, la cubierta y la orientación de cada casa. Selecciona un objeto en el editor para cambiarlo.";
   }
   document.querySelector(".scene-header h2").textContent = district
     ? simulation.config.mode === "neighborhood"
@@ -248,8 +259,9 @@ function updateScenarioInfo() {
       "aria-label",
       `${simulation.config.mode === "neighborhood" ? "Barrio sintético" : "Manzana ilustrativa"} de ${simulation.houses.length} viviendas y tornado`,
     );
-  $("roof-description").textContent =
-    profile.family === "Estructura liviana"
+  $("roof-description").textContent = simulation.config.sitePlan
+    ? "Plano manual: configura cada casa desde Construir mi manzana."
+    : profile.family === "Estructura liviana"
       ? "Losa no disponible en este perfil ilustrativo. Cambiar la selección reconstruye la vivienda."
       : "Cambiar el sistema o la cubierta reconstruye el escenario.";
 }
@@ -258,6 +270,7 @@ function reset(changes = {}) {
   notebook?.beforeReset();
   setRunning(false);
   const next = { ...simulation.config, ...changes };
+  if (next.mode !== "neighborhood") next.sitePlan = null;
   if (
     next.mode !== "single" &&
     next.distribution === "mixed" &&
@@ -379,8 +392,10 @@ for (const dialog of document.querySelectorAll("dialog"))
 $("parameters-button").addEventListener("click", () => {
   refreshParameterLibrary(simulation.config);
   const { profile, roof, config } = simulation;
-  $("census-description").textContent =
-    `Tipo representado: casa con acceso directo. Paredes: ${profile.censusWall}. Cubierta: ${roof.censusRoof}. ${CENSUS.scope}`;
+  $("census-description").textContent = simulation.config.sitePlan
+    ? "Plano manual: cada casa tiene su propio perfil y cubierta. Esta tabla muestra valores base de referencia; consulta cada objeto en el editor o en la inspección del cuaderno. " +
+      CENSUS.scope
+    : `Tipo representado: casa con acceso directo. Paredes: ${profile.censusWall}. Cubierta: ${roof.censusRoof}. ${CENSUS.scope}`;
   $("calibration-description").textContent = CENSUS.physicalProvenance;
   const rows = [
     ["Perfil ilustrativo", profile.label, "Catálogo SimTorCL"],
@@ -634,6 +649,12 @@ try {
       updateReadout();
     },
   });
+  editor = setupEditor({
+    experiment: simulation,
+    pause: () => setRunning(false),
+    reset,
+    isReplaying: () => !!notebook?.replaying,
+  });
   frame = requestAnimationFrame(animate);
 } catch (error) {
   $("loading").hidden = true;
@@ -659,5 +680,6 @@ if (import.meta.hot)
     cancelAnimationFrame(frame);
     worker?.terminate();
     notebook?.dispose();
+    editor?.dispose();
     view?.dispose();
   });

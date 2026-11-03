@@ -47,3 +47,5 @@ Los archivos de esquema 1 creados en v2.2 siguen cargando mediante una migració
 La comparación A/B admite lado de parcela y orientación para este modo, además de refuerzo, distribución de perfiles, cubierta y trayectoria. La separación fija de 10/13/16 m corresponde a las manzanas anteriores; el barrio usa su propia regla de separación. Las duraciones cortas pueden cubrir solo una parte del cruce del tornado.
 
 ![Barrio configurable con viviendas, parques y reservas](barrio.png)
+
+Desde v2.6, el [editor de manzanas](editor.md) permite modificar la distribución y propiedades por objeto sobre esta cuadrícula. El generador conserva su modo determinista por semilla; un plano editado se guarda explícitamente en `sitePlan`, con uso manual identificado. Regenerar desde el formulario sustituye las ediciones.

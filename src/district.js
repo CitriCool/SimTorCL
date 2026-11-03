@@ -1,9 +1,9 @@
 import { UrbanEnvironment } from "./environment.js";
 import { generateNeighborhood, housePlacements } from "./urban.js";
 import * as CANNON from "cannon-es";
-import { Simulation, FIXED_STEP } from "./physics.js";
+import { Simulation, FIXED_STEP, createWorld } from "./physics.js";
 import { RunRecorder, cleanConfig } from "./records.js";
-import { PROFILES, validateConfig } from "./catalog.js";
+import { PROFILES, ROOFS, validateConfig } from "./catalog.js";
 
 export class District {
   constructor(config) {
@@ -45,7 +45,11 @@ export class District {
         distribution === "mixed"
           ? profiles[(base + plan.profileOffset) % profiles.length]
           : config.profile;
-      const simulation = new Simulation({ ...config, profile });
+      const simulation = new Simulation({
+        ...config,
+        profile: plan.profile ?? profile,
+        roof: plan.roof ?? config.roof,
+      });
       const offset = new CANNON.Vec3(plan.x, 0, plan.z);
       const yaw = plan.yaw,
         rotation = new CANNON.Quaternion();
@@ -53,6 +57,10 @@ export class District {
       for (const piece of simulation.pieces) {
         piece.localOrigin = piece.origin.clone();
         piece.houseId = index;
+        if (plan.objectId) {
+          piece.objectId = plan.objectId;
+          piece.parcelId = plan.parcelId;
+        }
         rotation.vmult(piece.origin, piece.body.position);
         piece.body.position.vadd(offset, piece.body.position);
         rotation.mult(piece.body.quaternion, piece.body.quaternion);
@@ -73,12 +81,14 @@ export class District {
       this.houses.push({
         id: index,
         ...(plan.parcelId ? { parcelId: plan.parcelId } : {}),
+        ...(plan.objectId ? { objectId: plan.objectId } : {}),
         label: `C${String(index + 1).padStart(2, "0")}`,
         simulation,
         offset,
         yaw,
       });
     }
+    this.world ??= createWorld();
     this.environment =
       this.layout && config.environment === "physical"
         ? new UrbanEnvironment(config, this.layout, this.world)
@@ -121,7 +131,8 @@ export class District {
     return PROFILES[this.config.profile];
   }
   get roof() {
-    return this.houses[0].simulation.roof;
+    if (this.config.sitePlan) return ROOFS[this.config.roof];
+    return this.houses[0]?.simulation.roof ?? ROOFS[this.config.roof];
   }
   get stats() {
     const rows = this.houses.map((h) => ({
@@ -130,6 +141,7 @@ export class District {
       label: h.label,
       profile: h.simulation.profile.label,
       ...(h.parcelId ? { parcelId: h.parcelId } : {}),
+      ...(h.objectId ? { objectId: h.objectId } : {}),
     }));
     const keys = [
       "detached",
@@ -153,11 +165,13 @@ export class District {
     return {
       ...result,
       elapsed: this.elapsed,
-      maxDisplacement: Math.max(...rows.map((s) => s.maxDisplacement)),
-      maxTilt: Math.max(...rows.map((s) => s.maxTilt)),
-      state: affected
-        ? `${affected}/${rows.length} viviendas afectadas`
-        : "Estable",
+      maxDisplacement: Math.max(0, ...rows.map((s) => s.maxDisplacement)),
+      maxTilt: Math.max(0, ...rows.map((s) => s.maxTilt)),
+      state: !rows.length
+        ? "Sin viviendas"
+        : affected
+          ? `${affected}/${rows.length} viviendas afectadas`
+          : "Estable",
       affected,
       houseTotal: rows.length,
       collapsed: rows.filter((s) => s.state === "Colapso del modelo").length,

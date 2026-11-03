@@ -21,6 +21,21 @@ export const RULES = Object.freeze({
 });
 const UP = new CANNON.Vec3(0, 1, 0);
 
+export function createWorld() {
+  const world = new CANNON.World({
+    gravity: new CANNON.Vec3(0, -9.82, 0),
+    allowSleep: true,
+  });
+  world.broadphase = new CANNON.SAPBroadphase(world);
+  world.solver.iterations = 15;
+  world.defaultContactMaterial.friction = 0.65;
+  world.defaultContactMaterial.restitution = 0.03;
+  const ground = new CANNON.Body({ mass: 0, shape: new CANNON.Plane() });
+  ground.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
+  world.addBody(ground);
+  return world;
+}
+
 // Altitude-limited illustrative field. Forces scale with v² (m, s, kg, N).
 export function windAt(position, center, config, area = 1) {
   const dx = position.x - center.x,
@@ -48,17 +63,7 @@ export class Simulation {
     this.config = validateConfig({ ...this.config, ...config });
     this.profile = PROFILES[this.config.profile];
     this.roof = ROOFS[this.config.roof];
-    this.world = new CANNON.World({
-      gravity: new CANNON.Vec3(0, -9.82, 0),
-      allowSleep: true,
-    });
-    this.world.broadphase = new CANNON.SAPBroadphase(this.world);
-    this.world.solver.iterations = 15;
-    this.world.defaultContactMaterial.friction = 0.65;
-    this.world.defaultContactMaterial.restitution = 0.03;
-    const ground = new CANNON.Body({ mass: 0, shape: new CANNON.Plane() });
-    ground.quaternion.setFromEuler(-Math.PI / 2, 0, 0);
-    this.world.addBody(ground);
+    this.world = createWorld();
     this.events = [];
     this.pieces = [];
     this.connections = [];
