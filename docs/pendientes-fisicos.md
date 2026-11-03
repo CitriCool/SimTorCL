@@ -8,7 +8,7 @@ En v2.3, `src/scene.js` crea árboles y bancos como geometría visual. `src/dist
 
 Los perfiles de vivienda usan categorías censales, pero sus propiedades mecánicas siguen siendo supuestos educativos, como indica `src/catalog.js`. Una fuente oficial sobre clasificación o diseño no valida por sí sola el comportamiento ante tornados.
 
-Se priorizan los siguientes entregables antes del editor manual URB-06/07.
+Estos entregables se priorizaron inicialmente antes del editor manual URB-06/07. Tras la física inicial de v2.4 y la biblioteca de v2.5, la revisión del 3 de noviembre adelanta el editor didáctico y mantiene la calibración como trabajo transversal. Los mecanismos físicos pendientes conservan su alcance en el [plan integrado](editor-didactico.md).
 
 ## 1. Procedencia de cada tipo y parámetro
 

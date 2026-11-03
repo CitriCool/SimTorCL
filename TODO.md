@@ -2,6 +2,8 @@
 
 Plan futuro consolidado: [ROADMAP.md](ROADMAP.md). Este archivo conserva el detalle de las entregas anteriores y sus pendientes.
 
+Prioridad actual: [editor didáctico y pendientes integrados](docs/editor-didactico.md). La próxima entrega es construir por arrastre o selección sobre las parcelas existentes, con propiedades por objeto, deshacer/rehacer y guardado. La calibración técnica sigue en paralelo; los pendientes físicos se conservan.
+
 Lista de trabajo acordada a partir de la revisión del Censo 2024 y del alcance físico actual. Actualizada el 3 de noviembre de 2026.
 
 Entrega inicial: versión 2.1 implementada con tres familias y cuatro variantes, 14 combinaciones de cubierta, uniones rompibles, pérdida de soporte en paredes, elementos secundarios separados y comparación reproducible. Las grietas son trazos esquemáticos de uniones falladas; no hay cálculo continuo de tensiones. Pasaron 33 pruebas locales y la compilación, incluyendo el modo manzana. Se verificaron la escena, selectores, reinicio, fuentes, comparación, cancelación y diseño móvil en navegador. El censo aporta categorías; los valores físicos siguen siendo supuestos educativos. Detalles en [docs/modelo.md](docs/modelo.md).
@@ -101,7 +103,7 @@ Las etapas de generación urbana, edificios y zonas verdes siguen pendientes seg
 - [x] Crear una primera versión de edificios con estructura fija y envolvente desprendible; efectos y límites documentados.
 - [x] Verificar guardado, repetición, recálculo y colisiones de los objetos nuevos. El daño adicional por impacto permanece pendiente.
 
-El editor manual queda después de estas prioridades. Ver [alcance y fuentes localizadas](docs/pendientes-fisicos.md).
+La física inicial y la biblioteca ya están disponibles en v2.4/v2.5. Se adelanta ahora el editor manual; la calibración y los mecanismos físicos restantes continúan según el [plan integrado](docs/editor-didactico.md). Ver también [alcance y fuentes localizadas](docs/pendientes-fisicos.md).
 
 ## Entrega de entorno físico (v2.4)
 
@@ -126,3 +128,14 @@ El editor manual queda después de estas prioridades. Ver [alcance y fuentes loc
 - [ ] Primer caso de validación física independiente, métricas de error y estudios de sensibilidad.
 
 Detalle: [biblioteca, caso y límites](docs/parametros.md). VAL-01/02/04/10 mantienen avance parcial; esta entrega no completa la calibración física.
+
+## Próximas entregas integradas — pendientes
+
+- [ ] **B2 · Construir:** paleta de casas, edificios y parques, colocación por arrastre o selección, ajuste a parcelas, prevención de solapamientos, selección y transformación, propiedades por objeto, deshacer/rehacer y guardado compatible. URB-06/07, UX-01/02/06, PRO-01/08/09.
+- [ ] **B3 · Simular y entender:** árboles y bancos independientes, ejemplos guiados, trayectorias dibujadas y controles de duración/intensidad; explicación de eventos, revisión visual y comparación sobre el mismo plano editado. URB-08/09, VER-02/04, FIS-08/09, UX-03/04/05, PRO-12.
+- [ ] **C · Física:** nuevas roturas por impacto y cadenas causales, modelos de edificios y vegetación ampliados, cargas y uniones más completas. FIS-01 a FIS-07/11, EDI y VER pendientes.
+- [ ] **D · Transversal desde B2:** fuentes técnicas por parámetro, calibración, caso físico de referencia, errores, sensibilidad y estabilidad. VAL-01 a VAL-05/08/10.
+- [ ] **B4 / E · Escala y territorio:** calles y terrenos libres, mayor catálogo, rendimiento, datos por región/comuna e inventarios geográficos. URB-03/11, EDI, VER, GEO y PRO.
+- [ ] **E / F · Análisis avanzado:** incertidumbre y fragilidad, viento urbano/CFD, suelo y fundaciones y modelos de consecuencias. VAL-06/07/09, CFD, FIS-12, EDI-11, GEO-07 y CON.
+
+La navegación prevista será **Construir → Simular → Entender**. Los parámetros avanzados se despliegan cuando se necesitan; fuentes, supuestos y alcance permanecen accesibles. Esta lista organiza el trabajo y no declara implementadas las funciones del editor. Desglose y criterios de cierre: [plan integrado](docs/editor-didactico.md).

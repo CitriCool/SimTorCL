@@ -6,13 +6,15 @@ Objetivo: construir un laboratorio educativo que permita generar entornos urbano
 
 Prioridades: **P0** base necesaria para trabajar con confianza; **P1** ampliación del laboratorio; **P2** mayor respaldo físico y territorial; **P3** análisis avanzado sujeto a datos. La secuencia expresa dependencias, no fechas ni estimaciones de duración.
 
-## Prioridad revisada tras probar v2.3
+## Prioridad actual: editor didáctico y respaldo técnico
 
-Antes del editor manual, abordar el [entorno físico y el catálogo con procedencia](docs/pendientes-fisicos.md): fuentes por tipología y parámetro, árboles y mobiliario con daño, y edificios con interacción física. Diferenciar colisiones, daño por impacto, efecto aerodinámico y daño del terreno. En v2.3 los parques eran visuales y las parcelas azules eran reservas; el avance y las limitaciones actuales se detallan a continuación.
+Tras probar v2.3 se priorizó el [entorno físico y el catálogo con procedencia](docs/pendientes-fisicos.md). En v2.4 se incorporó una primera física urbana y en v2.5 una biblioteca de parámetros. Con esa base disponible, se adelanta el editor didáctico URB-06/07: construir la manzana arrastrando elementos, preparar el tornado y comprender los daños. La calibración y validación continúan como trabajo transversal; no es necesario completarlas para editar escenarios educativos, pero su nivel de respaldo debe permanecer visible.
 
 Primera implementación v2.4: [entorno físico urbano](docs/entorno-fisico.md). Incluye árboles y bancos con uniones rompibles, edificios residenciales de 2 a 5 pisos con núcleo fijo y envolvente desprendible, colisiones, registro y procedencia. Las capacidades mecánicas siguen siendo educativas. Permanecen pendientes calibración técnica, colapso estructural de edificios, rotura adicional por impacto, daño de suelo y modificación del campo de viento.
 
 Avance v2.5: [biblioteca versionada y comprobación analítica](docs/parametros.md), con 73 parámetros del modelo base y 16 del entorno, procedencia exportable y preservada en archivos. Caso de presión y cargas con referencias fijas, errores y tolerancias. VAL-01/02/04/10 tienen avance parcial: siguen pendientes resistencias con fuente técnica, casos experimentales y validación física.
+
+Próxima entrega B2: editor sobre las parcelas existentes, con paleta de infraestructuras, colocación por arrastre o selección, propiedades por objeto, deshacer/rehacer y guardado reproducible. Después se amplían la colocación independiente de árboles y mobiliario, las trayectorias dibujadas y la explicación visual de resultados. Calles y terrenos de forma libre se abordan en una entrega posterior. El desglose y sus criterios están en [el plan integrado del editor](docs/editor-didactico.md).
 
 ## 0. Base disponible — completada
 
@@ -54,13 +56,16 @@ Depende del formato de experimento de la etapa 1. Primera entrega B1 disponible 
 - [ ] **URB-03** Configurar densidad, ocupación de suelo, proporción de tipos de construcción y proporción de zonas verdes; identificar las distribuciones manuales o sintéticas.
 - [x] **URB-04** Incorporar una semilla de generación para reconstruir exactamente el mismo barrio.
 - [x] **URB-05** Evitar superposición entre volúmenes, parcelas, calles, zonas verdes y accesos mediante reglas geométricas explícitas.
-- [ ] **URB-06** Crear un editor para colocar, mover, rotar, duplicar y eliminar construcciones y zonas verdes, con deshacer y rehacer.
-- [ ] **URB-07** Permitir configurar cada parcela y construcción, además de los parámetros globales.
-- [ ] **URB-08** Añadir escenarios predefinidos: residencial de baja altura, barrio mixto, entorno con edificios y barrio con parque.
+- [ ] **URB-06** Crear un editor con paleta para arrastrar, colocar, mover, rotar, duplicar y eliminar construcciones y zonas verdes, con ajuste a parcelas/cuadrícula y deshacer/rehacer. Ampliar después a árboles y mobiliario independientes.
+- [ ] **URB-07** Permitir configurar cada parcela y objeto desde su selección: perfil y cubierta de casas, pisos de edificios y propiedades disponibles de áreas verdes, conservando identificadores y límites del catálogo físico.
+- [ ] **URB-08** Añadir escenarios predefinidos: residencial de baja altura, barrio mixto, entorno con edificios y barrio con parque; incluir un ejemplo guiado de viviendas reforzadas.
 - [ ] **URB-09** Permitir repetir comparaciones sobre la misma geometría, conservando identidades de edificios, parcelas y elementos del terreno.
 - [ ] **URB-10** Diferenciar visualización, geometría de colisión y modelo resistente de cada objeto del catálogo.
+- [ ] **URB-11** Ampliar el editor a calles, parcelas y terrenos de forma libre, con reglas de acceso, separación y geometría válidas; conservar la reconstrucción reproducible.
 
 Alcance de B1: cuadrículas rectangulares de 2 a 4 filas y columnas; parcelas, veredas y accesos simples; proporciones de usos, reservas para edificios y parques visuales. URB-03 tiene avance parcial: faltan proporciones por variante constructiva y control independiente de ocupación edificada.
+
+Alcance previsto de B2: edición sobre la cuadrícula actual, vista previa de colocación válida/inválida, propiedades por objeto y alternativas al arrastre para teclado y pantalla táctil. El plano editado debe guardarse explícitamente: la semilla por sí sola no representa los cambios manuales. El formato se versionará para conservar geometría, propiedades y resultados de los archivos existentes. Un objeto rechazado no reemplaza ni elimina el anterior. Las reglas de URB-05 deben comprobar también los cambios manuales.
 
 Criterio de salida de la etapa completa, aún pendiente: un escenario mixto puede generarse, editarse, guardarse y regenerarse con posiciones y parámetros idénticos, sin solapamientos no intencionados.
 
@@ -114,6 +119,7 @@ Depende de eventos y trazabilidad de la etapa 1. Se desarrolla por mecanismos in
 - [ ] **FIS-09** Permitir dibujar y guardar trayectorias personalizadas y comparar recorridos sobre el mismo entorno.
 - [ ] **FIS-10** Incorporar visualización cuantitativa del viento: vectores, magnitudes, mapas y puntos de consulta, diferenciada del vórtice decorativo.
 - [ ] **FIS-11** Definir estados de daño por tipología y distinguir pérdida de envolvente, pérdida de soporte y colapso sin depender únicamente de porcentajes de piezas.
+- [ ] **FIS-12** Definir y, cuando existan datos y un modelo comprobable, incorporar respuesta de suelo y fundaciones; distinguir deformación del terreno, fallo de anclaje y contacto con el plano estático.
 
 Criterio de salida por mecanismo: existe una prueba aislada, un evento explicable, una definición de sus parámetros y una comprobación de sus efectos sobre resultados y estabilidad numérica.
 
@@ -183,29 +189,44 @@ Criterio de salida: cada estimación de consecuencias conserva sus datos, modelo
 
 ## 10. Rendimiento, experiencia de uso y distribución — transversal
 
-- [ ] **PRO-01** Ampliar la inspección por clic en el escenario y las capas de cubierta, paredes, estructura, vegetación, viento y daño.
+- [ ] **PRO-01** Ampliar la selección e inspección por clic/toque en el escenario y las capas de cubierta, paredes, estructura, vegetación, viento y daño.
 - [ ] **PRO-02** Incorporar vista general, seguimiento del tornado y enfoque por edificio, parcela o zona verde.
 - [ ] **PRO-03** Evaluar instancias, niveles de detalle y reutilización de recursos para escenas urbanas más grandes.
 - [ ] **PRO-04** Optimizar cuerpos activos y colisiones conservando las interacciones necesarias, incluidos fragmentos que alcanzan objetos fuera del radio del viento.
 - [ ] **PRO-05** Separar calidad gráfica y precisión física; mostrar cuándo una configuración reduce el detalle del cálculo.
 - [ ] **PRO-06** Ejecutar trabajos pesados y lotes de experimentos en segundo plano, con progreso, cancelación y límites configurables.
 - [ ] **PRO-07** Establecer escenarios de rendimiento de referencia para escritorio y móvil y límites documentados de tamaño de escena.
-- [ ] **PRO-08** Mantener navegación por teclado, controles legibles, tablas accesibles y gráficos con unidades y leyendas.
+- [ ] **PRO-08** Mantener navegación por teclado, controles legibles, tablas accesibles y gráficos con unidades y leyendas; permitir colocar por selección y destino sin arrastrar, con alternativa táctil y avisos de colocación que no dependan solo del color.
 - [ ] **PRO-09** Ampliar pruebas de regresión a escenarios urbanos, importación/exportación, edificios, vegetación y mecanismos nuevos.
 - [ ] **PRO-10** Mantener compilación, pruebas y comprobaciones de recursos en GitHub Actions.
 - [ ] **PRO-11** Preparar publicación web de versiones estables, ejemplos descargables y documentación para usuarios.
 - [ ] **PRO-12** Incorporar tutoriales y experimentos guiados que expliquen causas, resultados y límites de cada módulo.
 
-## Orden recomendado de las próximas entregas
+## 11. Experiencia didáctica — P1
 
-| Entrega | Alcance principal                                                          | Condición para avanzar                               |
-| ------- | -------------------------------------------------------------------------- | ---------------------------------------------------- |
-| A       | Registro de eventos, guardar/cargar y exportar experimentos                | Repetición y explicación de resultados               |
-| B       | Generador urbano reproducible, edificios y zonas verdes visuales/editables | Escenarios mixtos guardables y geometría consistente |
-| C       | Modelos físicos diferenciados de edificios y vegetación; daño por impacto  | Pruebas por mecanismo y procedencia de parámetros    |
-| D       | Comparación de manzanas, sensibilidad y primer caso de validación          | Resultados comparables con evaluación de error       |
-| E       | Inventarios territoriales, incertidumbre y funciones de fragilidad         | Datos suficientes y trazabilidad de inferencias      |
-| F       | Acoplamiento con viento urbano/CFD y consecuencias                         | Validación y modelos específicos de cada módulo      |
+Estos ítems coordinan capacidades ya identificadas en URB, EXP, FIS y PRO; sus referencias no representan implementaciones duplicadas.
+
+- [ ] **UX-01** Organizar el recorrido en Construir → Simular → Entender, con acciones principales y estado de cada paso visibles; permitir volver al diseño de forma explícita.
+- [ ] **UX-02** Dar protagonismo al terreno, con paleta de objetos y panel de propiedades de la selección; mostrar controles avanzados bajo demanda y mantener accesibles fuentes, supuestos y alcance físico.
+- [ ] **UX-03** Ofrecer ayudas breves según la acción, una guía inicial y ejemplos listos para modificar, reutilizando URB-08 y PRO-12.
+- [ ] **UX-04** Explicar daños al seleccionar una pieza o recorrer la línea de tiempo, a partir de los eventos registrados de EXP-06/07/09; distinguir causas calculadas, datos ausentes y límites del modelo.
+- [ ] **UX-05** Facilitar la lectura visual del estado inicial y dañado y de las alternativas comparadas, reutilizando EXP-09/10 y URB-09; conservar geometría e identidades cuando solo se modifica el refuerzo.
+- [ ] **UX-06** Diferenciar edición, cálculo y repetición. Bloquear transformaciones mientras corre la física o se reproduce una grabación; volver al diseño requiere una reconstrucción intacta explícita y conservar o descartar resultados mediante acciones claras.
+
+Criterio de salida inicial: una persona puede colocar una casa, un edificio y un parque con arrastre o selección, corregir una acción con deshacer, guardar el barrio, ejecutar un recorrido y consultar una explicación de daño sin abrir parámetros avanzados. El mismo barrio editado se recupera con idéntica geometría y propiedades.
+
+## Orden integrado de las próximas entregas
+
+Punto de partida: A completada; B1 disponible; C y D tienen avances parciales en v2.4/v2.5. Se conservan todas las tareas pendientes anteriores y se reorganizan las próximas entregas:
+
+| Orden | Entrega | Alcance principal | Condición para cerrar |
+| --- | --- | --- | --- |
+| 1 | B2 · Construir | Editor por parcelas, arrastre/selección, propiedades, deshacer/rehacer, guardado; URB-06/07, UX-01/02/06, PRO-01/08 | Barrio mixto editable, sin solapamientos indebidos, guardable y reproducible; compatibilidad histórica |
+| 2 | B3 · Simular y entender | Objetos verdes independientes, ejemplos guiados, trayectorias dibujadas, controles de duración/intensidad y explicación visual; URB-08/09, VER-02/04, FIS-08/09, UX-03/04/05 | Recorrido guardable, eventos explicables y comparación con la misma geometría editada |
+| 3 | C · Interacción física | Nuevas roturas por impacto y cadenas causales; ampliar árboles, mobiliario y edificios; FIS-01/02, EDI y VER pendientes | Pruebas por mecanismo, origen/receptor de impactos y límites físicos documentados |
+| Transversal desde B2 | D · Respaldo y validación | Fuentes por propiedad, calibración, caso físico de referencia, error, sensibilidad y estabilidad; VAL-01 a VAL-05/08/10 | Evidencia y criterios específicos para cada capacidad que se incorpore |
+| 4 | B4 / E · Escala y territorio | Calles y terrenos libres, catálogo ampliado, rendimiento, datos por región/comuna e importación geográfica; URB-03/11, EDI, VER, GEO y PRO | Geometría válida, procedencia y distinción entre datos observados y supuestos |
+| 5 | E / F · Análisis avanzado | Incertidumbre y fragilidad, viento urbano/CFD, suelo/fundaciones y consecuencias; VAL-06/07/09, CFD, FIS-12, EDI-11, GEO-07 y CON | Datos suficientes, modelos propios y validación de cada acoplamiento; daño de suelo con alcance explícito |
 
 Las tareas transversales de validación, rendimiento y accesibilidad acompañan a todas las entregas. Incorporar edificios o árboles a una imagen no implica haber incorporado su respuesta estructural ni su efecto sobre el viento.
 
