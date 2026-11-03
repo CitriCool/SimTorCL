@@ -19,6 +19,8 @@ export function setupUrban({ experiment, getView, pause, reset }) {
       ...experiment.config,
       mode: "neighborhood",
       sitePlan: null,
+      route: null,
+      lesson: null,
       ...Object.fromEntries(
         fields.map((f) => [
           f.dataset.urban,
@@ -67,6 +69,8 @@ export function setupUrban({ experiment, getView, pause, reset }) {
       ...experiment.config,
       mode: "neighborhood",
       sitePlan: null,
+      route: null,
+      lesson: null,
       environment: "physical",
       buildingFloors: 3,
       rows: 2,
@@ -111,7 +115,7 @@ export function setupUrban({ experiment, getView, pause, reset }) {
       if (!layout) return;
       $("urban-summary").textContent = description(layout, experiment.config);
       $("urban-config-summary").textContent =
-        `${experiment.config.rows} × ${experiment.config.columns} parcelas · ${experiment.config.orientation}° · ${experiment.config.sitePlan ? "distribución manual" : "semilla " + layout.seed}`;
+        `${experiment.config.rows} × ${experiment.config.columns} parcelas · ${experiment.config.orientation}° · ${experiment.config.sitePlan ? "distribución manual" : "semilla " + layout.seed}. ${experiment.config.route ? "Recorrido dibujado: " + experiment.config.route.length + " puntos (sustituye el selector lineal)." : "Recorrido lineal."} Avance ${experiment.config.travelSpeed} m/s · ${experiment.config.duration === null ? "sin límite de duración" : experiment.config.duration + " s"}.`;
       const houses = new Map(
         experiment.houses.map((h) => [h.parcelId, h.label]),
       );

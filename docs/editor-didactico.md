@@ -1,12 +1,12 @@
 # Plan integrado: construir, simular y entender
 
-Actualizado el 3 de noviembre de 2026. Integra la propuesta de una interfaz didáctica con los pendientes del [roadmap maestro](../ROADMAP.md). B2 está implementada en v2.6; B3 y las etapas posteriores conservan sus pendientes. Consulta [uso, formato y límites del editor](editor.md).
+Actualizado el 3 de noviembre de 2026. Integra la propuesta de una interfaz didáctica con los pendientes del [roadmap maestro](../ROADMAP.md). B2 está implementada en v2.6 y B3 en v2.7; las etapas posteriores conservan sus pendientes. Consulta [uso, formato y límites del editor](editor.md).
 
 ## Punto de partida
 
 Ya existen viviendas y cubiertas configurables, generación de barrios, árboles y bancos con uniones rompibles, edificios residenciales de 2 a 5 pisos con núcleo fijo, biblioteca de experimentos, eventos, inspección, repetición, comparaciones y exportaciones. La biblioteca de parámetros y el caso analítico de v2.5 aportan trazabilidad y verificación numérica; las resistencias siguen pendientes de calibración física.
 
-El editor sobre las parcelas actuales está disponible en B2 (v2.6); la siguiente entrega es B3. El respaldo técnico continúa durante su desarrollo y en las entregas posteriores. Los pendientes físicos no se eliminan ni se consideran resueltos por mejorar la interfaz.
+El editor sobre las parcelas actuales está disponible en B2 (v2.6); B3 está disponible en [el taller v2.7](taller.md); la siguiente entrega es C. El respaldo técnico continúa durante su desarrollo y en las entregas posteriores. Los pendientes físicos no se eliminan ni se consideran resueltos por mejorar la interfaz.
 
 ## B2: construir la manzana — implementada en v2.6
 
@@ -25,17 +25,17 @@ Relacionada con URB-06/07, UX-01/02/06 y PRO-01/08/09.
 
 **Criterio de cierre:** crear una manzana con casa, edificio y parque, corregir una acción, guardar y cargar sin alterar sus propiedades, y simularla con los controles existentes. La edición no exige que ya existan trayectorias libres ni calles editables.
 
-## B3: preparar la simulación y entender el daño
+## B3: preparar la simulación y entender el daño — implementada en v2.7
 
 Relacionada con URB-08/09/12, VER-02/04, FIS-08/09, UX-03/04/05 y PRO-12. Reutiliza EXP-06 a EXP-10, ya disponibles, y las amplía al plano editado.
 
-- [ ] Ampliar la paleta a árboles y bancos colocados individualmente, con identificadores persistentes, geometría válida y participación en el inventario y la física. Añadir otras especies o mobiliario cuando exista su modelo definido.
-- [ ] Permitir dibujar y guardar la trayectoria sobre el terreno; controlar intensidad, traslación y duración de forma comprensible y con unidades.
-- [ ] Incorporar ejemplos modificables: residencial, barrio mixto, plaza con edificios y viviendas reforzadas. Mantener visible cuándo una distribución es sintética.
-- [ ] Añadir una guía inicial corta y ayudas contextuales para colocar, configurar, ejecutar y revisar resultados. Dejar parámetros avanzados en un panel desplegable, con fuentes y supuestos accesibles.
-- [ ] Seleccionar construcciones, objetos o piezas desde la escena para consultar daños y recorrer sus eventos en la línea de tiempo.
-- [ ] Explicar causas que constan en el registro, por ejemplo una unión sobrecargada o pérdida de soporte; indicar cuando un mecanismo no se calcula. Un contacto por sí solo no debe describirse como una nueva rotura por impacto.
-- [ ] Facilitar la lectura visual del estado inicial y dañado y la comparación de alternativas. Conservar el plano editado y las identidades al variar únicamente el refuerzo; diferenciar los cambios deliberados de geometría.
+- [x] Ampliar la paleta a árboles y bancos colocados individualmente, con identificadores persistentes, geometría válida y participación en el inventario y la física. Otras especies y mobiliario permanecen como ampliación posterior.
+- [x] Permitir dibujar y guardar la trayectoria sobre el terreno; controlar intensidad, traslación y duración de forma comprensible y con unidades.
+- [x] Incorporar ejemplos modificables: residencial, barrio mixto, plaza con edificios y viviendas reforzadas. Mantener visible cuándo una distribución es sintética.
+- [x] Añadir una guía inicial corta y ayudas contextuales para colocar, configurar, ejecutar y revisar resultados. Dejar parámetros avanzados en un panel desplegable, con fuentes y supuestos accesibles.
+- [x] Seleccionar construcciones, objetos o piezas desde la escena para consultar daños y recorrer sus eventos en la línea de tiempo.
+- [x] Explicar causas que constan en el registro, por ejemplo una unión sobrecargada o pérdida de soporte; indicar cuando un mecanismo no se calcula. Un contacto por sí solo no debe describirse como una nueva rotura por impacto.
+- [x] Facilitar la lectura visual del estado inicial y dañado y la comparación de alternativas. Conservar el plano editado y las identidades al variar únicamente el refuerzo; diferenciar los cambios deliberados de geometría.
 
 **Criterio de cierre:** una persona modifica un ejemplo, define un recorrido, lo ejecuta y encuentra una explicación respaldada por eventos; puede recuperar el diseño y repetir una comparación sin reconstruirlo manualmente.
 
@@ -75,4 +75,4 @@ Se mantienen en el roadmap completo:
 - Respuesta de suelo y fundaciones, diferenciando contactos con el plano, fallo de anclaje y deformación real (FIS-12, EDI-11, GEO-07).
 - Costos, escombros, pérdida de uso, recuperación, exposición y comparación de mitigaciones cuando existan modelos y datos de consecuencias (CON-01 a CON-07).
 
-La secuencia expresa prioridades y dependencias, sin comprometer fechas. Las casillas marcadas corresponden al alcance B2 verificado en v2.6; las abiertas conservan trabajo pendiente.
+La secuencia expresa prioridades y dependencias, sin comprometer fechas. Las casillas marcadas corresponden a B2/B3 verificadas en v2.6/v2.7; las abiertas conservan trabajo pendiente.

@@ -6,15 +6,17 @@ Laboratorio educativo 3D de viento, desprendimiento de cubiertas y daño en pare
 
 Construido con Vite, Three.js y Cannon-es. Viviendas, texturas, vegetación y efectos se generan en código. Las tipografías se incluyen localmente; la aplicación compilada funciona sin Google Fonts ni servicios externos. Las licencias de bibliotecas y fuentes se distribuyen en `public/licenses/`.
 
-## Editor de manzanas (v2.6)
+## Taller: construir, simular y entender (v2.7)
 
-Abre **Construir mi manzana** para arrastrar casas, edificios y parques sobre parcelas libres, mover, girar, duplicar o eliminar objetos y deshacer/rehacer. Puedes configurar el perfil y cubierta de cada casa y los pisos de cada edificio. La colocación por clic, teclado y toque ofrece una alternativa al arrastre.
+Abre **Construir mi manzana → Aprender con un ejemplo**. Hay cuatro escenarios sintéticos modificables: residencial, mixto, plaza con edificios y viviendas reforzadas. La paleta permite colocar casas, edificios, parques y también árboles y bancas independientes, con propiedades, identidades persistentes y deshacer/rehacer.
 
-El editor utiliza un borrador independiente: guarda el diseño en biblioteca o JSON y aplícalo para simular desde cero. Si hay resultados anteriores, permite conservarlos antes de reconstruir. Las identidades y propiedades manuales se mantienen al guardar, cargar, repetir y recalcular. Las calles permanecen fijas; los árboles y bancos del parque se mueven como conjunto.
+Dibuja un recorrido sobre el plano y ajusta intensidad, avance y duración. Guarda el diseño y pulsa **Usar esta manzana** para simularlo. En **Entiende lo que ocurrió**, selecciona objetos o piezas, consulta las causas registradas y abre el evento en la línea de tiempo. Puedes alternar la geometría inicial y calculada y comparar refuerzos A/B conservando el mismo diseño.
 
-![Editor de una manzana mixta](docs/editor-manzana.png)
+El borrador conserva el experimento original hasta aplicarlo y ofrece guardar los resultados antes de reconstruir. Las calles permanecen fijas; los parques conservan sus elementos originales como conjunto y los árboles y bancas añadidos mantienen identidades propias.
 
-Consulta [uso, compatibilidad y límites](docs/editor.md) y el [ejemplo importable](docs/examples/manzana-editor-v2.6.json).
+![Taller de construcción y preparación del tornado](docs/taller-b3.png)
+
+Consulta [la guía del taller v2.7](docs/taller.md), [el editor y su compatibilidad](docs/editor.md) y [un ejemplo importable](docs/examples/plaza-v2.7.json).
 
 ## Biblioteca y comprobación (v2.5)
 
@@ -157,7 +159,7 @@ El cuaderno permite guardar, cargar, duplicar y nombrar configuraciones y ejecuc
 
 La biblioteca se conserva en el navegador y requiere exportación JSON para trasladarse a otro equipo. La repetición usa fotogramas muestreados y permite recuperar la ejecución pausada anterior. El recálculo reproduce los pasos y controles iniciales. Las importaciones requieren un modelo compatible y se limitan a 40 MB.
 
-[Guía del cuaderno, formato, migración y límites](docs/experimentos.md). Las 78 pruebas cubren física, manzanas, persistencia del formato, eventos, exportación y reproducción.
+[Guía del cuaderno, formato, migración y límites](docs/experimentos.md). Las 88 pruebas cubren física, manzanas, persistencia del formato, eventos, exportación y reproducción.
 
 ![Cuaderno de experimentos](docs/experimentos.png)
 

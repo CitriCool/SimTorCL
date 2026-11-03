@@ -39,7 +39,11 @@ export function* compareScenarios(config, key, value, seconds = 20) {
     throw new Error("Condición no comparable.");
 
   const first = cleanConfig(config),
-    second = cleanConfig({ ...config, [key]: value });
+    second = cleanConfig({
+      ...config,
+      [key]: value,
+      ...(key === "trajectory" ? { route: null } : {}),
+    });
   if (first.sitePlan && ["distribution", "roof", "lotSize"].includes(key))
     throw new Error(
       "El plano manual conserva las propiedades de cada objeto. Compara refuerzo, recorrido u orientación; para cambiar objetos utiliza el editor.",

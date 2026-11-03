@@ -17,10 +17,11 @@ import {
 import { RULES, FIXED_STEP } from "./physics.js";
 import { parameterLibrary } from "./parameters.js";
 import { normalizeSitePlan } from "./site-plan.js";
+import { normalizeControls, controlModel } from "./route.js";
 
-export const APP_VERSION = "2.6.0";
+export const APP_VERSION = "2.7.0";
 
-export const SCHEMA_VERSION = 5;
+export const SCHEMA_VERSION = 6;
 
 export const MAX_FILE_BYTES = 40 * 1024 * 1024;
 
@@ -100,6 +101,10 @@ export const CONFIG_KEYS = [
   "environment",
   "buildingFloors",
   "sitePlan",
+  "route",
+  "travelSpeed",
+  "duration",
+  "lesson",
 ];
 
 export function cleanConfig(input = {}) {
@@ -112,6 +117,10 @@ export function cleanConfig(input = {}) {
     environment: "physical",
     buildingFloors: 3,
     sitePlan: null,
+    route: null,
+    travelSpeed: 2,
+    duration: null,
+    lesson: null,
     mode: "single",
     distribution: "mixed",
     spacing: 13,
@@ -124,6 +133,12 @@ export function cleanConfig(input = {}) {
   validateConfig(config);
   validateUrban(config);
   config.sitePlan = normalizeSitePlan(config.sitePlan, config);
+  config.route = normalizeControls(config);
+  if (
+    config.lesson !== null &&
+    !["residential", "mixed", "plaza", "reinforced"].includes(config.lesson)
+  )
+    throw new Error("Ejemplo guiado desconocido.");
   if (
     !["physical", "visual"].includes(config.environment) ||
     !Number.isInteger(config.buildingFloors) ||
@@ -181,8 +196,14 @@ export function environmentModel(config) {
     ? config.sitePlan
       ? {
           ...ENV_MODEL,
-          version: "urban-environment-editor-1",
-          geometry: "parcel-quarter-turn-v1",
+          version:
+            config.sitePlan.version === "parcel-editor-2"
+              ? "urban-environment-workshop-1"
+              : "urban-environment-editor-1",
+          geometry:
+            config.sitePlan.version === "parcel-editor-2"
+              ? "independent-nine-slots-v1"
+              : "parcel-quarter-turn-v1",
         }
       : ENV_MODEL
     : null;
@@ -271,6 +292,7 @@ export class RunRecorder {
       appVersion: APP_VERSION,
       modelId: MODEL_ID,
       model: clone(MODEL),
+      scenarioModel: controlModel(this.initial),
       parameterLibrary: parameterLibrary(MODEL, environmentModel(this.initial)),
       environmentModel: clone(environmentModel(this.initial)),
       environmentInventory: experiment.environment
@@ -310,6 +332,7 @@ export function configurationDocument(config = {}, name) {
     appVersion: APP_VERSION,
     modelId: MODEL_ID,
     model: clone(MODEL),
+    scenarioModel: controlModel(initial),
     parameterLibrary: parameterLibrary(MODEL, environmentModel(initial)),
     environmentModel: clone(environmentModel(initial)),
     environmentInventory: environmentModel(initial)
@@ -334,6 +357,7 @@ export function shareLink(base, config, name) {
         schemaVersion: SCHEMA_VERSION,
         modelId: MODEL_ID,
         environmentVersion: environmentModel(config)?.version ?? null,
+        controlVersion: controlModel(cleanConfig(config))?.version ?? null,
         name: normalizeName(name),
         config: cleanConfig(config),
       }),
@@ -343,7 +367,7 @@ export function shareLink(base, config, name) {
 
 export function parseShareHash(hash) {
   if (!hash.startsWith("#simtorcl=")) return null;
-  if (hash.length > 20000) throw new Error("Enlace demasiado largo.");
+  if (hash.length > 100000) throw new Error("Enlace demasiado largo.");
   let data;
   try {
     data = JSON.parse(decodeURIComponent(hash.slice(10)));
@@ -351,7 +375,7 @@ export function parseShareHash(hash) {
     throw new Error("Enlace de configuración inválido.");
   }
   if (
-    ![1, 2, 3, 4, SCHEMA_VERSION].includes(data.schemaVersion) ||
+    ![1, 2, 3, 4, 5, SCHEMA_VERSION].includes(data.schemaVersion) ||
     data.modelId !== MODEL_ID
   )
     throw new Error("El enlace usa otra versión del modelo.");
@@ -361,9 +385,18 @@ export function parseShareHash(hash) {
       (environmentModel(data.config)?.version ?? null)
   )
     throw new Error("El enlace usa otro modelo urbano.");
+  if (
+    data.schemaVersion >= 6 &&
+    (data.controlVersion ?? null) !==
+      (controlModel(cleanConfig(data.config))?.version ?? null)
+  )
+    throw new Error("El enlace usa otro modelo de recorrido o duración.");
   return {
     config: cleanConfig({
       ...data.config,
+      ...(data.schemaVersion < 6
+        ? { route: null, travelSpeed: 2, duration: null, lesson: null }
+        : {}),
       ...(data.schemaVersion < 3 ? { environment: "visual" } : {}),
     }),
     name: normalizeName(data.name),
@@ -463,8 +496,21 @@ export function parseDocument(text) {
   if (record?.format === "simtorcl-experiment" && record.schemaVersion === 4)
     record = {
       ...record,
-      schemaVersion: SCHEMA_VERSION,
+      schemaVersion: 5,
       initial: { ...record.initial, sitePlan: null },
+    };
+  if (record?.format === "simtorcl-experiment" && record.schemaVersion === 5)
+    record = {
+      ...record,
+      schemaVersion: SCHEMA_VERSION,
+      scenarioModel: null,
+      initial: {
+        ...record.initial,
+        route: null,
+        travelSpeed: 2,
+        duration: null,
+        lesson: null,
+      },
     };
   if (
     !record ||
@@ -483,6 +529,12 @@ export function parseDocument(text) {
 
   record.initial = cleanConfig(record.initial);
   record.name = normalizeName(record.name);
+  if (
+    canonical(record.scenarioModel) !== canonical(controlModel(record.initial))
+  )
+    throw new Error(
+      "El modelo de recorrido o duración no coincide con esta versión.",
+    );
   if (
     record.parameterLibrary !== null &&
     canonical(record.parameterLibrary) !==
@@ -543,6 +595,11 @@ export function parseDocument(text) {
     throw new Error("Ejecución demasiado grande o incompleta.");
 
   let last = -1;
+  if (
+    record.initial.duration !== null &&
+    record.steps > Math.round(record.initial.duration / FIXED_STEP)
+  )
+    throw new Error("La ejecución supera su duración declarada.");
   const config = { ...record.initial };
 
   for (const change of record.changes) {
@@ -994,6 +1051,7 @@ export function parcelsCSV(record) {
       "perfil_casa",
       "cubierta_casa",
       "pisos_edificio",
+      "elementos_independientes",
     ],
     ...record.layout.parcels.map((p) => [
       p.id,
@@ -1010,6 +1068,13 @@ export function parcelsCSV(record) {
       p.houseProfile ?? "",
       p.houseRoof ?? "",
       p.buildingFloors ?? "",
+      (record.layout.features ?? [])
+        .filter((item) => item.parcelId === p.id)
+        .map(
+          (item) =>
+            `${item.id}:${item.type}:punto${item.slot + 1}:giro${item.rotation}`,
+        )
+        .join(" | "),
     ]),
   ]);
 }
@@ -1075,6 +1140,10 @@ export function htmlReport(record, image = "") {
     ? `<img alt="Vista del experimento al exportar" src="${image}"/>`
     : "";
 
+  const scenario = record.scenarioModel
+    ? `<h2>Recorrido y condiciones del ensayo</h2><p>${record.initial.mode === "single" ? "Recorrido orbital de la casa individual." : (record.initial.route ? "Recorrido dibujado: " + record.initial.route.length + " puntos." : "Recorrido lineal.") + " Avance " + record.initial.travelSpeed + " m/s"} · ${record.initial.duration === null ? "sin límite de duración" : record.initial.duration + " s de duración"}. Intensidad inicial ${record.initial.wind} km/h.</p><p>${e(record.scenarioModel.scope)}</p><pre>${e(JSON.stringify(record.scenarioModel, null, 2))}</pre>`
+    : "";
+
   const plan = record.layout
     ? `<h2>Plano del barrio</h2><p>${record.initial.sitePlan ? "Distribución manual; propiedades por objeto conservadas. Semilla de origen " : "Distribución generada. Semilla "}${record.initial.seed} · ${record.initial.rows} × ${record.initial.columns} parcelas · orientación ${record.initial.orientation}°. ${record.initial.environment === "physical" ? "Edificios con estructura fija y envolvente desprendible; árboles y bancos con uniones rompibles." : "Reservas y vegetación visuales."}</p><table><tr><th>Parcela</th><th>Uso</th><th>Superficie m²</th><th>Centro X, Z (m)</th></tr>${record.layout.parcels.map((p) => `<tr><td>${e(p.id)}</td><td>${e({ house: "Vivienda", green: "Área verde", building: record.initial.environment === "physical" ? "Edificio residencial" : "Reserva para edificio", vacant: "Parcela libre" }[p.type])}</td><td>${p.area}</td><td>${p.world.x.toFixed(2)}, ${p.world.z.toFixed(2)}</td></tr>`).join("")}</table>${record.initial.sitePlan ? `<h3>Objetos del diseño manual</h3><pre>${e(JSON.stringify(record.initial.sitePlan, null, 2))}</pre>` : ""}`
     : "";
@@ -1084,7 +1153,7 @@ export function htmlReport(record, image = "") {
   const provenance = record.parameterLibrary
     ? `<h2>Biblioteca de parámetros ${e(record.parameterLibrary.version)}</h2><p>${e(record.parameterLibrary.scope)} Los valores mecánicos siguen pendientes de calibración.</p><table><tr><th>Propiedad</th><th>Valor y unidad</th><th>Evidencia</th><th>Aplicación y estado</th></tr>${record.parameterLibrary.entries.map((p) => `<tr><td>${e(p.label)}<br><small>${e(p.id)}</small></td><td>${p.value} ${e(p.unit)}</td><td>${e(p.evidence)}</td><td>${e(p.applicability)} ${e(p.status)} ${e(p.note)}</td></tr>`).join("")}</table><details><summary>Fuentes, ecuaciones y metadatos completos de la biblioteca guardada</summary><pre>${e(JSON.stringify(record.parameterLibrary, null, 2))}</pre></details>`
     : `<h2>Biblioteca de parámetros</h2><p>Este archivo histórico no contiene una biblioteca de procedencia. Se conservan sus descriptores originales; no se le asigna retrospectivamente la biblioteca actual.</p>`;
-  return `<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${e(record.name)} · SimTorCL</title><style>body{font:15px system-ui;line-height:1.6;max-width:1100px;margin:40px auto;padding:20px;color:#19392e}table{border-collapse:collapse;width:100%}td,th{padding:8px;text-align:left;border-bottom:1px solid #ccc}img{max-width:100%}svg{width:100%;background:#17231e;color:#dfece3;border-radius:8px;padding:12px}pre{white-space:pre-wrap}small{color:#52665a}@media print{body{margin:0}}</style><h1>${e(record.name)}</h1><p>SimTorCL ${e(record.appVersion)} · esquema ${record.schemaVersion} · modelo ${e(record.modelId)}</p><p>Tiempo simulado: ${s.elapsed.toFixed(2)} s · tiempo real activo: ${record.realSeconds.toFixed(2)} s. Los periodos en pausa se excluyen.</p><p>Modelo educativo con propiedades ilustrativas, sin validación experimental. La geometría urbana sintética no representa distribuciones censales. Informe de resultados declarados de una ejecución; una importación no recalcula ni certifica los datos.</p>${screenshot}<p>La imagen corresponde a la vista al exportar; las tablas y curvas describen la ejecución completa.</p><h2>Daño durante la ejecución</h2><p>Naranja: cubierta desprendida. Verde: paredes sin soporte. Curvas muestreadas, de 0 a 100 %.</p>${damageChart(record)}<h2>Resultados por vivienda</h2><table><tr><th>Casa</th><th>Perfil</th><th>Cubierta</th><th>Paredes sin soporte</th><th>Uniones falladas</th><th>Movimiento máximo de paredes</th><th>Estado</th></tr>${rows.map((r) => `<tr><td>${e(r.label)}</td><td>${e(r.profile)}</td><td>${r.detached}/${r.total}</td><td>${r.wallDetached}/${r.wallTotal}</td><td>${r.broken}/${r.connectionTotal}</td><td>${r.maxDisplacement.toFixed(2)} m / ${r.maxTilt.toFixed(1)}°</td><td>${e(r.state)}</td></tr>`).join("")}</table>${plan}${urban}${provenance}<h2>Configuración inicial</h2><pre>${e(JSON.stringify(record.initial, null, 2))}</pre><h2>Cambios durante la ejecución</h2><pre>${e(JSON.stringify(record.changes, null, 2))}</pre><h2>Eventos</h2><p>${record.events.length} eventos. El archivo JSON y el CSV de eventos conservan todos los identificadores y relaciones.</p><table><tr><th>Tiempo</th><th>Casa</th><th>Evento</th><th>Causa</th></tr>${record.events
+  return `<!doctype html><html lang="es"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>${e(record.name)} · SimTorCL</title><style>body{font:15px system-ui;line-height:1.6;max-width:1100px;margin:40px auto;padding:20px;color:#19392e}table{border-collapse:collapse;width:100%}td,th{padding:8px;text-align:left;border-bottom:1px solid #ccc}img{max-width:100%}svg{width:100%;background:#17231e;color:#dfece3;border-radius:8px;padding:12px}pre{white-space:pre-wrap}small{color:#52665a}@media print{body{margin:0}}</style><h1>${e(record.name)}</h1><p>SimTorCL ${e(record.appVersion)} · esquema ${record.schemaVersion} · modelo ${e(record.modelId)}</p><p>Tiempo simulado: ${s.elapsed.toFixed(2)} s · tiempo real activo: ${record.realSeconds.toFixed(2)} s. Los periodos en pausa se excluyen.</p><p>Modelo educativo con propiedades ilustrativas, sin validación experimental. La geometría urbana sintética no representa distribuciones censales. Informe de resultados declarados de una ejecución; una importación no recalcula ni certifica los datos.</p>${screenshot}<p>La imagen corresponde a la vista al exportar; las tablas y curvas describen la ejecución completa.</p><h2>Daño durante la ejecución</h2><p>Naranja: cubierta desprendida. Verde: paredes sin soporte. Curvas muestreadas, de 0 a 100 %.</p>${damageChart(record)}<h2>Resultados por vivienda</h2><table><tr><th>Casa</th><th>Perfil</th><th>Cubierta</th><th>Paredes sin soporte</th><th>Uniones falladas</th><th>Movimiento máximo de paredes</th><th>Estado</th></tr>${rows.map((r) => `<tr><td>${e(r.label)}</td><td>${e(r.profile)}</td><td>${r.detached}/${r.total}</td><td>${r.wallDetached}/${r.wallTotal}</td><td>${r.broken}/${r.connectionTotal}</td><td>${r.maxDisplacement.toFixed(2)} m / ${r.maxTilt.toFixed(1)}°</td><td>${e(r.state)}</td></tr>`).join("")}</table>${scenario}${plan}${urban}${provenance}<h2>Configuración inicial</h2><pre>${e(JSON.stringify(record.initial, null, 2))}</pre><h2>Cambios durante la ejecución</h2><pre>${e(JSON.stringify(record.changes, null, 2))}</pre><h2>Eventos</h2><p>${record.events.length} eventos. El archivo JSON y el CSV de eventos conservan todos los identificadores y relaciones.</p><table><tr><th>Tiempo</th><th>Casa</th><th>Evento</th><th>Causa</th></tr>${record.events
     .slice(0, 200)
     .map(
       (v) =>

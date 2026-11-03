@@ -137,7 +137,7 @@ Detalle: [biblioteca, caso y límites](docs/parametros.md). VAL-01/02/04/10 mant
 - [x] Guardado en biblioteca/JSON, esquema 5, repetición, recálculo y migración histórica.
 - [x] Conservación de la ejecución anterior al aplicar mediante guardado explícito; edición bloqueada durante repetición.
 - [x] 78 pruebas, compilación y revisión en navegador de edición, persistencia, respaldo y móvil.
-- [ ] Árboles y bancos independientes, recorridos dibujados, guía inicial y explicación visual ampliada (B3).
+- [x] Árboles y bancos independientes, recorridos dibujados, guía inicial y explicación visual ampliada (B3, v2.7).
 - [ ] Calles y parcelas de forma libre (B4), además de los pendientes físicos y de validación.
 
 Detalle y ejemplo: [editor v2.6](docs/editor.md).
@@ -145,10 +145,23 @@ Detalle y ejemplo: [editor v2.6](docs/editor.md).
 ## Entregas integradas — estado actual
 
 - [x] **B2 · Construir:** paleta de casas, edificios y parques, colocación por arrastre o selección, ajuste a parcelas, prevención de solapamientos, selección y transformación, propiedades por objeto, deshacer/rehacer y guardado compatible. URB-06/07, UX-01/02/06, PRO-01/08/09.
-- [ ] **B3 · Simular y entender:** árboles y bancos independientes, ejemplos guiados, trayectorias dibujadas y controles de duración/intensidad; explicación de eventos, revisión visual y comparación sobre el mismo plano editado. URB-08/09/12, VER-02/04, FIS-08/09, UX-03/04/05, PRO-12.
+- [x] **B3 · Simular y entender:** árboles y bancos independientes, ejemplos guiados, trayectorias dibujadas y controles de duración/intensidad; explicación de eventos, revisión visual y comparación sobre el mismo plano editado. URB-08/09/12, VER-02/04, FIS-08/09, UX-03/04/05, PRO-12.
 - [ ] **C · Física:** nuevas roturas por impacto y cadenas causales, modelos de edificios y vegetación ampliados, cargas y uniones más completas. FIS-01 a FIS-07/11, EDI y VER pendientes.
 - [ ] **D · Transversal desde B2:** fuentes técnicas por parámetro, calibración, caso físico de referencia, errores, sensibilidad y estabilidad. VAL-01 a VAL-05/08/10.
 - [ ] **B4 / E · Escala y territorio:** calles y terrenos libres, mayor catálogo, rendimiento, datos por región/comuna e inventarios geográficos. URB-03/11, EDI, VER, GEO y PRO.
 - [ ] **E / F · Análisis avanzado:** incertidumbre y fragilidad, viento urbano/CFD, suelo y fundaciones y modelos de consecuencias. VAL-06/07/09, CFD, FIS-12, EDI-11, GEO-07 y CON.
 
-La navegación prevista será **Construir → Simular → Entender**. Los parámetros avanzados se despliegan cuando se necesitan; fuentes, supuestos y alcance permanecen accesibles. B2 ya está implementada; las casillas abiertas conservan el trabajo pendiente. Desglose y criterios de cierre: [plan integrado](docs/editor-didactico.md).
+La navegación prevista será **Construir → Simular → Entender**. Los parámetros avanzados se despliegan cuando se necesitan; fuentes, supuestos y alcance permanecen accesibles. B2 y B3 ya están implementadas; las casillas abiertas conservan el trabajo pendiente. Desglose y criterios de cierre: [plan integrado](docs/editor-didactico.md).
+
+## Taller de simulación y explicación (v2.7)
+
+- [x] Árboles y bancas independientes, nueve posiciones por parcela, anclaje educativo del árbol y reglas contra solapamientos.
+- [x] Cuatro ejemplos sintéticos modificables; guía y ayudas de construcción, simulación e interpretación.
+- [x] Recorrido dibujado, intensidad, avance y duración guardados; detención exacta del cálculo al cumplir el tiempo.
+- [x] Selección de piezas y objetos; explicaciones de sobrecarga o pérdida de soporte basadas en eventos, con acceso a la línea de tiempo.
+- [x] Geometría inicial/calculada y barras A/B de cubierta perdida, conservando el plano al variar refuerzo.
+- [x] Esquema 6, descriptores de escenario y entorno, exportaciones y compatibilidad exacta con una ejecución v2.6 dañada.
+- [x] 88 pruebas, compilación y revisión del flujo en navegador.
+- [ ] La siguiente entrega C incorpora nuevas roturas por impacto. D mantiene calibración y validación como trabajo transversal. Calles libres, catálogo ampliado, ráfagas y perfil vertical siguen pendientes.
+
+Guía y alcance: [taller v2.7](docs/taller.md).

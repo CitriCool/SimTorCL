@@ -93,7 +93,8 @@
             </select>
             <p class="selection-note">
               Casas y calles ilustrativas. Cambiar la distribución reconstruye
-              el escenario. Recorrido a 2 m/s, sin repetición.
+              el escenario. Avance urbano configurable en el editor, sin
+              repetición automática.
             </p>
           </div>
           <div id="urban-controls" hidden>
@@ -422,6 +423,67 @@
             </button>
           </div>
         </section>
+        <section
+          id="learning-panel"
+          class="learning-panel"
+          aria-label="Entender los resultados"
+        >
+          <h3>3 · Entiende lo que ocurrió</h3>
+          <details id="learning-guide">
+            <summary>Guía rápida del laboratorio</summary>
+            <ol>
+              <li>
+                Construye una manzana o carga un ejemplo y prepara el recorrido.
+              </li>
+              <li>
+                Aplica el diseño e inicia el ensayo; puedes pausarlo para
+                explorar.
+              </li>
+              <li>
+                Selecciona una pieza en la escena o un objeto aquí y consulta
+                sus eventos.
+              </li>
+            </ol>
+            <p id="learning-lesson"></p>
+            <button class="reset-button" id="learning-examples">
+              Abrir ejemplos y editor
+            </button>
+          </details>
+          <p>
+            Haz clic en una pieza para consultar la falla registrada. Arrastrar
+            sigue moviendo la cámara.
+          </p>
+          <label for="learning-object">Objeto a explorar</label
+          ><select id="learning-object"></select
+          ><label for="learning-event">Evento de esta selección</label
+          ><select id="learning-event"></select>
+          <h4 id="learning-title">Selecciona un objeto</h4>
+          <p id="learning-explanation"></p>
+          <p id="learning-parents"></p>
+          <div class="notebook-actions">
+            <button class="reset-button" id="learning-timeline" disabled>
+              Ver en línea de tiempo</button
+            ><button class="reset-button" id="learning-compare">
+              Comparar refuerzo A / B</button
+            ><button
+              class="reset-button"
+              id="learning-initial"
+              aria-pressed="false"
+            >
+              Ver geometría inicial</button
+            ><button
+              class="reset-button"
+              id="learning-current"
+              aria-pressed="true"
+            >
+              Ver estado calculado
+            </button>
+          </div>
+          <p id="learning-view-note" role="status">
+            Vista del estado calculado. Las explicaciones se basan en los
+            eventos del modelo.
+          </p>
+        </section>
         <section id="urban-results" hidden aria-label="Plano del barrio">
           <div class="eyebrow">GENERADOR URBANO</div>
           <h3>Parcelas del barrio</h3>
@@ -536,7 +598,7 @@
           <span
             ><span class="footer-dot"></span> MOTOR FÍSICO ACTIVO
             <i>/</i> THREE.JS + CANNON-ES</span
-          ><span>SimTorCL <b>v2.6</b></span>
+          ><span>SimTorCL <b>v2.7</b></span>
         </footer>
       </section>
     </main>
@@ -702,10 +764,11 @@
       <div class="eyebrow">DETRÁS DEL EXPERIMENTO</div>
       <p>
         En modo manzana, las viviendas comparten mundo físico y colisiones. El
-        tornado cruza a 2 m/s por una trayectoria marcada. Los impactos pueden
-        colisionar con otras viviendas, pero no se convierten en nuevas roturas
-        por impacto: las uniones siguen evaluándose por viento y pérdida de
-        soporte. La mezcla y el trazado urbano son ilustrativos.
+        tornado sigue una trayectoria marcada, con avance configurable en los
+        escenarios urbanos (2 m/s por defecto). Los fragmentos pueden colisionar
+        con otras viviendas, pero no se convierten en nuevas roturas por
+        impacto: las uniones siguen evaluándose por viento y pérdida de soporte.
+        La mezcla y el trazado urbano son ilustrativos.
       </p>
       <h2 id="about-title">Cubierta, paredes y soporte.</h2>
       <p>
@@ -1155,6 +1218,23 @@
         Arrastra una infraestructura a una parcela libre o selecciónala y toca
         su destino. Para mover un objeto, arrástralo o usa «Mover».
       </p>
+      <details class="editor-example-panel">
+        <summary>Aprender con un ejemplo</summary>
+        <label for="editor-example">Escenario educativo</label
+        ><select id="editor-example">
+          <option value="residential">Barrio residencial</option>
+          <option value="mixed">Barrio mixto</option>
+          <option value="plaza">Plaza con edificios</option>
+          <option value="reinforced">Viviendas reforzadas</option></select
+        ><button type="button" id="editor-load-example" class="reset-button">
+          Cargar ejemplo en el borrador
+        </button>
+        <p class="selection-note">
+          Distribuciones sintéticas modificables. Puedes deshacer la carga; tu
+          experimento original permanece intacto.
+        </p>
+        <p id="editor-lesson-goal"></p>
+      </details>
       <div class="editor-layout">
         <section
           class="editor-palette"
@@ -1188,9 +1268,38 @@
             <span aria-hidden="true">♣</span><strong>Parque</strong
             ><small>Dos árboles y dos bancas</small>
           </button>
+          <button
+            type="button"
+            draggable="true"
+            data-editor-type="tree"
+            aria-pressed="false"
+          >
+            <span aria-hidden="true">♧</span><strong>Árbol</strong
+            ><small>Independiente · anclaje propio</small></button
+          ><button
+            type="button"
+            draggable="true"
+            data-editor-type="bench"
+            aria-pressed="false"
+          >
+            <span aria-hidden="true">▰</span><strong>Banca</strong
+            ><small>Independiente · piezas y uniones</small></button
+          ><label for="editor-slot">Punto dentro de la parcela</label
+          ><select id="editor-slot">
+            <option value="0">1 · Noroeste</option>
+            <option value="1">2 · Norte</option>
+            <option value="2">3 · Noreste</option>
+            <option value="3">4 · Oeste</option>
+            <option value="4" selected>5 · Centro</option>
+            <option value="5">6 · Este</option>
+            <option value="6">7 · Suroeste</option>
+            <option value="7">8 · Sur</option>
+            <option value="8">9 · Sureste</option>
+          </select>
           <p class="selection-note">
             Un objeto principal por parcela. El parque se mueve como conjunto.
-            Las calles permanecen fijas.
+            Puedes añadir árboles y bancas en puntos libres de parques y
+            parcelas sin construcción. Las calles permanecen fijas.
           </p>
         </section>
         <section class="editor-plan" aria-label="Plano de construcción">
@@ -1214,6 +1323,53 @@
             ><span class="editor-canvas-tag">BORRADOR · SIN VIENTO</span>
           </div>
           <p id="editor-summary" class="selection-note"></p>
+          <section class="editor-route-box" aria-label="Preparar el tornado">
+            <h3>2 · Prepara el tornado</h3>
+            <p>
+              Marca puntos sobre el plano o usa las parcelas para un recorrido
+              por sus centros. Las líneas unen los puntos en orden.
+            </p>
+            <div class="editor-tools">
+              <button type="button" id="editor-route-draw" aria-pressed="false">
+                Dibujar recorrido</button
+              ><button type="button" id="editor-route-remove">
+                Quitar último punto</button
+              ><button type="button" id="editor-route-clear">
+                Usar recorrido lineal
+              </button>
+            </div>
+            <p id="editor-route-summary" role="status"></p>
+            <form id="editor-weather-form" class="editor-weather">
+              <label for="editor-wind"
+                >Intensidad del viento (km/h)<input
+                  id="editor-wind"
+                  type="number"
+                  min="0"
+                  max="280"
+                  step="1" /></label
+              ><label for="editor-speed"
+                >Avance (m/s)<input
+                  id="editor-speed"
+                  type="number"
+                  min="0.5"
+                  max="8"
+                  step="0.5" /></label
+              ><label for="editor-duration"
+                >Duración del ensayo<select id="editor-duration">
+                  <option value="0">Sin límite</option>
+                  <option value="15">15 s</option>
+                  <option value="30">30 s</option>
+                  <option value="45">45 s</option>
+                  <option value="60">60 s</option>
+                  <option value="90">90 s</option>
+                  <option value="120">120 s</option>
+                  <option value="180">180 s</option>
+                </select></label
+              ><button class="reset-button" type="submit">
+                Aplicar condiciones
+              </button>
+            </form>
+          </section>
           <details class="editor-grid-details">
             <summary>Elegir parcela por botones · teclado y móvil</summary>
             <p class="selection-note">
@@ -1233,6 +1389,8 @@
         >
           <h3>Tu selección</h3>
           <p id="editor-selected">Selecciona una parcela.</p>
+          <label for="editor-object-list">Objeto en esta parcela</label
+          ><select id="editor-object-list"></select>
           <div class="editor-object-actions">
             <button type="button" id="editor-move" disabled>Mover</button
             ><button type="button" id="editor-duplicate" disabled>
@@ -1254,6 +1412,14 @@
                 <option value="3">3 pisos</option>
                 <option value="4">4 pisos</option>
                 <option value="5">5 pisos</option>
+              </select>
+            </div>
+            <div id="editor-tree-fields" hidden>
+              <label for="editor-anchorage"
+                >Anclaje educativo de este árbol</label
+              ><select id="editor-anchorage">
+                <option value="standard">Estándar · supuesto</option>
+                <option value="weak">Reducido · supuesto</option>
               </select>
             </div>
             <label for="editor-rotation">Orientación del objeto</label

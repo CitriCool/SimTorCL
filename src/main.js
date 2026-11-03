@@ -1,5 +1,6 @@
 import { ENV_MODEL } from "./environment.js";
 import { setupEditor } from "./editor-ui.js";
+import { setupLearning } from "./learning-ui.js";
 import { refreshParameterLibrary } from "./parameters-ui.js";
 import { setupUrban } from "./urban-ui.js";
 import "./style.css";
@@ -11,7 +12,7 @@ import { SceneView } from "./scene.js";
 
 const $ = (id) => document.getElementById(id);
 const simulation = new Experiment();
-let view, frame, worker, comparisonConfig, notebook, urban, editor;
+let view, frame, worker, comparisonConfig, notebook, urban, editor, learning;
 let running = false,
   accumulator = 0,
   lastTime = null,
@@ -94,23 +95,29 @@ function updateReadout() {
   const seconds = Math.floor(s.elapsed + 1e-8);
   $("elapsed").textContent =
     `${String(Math.floor(seconds / 60)).padStart(2, "0")}:${String(seconds % 60).padStart(2, "0")}`;
+  learning?.refresh();
 }
 
 function setRunning(value) {
   if (!view || $("play").disabled) return;
   running = value;
+  if (value && view.initialView) view.setInitialView(false);
   lastTime = null;
   $("status").classList.toggle("running", running);
   $("status-text").textContent = running
     ? "Simulación en curso"
-    : simulation.elapsed
-      ? "Simulación pausada"
-      : "Listo para iniciar";
+    : simulation.finished
+      ? "Ensayo terminado"
+      : simulation.elapsed
+        ? "Simulación pausada"
+        : "Listo para iniciar";
   $("play-text").textContent = running
     ? "Pausar simulación"
-    : simulation.elapsed
-      ? "Reanudar simulación"
-      : "Iniciar simulación";
+    : simulation.finished
+      ? "Repetir ensayo"
+      : simulation.elapsed
+        ? "Reanudar simulación"
+        : "Iniciar simulación";
   $("play-icon").textContent = running ? "Ⅱ" : "▶";
   $("play").setAttribute("aria-label", $("play-text").textContent);
   $("play").setAttribute("aria-pressed", String(running));
@@ -163,6 +170,17 @@ function updateScenarioInfo() {
   }
   for (const id of ["mode", "distribution", "spacing", "trajectory", "profile"])
     $(id).value = simulation.config[id];
+  $("trajectory").querySelector("[data-custom]")?.remove();
+  if (simulation.config.route) {
+    const option = new Option(
+      `Dibujado · ${simulation.config.route.length} puntos`,
+      "custom",
+    );
+    option.dataset.custom = "true";
+    option.disabled = true;
+    $("trajectory").add(option);
+    $("trajectory").value = "custom";
+  }
   for (const id of ["wind", "radius", "reinforcement"]) {
     $(id).value = simulation.config[id];
     paintRange(id);
@@ -270,7 +288,12 @@ function reset(changes = {}) {
   notebook?.beforeReset();
   setRunning(false);
   const next = { ...simulation.config, ...changes };
-  if (next.mode !== "neighborhood") next.sitePlan = null;
+  if (next.mode !== "neighborhood") {
+    next.sitePlan = null;
+    next.route = null;
+    next.lesson = null;
+  }
+  if (next.mode === "single") next.travelSpeed = 2;
   if (
     next.mode !== "single" &&
     next.distribution === "mixed" &&
@@ -278,6 +301,7 @@ function reset(changes = {}) {
   )
     next.roof = "metal";
   simulation.reset(next);
+  if (view) view.initialView = false;
   accumulator = 0;
   lastTime = null;
   lastReadout = -1;
@@ -313,7 +337,10 @@ function paintRange(id) {
 
 for (const id of ["mode", "distribution", "spacing", "trajectory"])
   $(id).addEventListener("change", () =>
-    reset({ [id]: id === "spacing" ? Number($(id).value) : $(id).value }),
+    reset({
+      [id]: id === "spacing" ? Number($(id).value) : $(id).value,
+      ...(id === "trajectory" ? { route: null } : {}),
+    }),
   );
 $("house-inspect").addEventListener("change", () => {
   const house = simulation.houses?.find(
@@ -351,7 +378,10 @@ document.querySelectorAll("[data-preset]").forEach((button) =>
     updateRange("wind");
   }),
 );
-$("play").addEventListener("click", () => setRunning(!running));
+$("play").addEventListener("click", () => {
+  if (simulation.finished) reset();
+  setRunning(!running);
+});
 $("reset").addEventListener("click", () => reset());
 $("show-tornado").addEventListener("change", (event) => {
   if (view) view.vortex.visible = event.target.checked;
@@ -593,6 +623,7 @@ window.addEventListener("keydown", (event) => {
     return;
   if (event.code === "Space") {
     event.preventDefault();
+    if (simulation.finished) reset();
     setRunning(!running);
   }
   if (event.code === "KeyR" && view) reset();
@@ -615,6 +646,10 @@ function animate(now) {
     while (accumulator >= FIXED_STEP) {
       simulation.step();
       accumulator -= FIXED_STEP;
+      if (simulation.finished) {
+        setRunning(false);
+        break;
+      }
     }
     view.sync();
   }
@@ -655,6 +690,13 @@ try {
     reset,
     isReplaying: () => !!notebook?.replaying,
   });
+  learning = setupLearning({
+    experiment: simulation,
+    getView: () => view,
+    getNotebook: () => notebook,
+    pause: () => setRunning(false),
+    openEditor: () => editor.openExamples(),
+  });
   frame = requestAnimationFrame(animate);
 } catch (error) {
   $("loading").hidden = true;
@@ -681,5 +723,6 @@ if (import.meta.hot)
     worker?.terminate();
     notebook?.dispose();
     editor?.dispose();
+    learning?.dispose();
     view?.dispose();
   });

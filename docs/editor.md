@@ -49,4 +49,10 @@ La suite contiene 78 pruebas: diez nuevas comprueban edición e historial, aisla
 
 En navegador se comprobaron arrastre desde la paleta, movimiento directo, rechazo de destinos ocupados, propiedades por casa/edificio, duplicación, deshacer/rehacer, teclado, guardado/exportación y carga, respaldo de una ejecución, repetición y reapertura del editor. Se revisó la alternativa de colocación por botones a 390 × 844, sin desbordamiento horizontal de la página ni del diálogo.
 
-El editor no amplía la evidencia mecánica: siguen pendientes calibración técnica, colapso estructural de edificios, rotura adicional por impacto, suelo deformable y viento modificado por obstáculos. Árboles y bancos independientes, recorridos dibujados, ayudas guiadas y comparación visual ampliada corresponden a B3. Calles y parcelas libres corresponden a B4.
+El editor no amplía la evidencia mecánica: siguen pendientes calibración técnica, colapso estructural de edificios, rotura adicional por impacto, suelo deformable y viento modificado por obstáculos. Árboles y bancos independientes, recorridos dibujados, ayudas guiadas y comparación visual ampliada se incorporan en [B3, v2.7](taller.md). La descripción de esquema 5 anterior documenta v2.6: los nuevos borradores utilizan esquema 6 y `parcel-editor-2`; los archivos históricos conservan su versión física al importarse. Calles y parcelas libres corresponden a B4.
+
+## Compatibilidad de v2.7
+
+Los nuevos borradores usan `urban-editor-v2` y `urban-environment-workshop-1`, con geometría `independent-nine-slots-v1`. `sitePlan.items` contiene árboles/bancas independientes y sus puntos, giros y anclajes. Abrir un diseño antiguo crea un borrador nuevo de esta versión; cerrar sin aplicar conserva la ejecución histórica.
+
+El esquema 6 importa esquemas anteriores con `route: null`, `travelSpeed: 2`, `duration: null`, `lesson: null` y `scenarioModel: null`. No convierte los planos antiguos `parcel-editor-1` a la nueva física durante importación, repetición o recálculo. Una ejecución v2.6 con daño forma parte de las pruebas de regresión y reproduce exactamente sus métricas, eventos y poses.

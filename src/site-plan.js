@@ -1,6 +1,22 @@
 import { PROFILES, ROOFS } from "./catalog.js";
 
 export const SITE_PLAN_VERSION = "parcel-editor-1";
+export const WORKSHOP_PLAN_VERSION = "parcel-editor-2";
+export function featurePosition(item, parcel) {
+  return {
+    x: parcel.x + ((item.slot % 3) - 1) * parcel.size * 0.3,
+    z: parcel.z + (Math.floor(item.slot / 3) - 1) * parcel.size * 0.3,
+  };
+}
+const footprint = (type, x, z) => ({
+  x,
+  z,
+  hx: type === "tree" ? 1.8 : 1,
+  hz: type === "tree" ? 1.8 : 0.7,
+});
+const overlaps = (a, b) =>
+  Math.abs(a.x - b.x) < a.hx + b.hx - 1e-6 &&
+  Math.abs(a.z - b.z) < a.hz + b.hz - 1e-6;
 const gridKeys = ["rows", "columns", "lotSize", "roadWidth"];
 const gridOf = (config) =>
   Object.fromEntries(gridKeys.map((k) => [k, config[k]]));
@@ -16,7 +32,7 @@ export function normalizeSitePlan(input, config) {
     fail("El plano manual requiere el entorno físico.");
   if (
     !input ||
-    input.version !== SITE_PLAN_VERSION ||
+    ![SITE_PLAN_VERSION, WORKSHOP_PLAN_VERSION].includes(input.version) ||
     !Array.isArray(input.objects) ||
     input.objects.length > config.rows * config.columns
   )
@@ -92,12 +108,104 @@ export function normalizeSitePlan(input, config) {
       return next;
     })
     .sort((a, b) => a.id.localeCompare(b.id));
-  return {
-    version: SITE_PLAN_VERSION,
+  const result = {
+    version: input.version,
     grid: gridOf(config),
     nextId: input.nextId,
     objects,
   };
+  if (input.version === WORKSHOP_PLAN_VERSION) {
+    if (!Array.isArray(input.items) || input.items.length > 48)
+      fail("Se admiten hasta 48 árboles y bancas independientes.");
+    const occupied = new Map();
+    for (const obj of objects) {
+      const list = [];
+      if (obj.type === "green")
+        for (const sign of [-1, 1]) {
+          // Conservative footprints of the park's built-in trees and benches.
+          const yaw = (obj.rotation * Math.PI) / 180;
+          const turn = (x, z) => ({
+            x: Math.cos(yaw) * x + Math.sin(yaw) * z,
+            z: -Math.sin(yaw) * x + Math.cos(yaw) * z,
+          });
+          const t = turn(
+            sign * config.lotSize * 0.28,
+            sign * config.lotSize * 0.27,
+          );
+          const b = turn(sign * 2.5, sign * 1.5);
+          const bank = footprint("bench", b.x, b.z);
+          if (obj.rotation % 180) [bank.hx, bank.hz] = [bank.hz, bank.hx];
+          list.push(footprint("tree", t.x, t.z), bank);
+        }
+      occupied.set(obj.parcelId, { type: obj.type, list });
+    }
+    const slots = new Set();
+    result.items = input.items
+      .map((item) => {
+        if (
+          !item ||
+          typeof item.id !== "string" ||
+          !/^O\d{6}$/.test(item.id) ||
+          Number(item.id.slice(1)) < 1 ||
+          Number(item.id.slice(1)) >= input.nextId ||
+          ids.has(item.id)
+        )
+          fail("Identidad de elemento inválida o repetida.");
+        const index = Number(String(item.parcelId).slice(1));
+        if (
+          !/^P\d{2}$/.test(item.parcelId) ||
+          index < 1 ||
+          index > config.rows * config.columns ||
+          !["tree", "bench"].includes(item.type) ||
+          !Number.isInteger(item.slot) ||
+          item.slot < 0 ||
+          item.slot > 8 ||
+          ![0, 90, 180, 270].includes(item.rotation)
+        )
+          fail("Ubicación o tipo de elemento independiente inválido.");
+        const allowed = [
+          "id",
+          "parcelId",
+          "type",
+          "slot",
+          "rotation",
+          ...(item.type === "tree" ? ["anchorage"] : []),
+        ];
+        if (
+          Object.keys(item).some((k) => !allowed.includes(k)) ||
+          (item.type === "tree" &&
+            !["standard", "weak"].includes(item.anchorage))
+        )
+          fail("Propiedades del árbol o banca no compatibles.");
+        const key = `${item.parcelId}:${item.slot}`,
+          parcel = occupied.get(item.parcelId) ?? { type: "vacant", list: [] };
+        if (["house", "building"].includes(parcel.type))
+          fail("Los árboles y bancas requieren una parcela libre o un parque.");
+        if (slots.has(key)) fail("Ese punto de la parcela ya está ocupado.");
+        const pos = featurePosition(item, { x: 0, z: 0, size: config.lotSize });
+        const box = footprint(item.type, pos.x, pos.z);
+        if (item.type === "bench" && item.rotation % 180)
+          [box.hx, box.hz] = [box.hz, box.hx];
+        if (parcel.list.some((other) => overlaps(box, other)))
+          fail(
+            "Ese punto se superpone con un árbol o una banca. Elige otro punto.",
+          );
+        parcel.list.push(box);
+        occupied.set(item.parcelId, parcel);
+        slots.add(key);
+        ids.add(item.id);
+        return {
+          id: item.id,
+          parcelId: item.parcelId,
+          type: item.type,
+          slot: item.slot,
+          rotation: item.rotation,
+          ...(item.type === "tree" ? { anchorage: item.anchorage } : {}),
+        };
+      })
+      .sort((a, b) => a.id.localeCompare(b.id));
+  }
+  return result;
 }
 
 export function initialSitePlan(config, layout) {
@@ -155,10 +263,22 @@ export function applySitePlan(layout, plan) {
   );
   return {
     ...layout,
-    version: "urban-editor-v1",
+    version:
+      plan.version === WORKSHOP_PLAN_VERSION
+        ? "urban-editor-v2"
+        : "urban-editor-v1",
     source: "manual",
     parcels,
     counts,
     areas: { ...layout.areas, green: counts.green * plan.grid.lotSize ** 2 },
+    ...(plan.version === WORKSHOP_PLAN_VERSION
+      ? {
+          features: structuredClone(plan.items),
+          itemCounts: {
+            tree: plan.items.filter((i) => i.type === "tree").length,
+            bench: plan.items.filter((i) => i.type === "bench").length,
+          },
+        }
+      : {}),
   };
 }

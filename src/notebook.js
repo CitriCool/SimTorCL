@@ -728,7 +728,7 @@ export function setupNotebook({
       ]) {
         const tr = document.createElement("tr");
         for (const value of [
-          `${result.label} · ${s.label} · ${[...$("run-variable").options].find((o) => o.value === comparisonKey).textContent}: ${variables[comparisonKey].find(([v]) => v === result.config[comparisonKey])[1]}`,
+          `${result.label} · ${s.label} · ${[...$("run-variable").options].find((o) => o.value === comparisonKey).textContent}: ${comparisonKey === "trajectory" && result.config.route ? "Recorrido dibujado" : variables[comparisonKey].find(([v]) => v === result.config[comparisonKey])[1]}`,
           `${s.detached}/${s.total}`,
           `${s.wallDetached}/${s.wallTotal}`,
           `${s.broken}/${s.connectionTotal}`,
@@ -742,6 +742,21 @@ export function setupNotebook({
       }
     }
     $("runs-results").replaceChildren(table);
+    const overview = document.createElement("div");
+    overview.className = "comparison-overview";
+    for (const result of comparison) {
+      const box = document.createElement("div"),
+        label = document.createElement("p"),
+        meter = document.createElement("div"),
+        fill = document.createElement("span");
+      label.textContent = `${result.label} · ${result.config.reinforcement} % de refuerzo · ${result.stats.elapsed.toFixed(2)} s calculados · cubierta: ${result.stats.detached}/${result.stats.total}`;
+      meter.className = "comparison-meter";
+      fill.style.width = `${(result.stats.detached / Math.max(1, result.stats.total)) * 100}%`;
+      meter.append(fill);
+      box.append(label, meter);
+      overview.append(box);
+    }
+    $("runs-results").prepend(overview);
     if (comparison.some((r) => r.stats.environment)) {
       const title = document.createElement("h3");
       title.textContent = "Objetos urbanos";
@@ -804,7 +819,7 @@ export function setupNotebook({
         ["distribution", "spacing", "trajectory"].includes(key)
       )
         throw new Error("Esta condición requiere seleccionar una manzana.");
-      if (config[key] === value)
+      if (config[key] === value && !(key === "trajectory" && config.route))
         throw new Error("Elige para B un valor diferente al de A.");
       start({
         kind: "compare",
@@ -920,6 +935,39 @@ export function setupNotebook({
   window.addEventListener("hashchange", loadLink);
   loadLink();
   return {
+    get replayRecord() {
+      return replay;
+    },
+    openEvent(id) {
+      pause();
+      pauseReplay();
+      snapshot = current();
+      populate();
+      const event = snapshot.events.find((e) => e.id === id);
+      if (!event) return;
+      $("event-house").value = event.house;
+      $("event-type").value = "all";
+      events();
+      $("event-list").value = id;
+      eventDetail();
+      tab($("tab-events"));
+      if (!$("notebook-dialog").open) $("notebook-dialog").showModal();
+      library().catch((error) => status(error.message));
+    },
+    openComparison() {
+      pause();
+      pauseReplay();
+      snapshot = current();
+      populate();
+      $("run-variable").value = "reinforcement";
+      choices();
+      $("run-value").value = String(
+        experiment.config.reinforcement === 150 ? 100 : 150,
+      );
+      tab($("tab-runs"));
+      if (!$("notebook-dialog").open) $("notebook-dialog").showModal();
+      library().catch((error) => status(error.message));
+    },
     get replayStats() {
       return replayStats;
     },

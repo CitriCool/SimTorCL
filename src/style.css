@@ -10,6 +10,142 @@
   --mono: "Space Grotesk", monospace;
   color-scheme: dark;
 }
+.editor-example-panel,
+.editor-route-box {
+  border: 1px solid #435e4c;
+  border-radius: 7px;
+  padding: 12px;
+  margin: 12px 0;
+}
+.editor-example-panel summary {
+  cursor: pointer;
+  color: var(--teal);
+  font-size: 13px;
+}
+.editor-example-panel select {
+  margin: 10px;
+  max-width: 280px;
+}
+.editor-route-box p,
+.editor-weather label {
+  font-size: 11px;
+}
+.editor-weather {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 9px;
+  align-items: end;
+}
+.editor-weather input,
+.editor-weather select {
+  width: 100%;
+  min-width: 0;
+  margin-top: 6px;
+}
+.editor-weather input,
+#editor-name {
+  padding: 11px;
+  border: 1px solid #405348;
+  border-radius: 4px;
+  background: #111e19;
+  color: inherit;
+  font: inherit;
+  font-size: 12px;
+  box-sizing: border-box;
+}
+.editor-weather button {
+  grid-column: 1/-1;
+  font-size: 11px;
+}
+.editor-palette label,
+.editor-palette select {
+  grid-column: 1/-1;
+  width: 100%;
+  font-size: 10px;
+  margin: 5px 0;
+}
+.learning-panel {
+  padding: 22px 28px;
+  border-top: 1px solid var(--line);
+  background: #18271f;
+}
+.learning-panel h3 {
+  font: 16px var(--mono);
+  color: var(--teal);
+}
+.learning-panel h4 {
+  font-size: 14px;
+  color: #e2d9bb;
+}
+.learning-panel p,
+.learning-panel li {
+  font-size: 12px;
+  line-height: 1.8;
+  color: #b0c4b5;
+}
+.learning-panel label {
+  display: block;
+  margin: 12px 0 6px;
+  font-size: 11px;
+}
+.learning-panel select {
+  width: 100%;
+  max-width: 100%;
+}
+.learning-panel details {
+  padding: 12px;
+  border: 1px solid #3d5947;
+  border-radius: 6px;
+}
+.learning-panel summary {
+  cursor: pointer;
+  font-size: 12px;
+  color: #c6dfca;
+}
+#learning-lesson {
+  white-space: pre-line;
+}
+.comparison-overview {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  padding: 14px 0;
+}
+.comparison-meter {
+  height: 12px;
+  background: #354a3d;
+  border-radius: 6px;
+  overflow: hidden;
+}
+.comparison-meter span {
+  display: block;
+  height: 100%;
+  background: #e7aa77;
+}
+@media (min-width: 621px) {
+  .editor-palette {
+    position: sticky;
+    top: 0;
+    max-height: 75vh;
+    overflow: auto;
+  }
+}
+@media (max-width: 620px) {
+  .editor-weather {
+    grid-template-columns: 1fr;
+  }
+  .learning-panel {
+    padding: 18px 15px;
+  }
+  .editor-example-panel select {
+    width: 100%;
+    max-width: 100%;
+    margin: 10px 0;
+  }
+  .comparison-overview {
+    grid-template-columns: 1fr;
+  }
+}
 .editor-entry {
   width: 100%;
   margin-top: 8px;

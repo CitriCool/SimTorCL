@@ -80,3 +80,9 @@ El esquema 3 incorpora `environmentModel` y `environmentInventory`. Los esquemas
 El esquema 4 incorpora `parameterLibrary`, una copia de la biblioteca de propiedades y procedencia. Los esquemas 1–3 migran con ese campo en `null`, sin añadir evidencia retrospectiva; los informes lo indican y conservan la versión de aplicación original. La nueva biblioteca y su comprobación analítica se consultan en **Parámetros y fuentes**. Consulta [alcance, fuentes y criterio](parametros.md).
 
 El esquema 5 añade `initial.sitePlan` para el plano manual del [editor v2.6](editor.md), con identidades y propiedades por objeto. Los esquemas 1–4 migran con ese campo en `null`, conservando su geometría, procedencia disponible y resultados. Las ejecuciones manuales incluyen los objetos en eventos, inspección, poses, inventario y exportaciones; pueden recalcularse desde el plano guardado.
+
+## Taller v2.7 y esquema 6
+
+El [taller](taller.md) añade `route`, `travelSpeed`, `duration` y `lesson` a la configuración. `scenarioModel` describe las unidades y reglas de recorrido/tiempo cuando se usan controles nuevos. Los planos nuevos `parcel-editor-2` incorporan `items`, identificadores persistentes y posiciones discretas por parcela; el inventario físico conserva cada componente y su capacidad educativa. El informe incluye el descriptor y el CSV de parcelas lista los elementos independientes. Los enlaces de configuración admiten estos datos y siguen sin incluir resultados.
+
+Los archivos anteriores mantienen las versiones de geometría, capacidades, procedencia disponible y resultados con las que fueron creados. La migración agrega controles predeterminados sin modificar una ejecución guardada ni atribuirle una nueva biblioteca de propiedades. El recálculo sigue siendo una acción explícita.

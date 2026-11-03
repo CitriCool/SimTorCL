@@ -102,7 +102,7 @@ test("manual layout regenerates declared geometry, counts and per-object physica
     c = d.config,
     layout = generateNeighborhood(c),
     e = new Experiment(c);
-  assert.equal(layout.version, "urban-editor-v1");
+  assert.equal(layout.version, "urban-editor-v2");
   assert.equal(layout.source, "manual");
   assert.deepEqual(layout.counts, {
     house: 1,
@@ -212,8 +212,8 @@ test("edited damaged runs retain custom roofs, object identities, events, poses 
   for (let i = 0; i < 1500; i++) e.step();
   const r = decode(e.document("Manzana manual"));
   assert.ok(r.events.length > 0);
-  assert.equal(r.schemaVersion, 5);
-  assert.equal(r.environmentModel.version, "urban-environment-editor-1");
+  assert.equal(r.schemaVersion, 6);
+  assert.equal(r.environmentModel.version, "urban-environment-workshop-1");
   assert.deepEqual(recalculate(r), r.results);
   const copy = new Experiment(r.initial, { record: false });
   applyFrame(copy, r, r.frames.length - 1);
@@ -266,7 +266,7 @@ test("schema-4 v2.5 recordings preserve their library, generated layout, histori
   );
   assert.equal(original.schemaVersion, 4);
   const r = decode(original);
-  assert.equal(r.schemaVersion, 5);
+  assert.equal(r.schemaVersion, 6);
   assert.equal(r.initial.sitePlan, null);
   assert.equal(r.appVersion, "2.5.0");
   assert.equal(MODEL_ID, "simtorcl-33082313");

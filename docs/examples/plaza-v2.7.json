@@ -1,0 +1,5281 @@
+{
+  "format": "simtorcl-experiment",
+  "schemaVersion": 6,
+  "kind": "configuration",
+  "appVersion": "2.7.0",
+  "modelId": "simtorcl-33082313",
+  "model": {
+    "version": "pressure-v2.1",
+    "parameters": {
+      "house": {
+        "width": 6.4,
+        "depth": 6.4,
+        "height": 3,
+        "bays": 3,
+        "pitch": 0.34,
+        "eave": 0.45
+      },
+      "profiles": {
+        "masonry": {
+          "id": "masonry",
+          "label": "Albañilería",
+          "family": "Albañilería",
+          "censusWall": "Albañilería",
+          "description": "Paneles macizos con uniones frágiles idealizadas; la rotura separa segmentos rígidos.",
+          "thickness": 0.18,
+          "arealMass": 260,
+          "jointPressure": 1600,
+          "claddingPressure": 0,
+          "color": "#b98865",
+          "roofs": [
+            "metal",
+            "fiber",
+            "tile",
+            "slab"
+          ],
+          "defaultRoof": "metal",
+          "failure": "Separación de segmentos de albañilería"
+        },
+        "timber": {
+          "id": "timber",
+          "label": "Entramado de madera",
+          "family": "Estructura liviana",
+          "censusWall": "Tabique forrado por ambas caras",
+          "description": "Variante ilustrativa de madera. Revestimientos y paneles estructurales tienen conexiones independientes.",
+          "thickness": 0.14,
+          "arealMass": 32,
+          "jointPressure": 850,
+          "claddingPressure": 300,
+          "claddingMass": 9,
+          "color": "#ad9672",
+          "roofs": [
+            "metal",
+            "fiber",
+            "tile"
+          ],
+          "defaultRoof": "metal",
+          "failure": "Pérdida de revestimientos y uniones del entramado"
+        },
+        "steel": {
+          "id": "steel",
+          "label": "Entramado de acero",
+          "family": "Estructura liviana",
+          "censusWall": "Tabique forrado por ambas caras",
+          "description": "Variante ilustrativa de acero dentro de la misma categoría censal que el entramado de madera.",
+          "thickness": 0.12,
+          "arealMass": 28,
+          "jointPressure": 1250,
+          "claddingPressure": 420,
+          "claddingMass": 11,
+          "color": "#b5bfc0",
+          "roofs": [
+            "metal",
+            "fiber",
+            "tile"
+          ],
+          "defaultRoof": "metal",
+          "failure": "Pérdida de revestimientos y uniones del entramado"
+        },
+        "concrete": {
+          "id": "concrete",
+          "label": "Hormigón armado",
+          "family": "Hormigón armado",
+          "censusWall": "Hormigón armado",
+          "description": "Segmentos rígidos con conexiones de mayor capacidad asumida; ventanas secundarias desprendibles.",
+          "thickness": 0.16,
+          "arealMass": 360,
+          "jointPressure": 4000,
+          "claddingPressure": 650,
+          "claddingMass": 22,
+          "color": "#b6b7a6",
+          "roofs": [
+            "metal",
+            "fiber",
+            "tile",
+            "slab"
+          ],
+          "defaultRoof": "slab",
+          "failure": "Elementos secundarios; pérdida de soporte solo si fallan las uniones"
+        }
+      },
+      "roofs": {
+        "metal": {
+          "id": "metal",
+          "label": "Planchas metálicas",
+          "censusRoof": "Planchas metálicas",
+          "unit": "planchas",
+          "arealMass": 4.2,
+          "thickness": 0.065,
+          "fixingPressure": 250,
+          "columns": 2,
+          "rows": 4,
+          "color": "#8daba8"
+        },
+        "fiber": {
+          "id": "fiber",
+          "label": "Fibrocemento",
+          "censusRoof": "Planchas de fibrocemento",
+          "unit": "planchas",
+          "arealMass": 12,
+          "thickness": 0.07,
+          "fixingPressure": 300,
+          "columns": 2,
+          "rows": 4,
+          "color": "#9daba5"
+        },
+        "tile": {
+          "id": "tile",
+          "label": "Tejas / tejuelas",
+          "censusRoof": "Tejas o tejuelas",
+          "unit": "módulos",
+          "arealMass": 40,
+          "thickness": 0.09,
+          "fixingPressure": 190,
+          "columns": 4,
+          "rows": 8,
+          "color": "#a86f50"
+        },
+        "slab": {
+          "id": "slab",
+          "label": "Losa de hormigón",
+          "censusRoof": "Losa de hormigón",
+          "unit": "losa",
+          "arealMass": 300,
+          "thickness": 0.15,
+          "fixingPressure": 10000,
+          "columns": 1,
+          "rows": 1,
+          "color": "#b0b2a4"
+        }
+      },
+      "rules": {
+        "stableDisplacement": 0.05,
+        "stableTilt": 5,
+        "collapseTilt": 45,
+        "collapseDrop": 0.8,
+        "collapseFraction": 0.5,
+        "overloadSeconds": 0.12
+      },
+      "step": 0.008333333333333333,
+      "engine": {
+        "name": "cannon-es",
+        "version": "0.20.0",
+        "iterations": 15,
+        "gravity": 9.82,
+        "friction": 0.65,
+        "restitution": 0.03,
+        "linearDamping": 0.1,
+        "angularDamping": 0.4
+      },
+      "wind": {
+        "airDensity": 1.225,
+        "radialFactor": 0.18,
+        "tangentialFactor": 0.85,
+        "verticalFactor": 0.7,
+        "falloffExponent": 1.15,
+        "altitudeLimit": 32,
+        "minimumDistance": 0.25,
+        "rampSeconds": 1.8,
+        "wallResidualFactor": 0.12,
+        "dragCoefficient": 0.7
+      },
+      "trajectory": {
+        "blockSpeed": 2,
+        "orbitalAngularSpeed": 0.17,
+        "orbitalRadiusX": 5.5,
+        "orbitalRadiusZ": 4.4,
+        "orbitalPhase": 0.6
+      }
+    },
+    "sources": {
+      "glossary": {
+        "title": "INE · Glosario de viviendas, Censo 2024",
+        "url": "https://censo2024.ine.gob.cl/wp-content/uploads/2025/05/Glosario_viviendas_y_servicios-basicos_CPV2024.pdf",
+        "consulted": "2026-11-02"
+      },
+      "manual": {
+        "title": "INE · Manual censal 2024, preguntas de vivienda",
+        "url": "https://censo2024.ine.gob.cl/wp-content/uploads/2025/03/Manual_Censal_CPV2024.pdf",
+        "consulted": "2026-11-02"
+      },
+      "results": {
+        "title": "INE · Resultados y acceso a tabulados y microdatos",
+        "url": "https://censo2024.ine.gob.cl/resultados/",
+        "consulted": "2026-11-02"
+      }
+    },
+    "units": {
+      "length": "m",
+      "mass": "kg",
+      "force": "N",
+      "time": "s",
+      "wind": "km/h"
+    }
+  },
+  "scenarioModel": {
+    "version": "scenario-controls-1",
+    "routeVersion": "polyline-1",
+    "speedUnit": "m/s",
+    "durationUnit": "s",
+    "coordinateUnit": "m",
+    "scope": "Los recorridos urbanos son lineales o poligonales; los puntos dibujados usan coordenadas locales del barrio. Avance constante por longitud recorrida y parada al final. La casa individual conserva su órbita. La física termina al cumplir la duración; sin duración continúa calculando. Campo de viento educativo sin modificación por obstáculos."
+  },
+  "parameterLibrary": {
+    "version": "parameters-1",
+    "reviewed": "2026-11-03",
+    "modelVersion": "pressure-v2.1",
+    "environmentVersion": "urban-environment-workshop-1",
+    "scope": "Parámetros numéricos declarados en los descriptores de vivienda, cálculo y entorno. No es un inventario de cada constante interna; geometría y propiedades por pieza se conservan por separado.",
+    "sources": [
+      {
+        "id": "census-glossary",
+        "title": "INE · Glosario de viviendas, Censo 2024",
+        "url": "https://censo2024.ine.gob.cl/wp-content/uploads/2025/05/Glosario_viviendas_y_servicios-basicos_CPV2024.pdf",
+        "consulted": "2026-11-02",
+        "institution": "INE",
+        "edition": "Censo 2024",
+        "section": "Categorías de vivienda y materialidad; véase documento original",
+        "status": "Referencia de clasificación; sin extracción mecánica",
+        "supports": "Tipología y materialidad. No respalda valores mecánicos de esta biblioteca."
+      },
+      {
+        "id": "census-manual",
+        "title": "INE · Manual censal 2024, preguntas de vivienda",
+        "url": "https://censo2024.ine.gob.cl/wp-content/uploads/2025/03/Manual_Censal_CPV2024.pdf",
+        "consulted": "2026-11-02",
+        "institution": "INE",
+        "edition": "Censo 2024",
+        "section": "Categorías de vivienda y materialidad; véase documento original",
+        "status": "Referencia de clasificación; sin extracción mecánica",
+        "supports": "Tipología y materialidad. No respalda valores mecánicos de esta biblioteca."
+      },
+      {
+        "id": "census-results",
+        "title": "INE · Resultados y acceso a tabulados y microdatos",
+        "url": "https://censo2024.ine.gob.cl/resultados/",
+        "consulted": "2026-11-02",
+        "institution": "INE",
+        "edition": "Censo 2024",
+        "section": "Categorías de vivienda y materialidad; véase documento original",
+        "status": "Referencia de clasificación; sin extracción mecánica",
+        "supports": "Tipología y materialidad. No respalda valores mecánicos de esta biblioteca."
+      },
+      {
+        "id": "ine",
+        "institution": "INE",
+        "title": "Glosario de viviendas, Censo 2024",
+        "url": "https://censo2024.ine.gob.cl/wp-content/uploads/2025/05/Glosario_viviendas_y_servicios-basicos_CPV2024.pdf",
+        "section": "Tipos de vivienda y materialidad",
+        "use": "Clasificación de vivienda y materiales; no resistencia mecánica",
+        "status": "Referencia tipológica",
+        "edition": "No comprobada en esta entrega",
+        "consulted": null
+      },
+      {
+        "id": "minvu",
+        "institution": "MINVU · DITEC",
+        "title": "Manuales técnicos: espacio público, diseño y materiales",
+        "url": "https://www.minvu.gob.cl/ditec/manuales-tecnicos-ditec/",
+        "section": "Espacio público; diseño, ingeniería y materiales",
+        "use": "Índice oficial de documentos para parques, arbolado y construcción; no aporta los coeficientes de esta calibración",
+        "status": "Índice consultado; extracción de propiedades pendiente",
+        "edition": "No comprobada en esta entrega",
+        "consulted": null
+      },
+      {
+        "id": "infor",
+        "institution": "INFOR / aportes CONAF",
+        "title": "Técnicas de Planificación y Manejo del Arbolado Urbano",
+        "url": "https://bibliotecadigital.infor.cl/bitstream/handle/20.500.12220/13191/13191.pdf?sequence=1",
+        "section": "Evaluación de riesgos en los árboles",
+        "use": "Referencia de riesgo de caída; no umbrales universales ni capacidades por especie",
+        "status": "Referencia localizada; calibración mecánica pendiente",
+        "edition": "No comprobada en esta entrega",
+        "consulted": null
+      },
+      {
+        "id": "nasa-pressure",
+        "institution": "NASA · Glenn Research Center",
+        "title": "Dynamic Pressure",
+        "url": "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/dynamic-pressure/",
+        "edition": "Página web, sin edición declarada",
+        "section": "Derivation: q = ρu²/2",
+        "consulted": "2026-11-03",
+        "status": "Ecuación consultada",
+        "supports": "Definición de presión dinámica; no valida densidad, campo de tornado ni resistencias del catálogo."
+      },
+      {
+        "id": "nasa-drag",
+        "institution": "NASA · Glenn Research Center",
+        "title": "Drag Equation",
+        "url": "https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/drag-equation/",
+        "edition": "Página web, sin edición declarada",
+        "section": "Drag Coefficient; Reference Area; Density",
+        "consulted": "2026-11-03",
+        "status": "Ecuación consultada",
+        "supports": "D = Cd · ρV²A/2. Cd y área de referencia deben corresponder al objeto y a las condiciones del ensayo; no aporta el Cd del catálogo."
+      }
+    ],
+    "equations": [
+      {
+        "id": "dynamic-pressure",
+        "expression": "q = ρV²/2",
+        "sourceIds": [
+          "nasa-pressure"
+        ],
+        "implementation": "dynamicPressure; windAt",
+        "scope": "Presión dinámica, con velocidad en m/s. No equivale por sí sola a presión sobre una fachada."
+      },
+      {
+        "id": "drag",
+        "expression": "D = Cd · q · A",
+        "sourceIds": [
+          "nasa-drag"
+        ],
+        "implementation": "Arrastre de fragmentos; caso analítico",
+        "scope": "El Cd = 0,7 del modelo sigue siendo un supuesto. El campo del tornado tiene factores propios educativos."
+      }
+    ],
+    "entries": [
+      {
+        "id": "model.house.width",
+        "label": "Geometría de vivienda · Ancho",
+        "value": 6.4,
+        "unit": "m",
+        "group": "Geometría de vivienda",
+        "appliesTo": "house",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.house.depth",
+        "label": "Geometría de vivienda · Fondo",
+        "value": 6.4,
+        "unit": "m",
+        "group": "Geometría de vivienda",
+        "appliesTo": "house",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.house.height",
+        "label": "Geometría de vivienda · Altura",
+        "value": 3,
+        "unit": "m",
+        "group": "Geometría de vivienda",
+        "appliesTo": "house",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.house.bays",
+        "label": "Geometría de vivienda · Segmentos por fachada",
+        "value": 3,
+        "unit": "1",
+        "group": "Geometría de vivienda",
+        "appliesTo": "house",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.house.pitch",
+        "label": "Geometría de vivienda · Pendiente angular",
+        "value": 0.34,
+        "unit": "rad",
+        "group": "Geometría de vivienda",
+        "appliesTo": "house",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.house.eave",
+        "label": "Geometría de vivienda · Alero",
+        "value": 0.45,
+        "unit": "m",
+        "group": "Geometría de vivienda",
+        "appliesTo": "house",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.profiles.masonry.thickness",
+        "label": "Albañilería · Espesor de representación",
+        "value": 0.18,
+        "unit": "m",
+        "group": "Paredes de viviendas",
+        "appliesTo": "masonry",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.profiles.masonry.arealMass",
+        "label": "Albañilería · Masa superficial",
+        "value": 260,
+        "unit": "kg/m²",
+        "group": "Paredes de viviendas",
+        "appliesTo": "masonry",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.profiles.masonry.jointPressure",
+        "label": "Albañilería · Capacidad de unión por superficie",
+        "value": 1600,
+        "unit": "N/m²",
+        "group": "Paredes de viviendas",
+        "appliesTo": "masonry",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.profiles.masonry.claddingPressure",
+        "label": "Albañilería · Fijación secundaria por superficie",
+        "value": 0,
+        "unit": "N/m²",
+        "group": "Paredes de viviendas",
+        "appliesTo": "masonry",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.profiles.timber.thickness",
+        "label": "Entramado de madera · Espesor de representación",
+        "value": 0.14,
+        "unit": "m",
+        "group": "Paredes de viviendas",
+        "appliesTo": "timber",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.profiles.timber.arealMass",
+        "label": "Entramado de madera · Masa superficial",
+        "value": 32,
+        "unit": "kg/m²",
+        "group": "Paredes de viviendas",
+        "appliesTo": "timber",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.profiles.timber.jointPressure",
+        "label": "Entramado de madera · Capacidad de unión por superficie",
+        "value": 850,
+        "unit": "N/m²",
+        "group": "Paredes de viviendas",
+        "appliesTo": "timber",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.profiles.timber.claddingPressure",
+        "label": "Entramado de madera · Fijación secundaria por superficie",
+        "value": 300,
+        "unit": "N/m²",
+        "group": "Paredes de viviendas",
+        "appliesTo": "timber",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.profiles.timber.claddingMass",
+        "label": "Entramado de madera · Masa superficial secundaria",
+        "value": 9,
+        "unit": "kg/m²",
+        "group": "Paredes de viviendas",
+        "appliesTo": "timber",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.profiles.steel.thickness",
+        "label": "Entramado de acero · Espesor de representación",
+        "value": 0.12,
+        "unit": "m",
+        "group": "Paredes de viviendas",
+        "appliesTo": "steel",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.profiles.steel.arealMass",
+        "label": "Entramado de acero · Masa superficial",
+        "value": 28,
+        "unit": "kg/m²",
+        "group": "Paredes de viviendas",
+        "appliesTo": "steel",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.profiles.steel.jointPressure",
+        "label": "Entramado de acero · Capacidad de unión por superficie",
+        "value": 1250,
+        "unit": "N/m²",
+        "group": "Paredes de viviendas",
+        "appliesTo": "steel",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.profiles.steel.claddingPressure",
+        "label": "Entramado de acero · Fijación secundaria por superficie",
+        "value": 420,
+        "unit": "N/m²",
+        "group": "Paredes de viviendas",
+        "appliesTo": "steel",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.profiles.steel.claddingMass",
+        "label": "Entramado de acero · Masa superficial secundaria",
+        "value": 11,
+        "unit": "kg/m²",
+        "group": "Paredes de viviendas",
+        "appliesTo": "steel",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.profiles.concrete.thickness",
+        "label": "Hormigón armado · Espesor de representación",
+        "value": 0.16,
+        "unit": "m",
+        "group": "Paredes de viviendas",
+        "appliesTo": "concrete",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.profiles.concrete.arealMass",
+        "label": "Hormigón armado · Masa superficial",
+        "value": 360,
+        "unit": "kg/m²",
+        "group": "Paredes de viviendas",
+        "appliesTo": "concrete",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.profiles.concrete.jointPressure",
+        "label": "Hormigón armado · Capacidad de unión por superficie",
+        "value": 4000,
+        "unit": "N/m²",
+        "group": "Paredes de viviendas",
+        "appliesTo": "concrete",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.profiles.concrete.claddingPressure",
+        "label": "Hormigón armado · Fijación secundaria por superficie",
+        "value": 650,
+        "unit": "N/m²",
+        "group": "Paredes de viviendas",
+        "appliesTo": "concrete",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.profiles.concrete.claddingMass",
+        "label": "Hormigón armado · Masa superficial secundaria",
+        "value": 22,
+        "unit": "kg/m²",
+        "group": "Paredes de viviendas",
+        "appliesTo": "concrete",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.roofs.metal.arealMass",
+        "label": "Planchas metálicas · Masa superficial",
+        "value": 4.2,
+        "unit": "kg/m²",
+        "group": "Cubiertas de viviendas",
+        "appliesTo": "metal",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.roofs.metal.thickness",
+        "label": "Planchas metálicas · Espesor de representación",
+        "value": 0.065,
+        "unit": "m",
+        "group": "Cubiertas de viviendas",
+        "appliesTo": "metal",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.roofs.metal.fixingPressure",
+        "label": "Planchas metálicas · Fijación de cubierta por superficie",
+        "value": 250,
+        "unit": "N/m²",
+        "group": "Cubiertas de viviendas",
+        "appliesTo": "metal",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.roofs.metal.columns",
+        "label": "Planchas metálicas · Columnas de módulos",
+        "value": 2,
+        "unit": "1",
+        "group": "Cubiertas de viviendas",
+        "appliesTo": "metal",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.roofs.metal.rows",
+        "label": "Planchas metálicas · Filas de módulos",
+        "value": 4,
+        "unit": "1",
+        "group": "Cubiertas de viviendas",
+        "appliesTo": "metal",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.roofs.fiber.arealMass",
+        "label": "Fibrocemento · Masa superficial",
+        "value": 12,
+        "unit": "kg/m²",
+        "group": "Cubiertas de viviendas",
+        "appliesTo": "fiber",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.roofs.fiber.thickness",
+        "label": "Fibrocemento · Espesor de representación",
+        "value": 0.07,
+        "unit": "m",
+        "group": "Cubiertas de viviendas",
+        "appliesTo": "fiber",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.roofs.fiber.fixingPressure",
+        "label": "Fibrocemento · Fijación de cubierta por superficie",
+        "value": 300,
+        "unit": "N/m²",
+        "group": "Cubiertas de viviendas",
+        "appliesTo": "fiber",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.roofs.fiber.columns",
+        "label": "Fibrocemento · Columnas de módulos",
+        "value": 2,
+        "unit": "1",
+        "group": "Cubiertas de viviendas",
+        "appliesTo": "fiber",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.roofs.fiber.rows",
+        "label": "Fibrocemento · Filas de módulos",
+        "value": 4,
+        "unit": "1",
+        "group": "Cubiertas de viviendas",
+        "appliesTo": "fiber",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.roofs.tile.arealMass",
+        "label": "Tejas / tejuelas · Masa superficial",
+        "value": 40,
+        "unit": "kg/m²",
+        "group": "Cubiertas de viviendas",
+        "appliesTo": "tile",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.roofs.tile.thickness",
+        "label": "Tejas / tejuelas · Espesor de representación",
+        "value": 0.09,
+        "unit": "m",
+        "group": "Cubiertas de viviendas",
+        "appliesTo": "tile",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.roofs.tile.fixingPressure",
+        "label": "Tejas / tejuelas · Fijación de cubierta por superficie",
+        "value": 190,
+        "unit": "N/m²",
+        "group": "Cubiertas de viviendas",
+        "appliesTo": "tile",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.roofs.tile.columns",
+        "label": "Tejas / tejuelas · Columnas de módulos",
+        "value": 4,
+        "unit": "1",
+        "group": "Cubiertas de viviendas",
+        "appliesTo": "tile",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.roofs.tile.rows",
+        "label": "Tejas / tejuelas · Filas de módulos",
+        "value": 8,
+        "unit": "1",
+        "group": "Cubiertas de viviendas",
+        "appliesTo": "tile",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.roofs.slab.arealMass",
+        "label": "Losa de hormigón · Masa superficial",
+        "value": 300,
+        "unit": "kg/m²",
+        "group": "Cubiertas de viviendas",
+        "appliesTo": "slab",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.roofs.slab.thickness",
+        "label": "Losa de hormigón · Espesor de representación",
+        "value": 0.15,
+        "unit": "m",
+        "group": "Cubiertas de viviendas",
+        "appliesTo": "slab",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.roofs.slab.fixingPressure",
+        "label": "Losa de hormigón · Fijación de cubierta por superficie",
+        "value": 10000,
+        "unit": "N/m²",
+        "group": "Cubiertas de viviendas",
+        "appliesTo": "slab",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.roofs.slab.columns",
+        "label": "Losa de hormigón · Columnas de módulos",
+        "value": 1,
+        "unit": "1",
+        "group": "Cubiertas de viviendas",
+        "appliesTo": "slab",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.roofs.slab.rows",
+        "label": "Losa de hormigón · Filas de módulos",
+        "value": 1,
+        "unit": "1",
+        "group": "Cubiertas de viviendas",
+        "appliesTo": "slab",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.rules.stableDisplacement",
+        "label": "Reglas de daño · Umbral de desplazamiento estable",
+        "value": 0.05,
+        "unit": "m",
+        "group": "Reglas de daño",
+        "appliesTo": "rules",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.rules.stableTilt",
+        "label": "Reglas de daño · Umbral de inclinación estable",
+        "value": 5,
+        "unit": "°",
+        "group": "Reglas de daño",
+        "appliesTo": "rules",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.rules.collapseTilt",
+        "label": "Reglas de daño · Umbral de inclinación de colapso",
+        "value": 45,
+        "unit": "°",
+        "group": "Reglas de daño",
+        "appliesTo": "rules",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.rules.collapseDrop",
+        "label": "Reglas de daño · Umbral de descenso de colapso",
+        "value": 0.8,
+        "unit": "m",
+        "group": "Reglas de daño",
+        "appliesTo": "rules",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.rules.collapseFraction",
+        "label": "Reglas de daño · Fracción para indicador de colapso",
+        "value": 0.5,
+        "unit": "1",
+        "group": "Reglas de daño",
+        "appliesTo": "rules",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.rules.overloadSeconds",
+        "label": "Reglas de daño · Duración de sobrecarga",
+        "value": 0.12,
+        "unit": "s",
+        "group": "Reglas de daño",
+        "appliesTo": "rules",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.step",
+        "label": "Cálculo numérico · Paso temporal",
+        "value": 0.008333333333333333,
+        "unit": "s",
+        "group": "Cálculo numérico",
+        "appliesTo": "step",
+        "evidence": "numerical",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Verificación numérica; no validación estructural",
+        "note": ""
+      },
+      {
+        "id": "model.engine.iterations",
+        "label": "Cálculo numérico · Iteraciones del solver",
+        "value": 15,
+        "unit": "1",
+        "group": "Cálculo numérico",
+        "appliesTo": "engine",
+        "evidence": "numerical",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Verificación numérica; no validación estructural",
+        "note": ""
+      },
+      {
+        "id": "model.engine.gravity",
+        "label": "Cálculo numérico · Aceleración gravitatoria",
+        "value": 9.82,
+        "unit": "m/s²",
+        "group": "Cálculo numérico",
+        "appliesTo": "engine",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.engine.friction",
+        "label": "Cálculo numérico · Coeficiente de fricción",
+        "value": 0.65,
+        "unit": "1",
+        "group": "Cálculo numérico",
+        "appliesTo": "engine",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.engine.restitution",
+        "label": "Cálculo numérico · Coeficiente de restitución",
+        "value": 0.03,
+        "unit": "1",
+        "group": "Cálculo numérico",
+        "appliesTo": "engine",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.engine.linearDamping",
+        "label": "Cálculo numérico · Amortiguamiento lineal del motor",
+        "value": 0.1,
+        "unit": "1",
+        "group": "Cálculo numérico",
+        "appliesTo": "engine",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.engine.angularDamping",
+        "label": "Cálculo numérico · Amortiguamiento angular del motor",
+        "value": 0.4,
+        "unit": "1",
+        "group": "Cálculo numérico",
+        "appliesTo": "engine",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.wind.airDensity",
+        "label": "Viento · Densidad del aire",
+        "value": 1.225,
+        "unit": "kg/m³",
+        "group": "Viento",
+        "appliesTo": "wind",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.wind.radialFactor",
+        "label": "Viento · Factor radial del campo",
+        "value": 0.18,
+        "unit": "1",
+        "group": "Viento",
+        "appliesTo": "wind",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.wind.tangentialFactor",
+        "label": "Viento · Factor tangencial del campo",
+        "value": 0.85,
+        "unit": "1",
+        "group": "Viento",
+        "appliesTo": "wind",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.wind.verticalFactor",
+        "label": "Viento · Factor vertical del campo",
+        "value": 0.7,
+        "unit": "1",
+        "group": "Viento",
+        "appliesTo": "wind",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.wind.falloffExponent",
+        "label": "Viento · Exponente de atenuación",
+        "value": 1.15,
+        "unit": "1",
+        "group": "Viento",
+        "appliesTo": "wind",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.wind.altitudeLimit",
+        "label": "Viento · Límite de altura del campo",
+        "value": 32,
+        "unit": "m",
+        "group": "Viento",
+        "appliesTo": "wind",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.wind.minimumDistance",
+        "label": "Viento · Distancia mínima de regularización",
+        "value": 0.25,
+        "unit": "m",
+        "group": "Viento",
+        "appliesTo": "wind",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.wind.rampSeconds",
+        "label": "Viento · Rampa de carga",
+        "value": 1.8,
+        "unit": "s",
+        "group": "Viento",
+        "appliesTo": "wind",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.wind.wallResidualFactor",
+        "label": "Viento · Factor vertical residual en paredes",
+        "value": 0.12,
+        "unit": "1",
+        "group": "Viento",
+        "appliesTo": "wind",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.wind.dragCoefficient",
+        "label": "Viento · Coeficiente de arrastre de fragmentos",
+        "value": 0.7,
+        "unit": "1",
+        "group": "Viento",
+        "appliesTo": "wind",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.trajectory.blockSpeed",
+        "label": "Trayectoria · Velocidad de traslación",
+        "value": 2,
+        "unit": "m/s",
+        "group": "Trayectoria",
+        "appliesTo": "trajectory",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.trajectory.orbitalAngularSpeed",
+        "label": "Trayectoria · Velocidad angular orbital",
+        "value": 0.17,
+        "unit": "rad/s",
+        "group": "Trayectoria",
+        "appliesTo": "trajectory",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.trajectory.orbitalRadiusX",
+        "label": "Trayectoria · Radio orbital X",
+        "value": 5.5,
+        "unit": "m",
+        "group": "Trayectoria",
+        "appliesTo": "trajectory",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.trajectory.orbitalRadiusZ",
+        "label": "Trayectoria · Radio orbital Z",
+        "value": 4.4,
+        "unit": "m",
+        "group": "Trayectoria",
+        "appliesTo": "trajectory",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "model.trajectory.orbitalPhase",
+        "label": "Trayectoria · Fase orbital",
+        "value": 0.6,
+        "unit": "rad",
+        "group": "Trayectoria",
+        "appliesTo": "trajectory",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "environment.treeHeight",
+        "label": "Altura nominal de referencia del árbol",
+        "value": 3.8,
+        "unit": "m",
+        "group": "Entorno urbano",
+        "appliesTo": "urban-environment-workshop-1",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": "Referencia nominal: la geometría real se conserva en el inventario de piezas; este valor no controla por sí solo la altura de la copa."
+      },
+      {
+        "id": "environment.woodDensity",
+        "label": "Densidad de madera",
+        "value": 550,
+        "unit": "kg/m³",
+        "group": "Entorno urbano",
+        "appliesTo": "urban-environment-workshop-1",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "environment.treeAnchor",
+        "label": "Anclaje del árbol estándar",
+        "value": 4000,
+        "unit": "N·m",
+        "group": "Entorno urbano",
+        "appliesTo": "urban-environment-workshop-1",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "environment.treeWeakAnchor",
+        "label": "Anclaje del árbol reducido",
+        "value": 1200,
+        "unit": "N·m",
+        "group": "Entorno urbano",
+        "appliesTo": "urban-environment-workshop-1",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "environment.branchJoint",
+        "label": "Unión de rama",
+        "value": 500,
+        "unit": "N·m",
+        "group": "Entorno urbano",
+        "appliesTo": "urban-environment-workshop-1",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "environment.crownJoint",
+        "label": "Unión de copa",
+        "value": 1600,
+        "unit": "N",
+        "group": "Entorno urbano",
+        "appliesTo": "urban-environment-workshop-1",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "environment.benchAnchor",
+        "label": "Anclaje de banco",
+        "value": 280,
+        "unit": "N·m",
+        "group": "Entorno urbano",
+        "appliesTo": "urban-environment-workshop-1",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "environment.benchJoint",
+        "label": "Unión de piezas de banco",
+        "value": 800,
+        "unit": "N",
+        "group": "Entorno urbano",
+        "appliesTo": "urban-environment-workshop-1",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "environment.storeyHeight",
+        "label": "Altura de entrepiso",
+        "value": 3,
+        "unit": "m",
+        "group": "Entorno urbano",
+        "appliesTo": "urban-environment-workshop-1",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "environment.buildingWidth",
+        "label": "Ancho nominal del edificio",
+        "value": 8,
+        "unit": "m",
+        "group": "Entorno urbano",
+        "appliesTo": "urban-environment-workshop-1",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "environment.concreteDensity",
+        "label": "Densidad de hormigón",
+        "value": 2500,
+        "unit": "kg/m³",
+        "group": "Entorno urbano",
+        "appliesTo": "urban-environment-workshop-1",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": "Masa nominal del núcleo fijo; el núcleo no participa como estructura deformable ni colapsable."
+      },
+      {
+        "id": "environment.facadeMass",
+        "label": "Masa superficial de fachada y cubierta",
+        "value": 35,
+        "unit": "kg/m²",
+        "group": "Entorno urbano",
+        "appliesTo": "urban-environment-workshop-1",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "environment.windowMass",
+        "label": "Masa superficial de ventana",
+        "value": 20,
+        "unit": "kg/m²",
+        "group": "Entorno urbano",
+        "appliesTo": "urban-environment-workshop-1",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "environment.facadeFixing",
+        "label": "Fijación de fachada por superficie",
+        "value": 750,
+        "unit": "N/m²",
+        "group": "Entorno urbano",
+        "appliesTo": "urban-environment-workshop-1",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "environment.windowFixing",
+        "label": "Fijación de ventana por superficie",
+        "value": 450,
+        "unit": "N/m²",
+        "group": "Entorno urbano",
+        "appliesTo": "urban-environment-workshop-1",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      },
+      {
+        "id": "environment.roofFixing",
+        "label": "Fijación de cubierta por superficie",
+        "value": 500,
+        "unit": "N/m²",
+        "group": "Entorno urbano",
+        "appliesTo": "urban-environment-workshop-1",
+        "evidence": "illustrative",
+        "origin": "Configuración de SimTorCL; valor conservado del modelo educativo",
+        "sourceIds": [],
+        "section": null,
+        "applicability": "Solo la idealización indicada y esta versión del modelo. Sin intervalo de validez física calibrado.",
+        "calibratedRange": null,
+        "status": "Calibración técnica pendiente",
+        "note": ""
+      }
+    ]
+  },
+  "environmentModel": {
+    "version": "urban-environment-workshop-1",
+    "evidence": "illustrative",
+    "scope": "Árboles y bancos con anclajes y uniones rompibles. Edificios con estructura y losas fijas, envolvente desprendible. Sin daño de suelo, daño adicional por contacto ni modificación aerodinámica del campo.",
+    "sources": [
+      {
+        "id": "ine",
+        "institution": "INE",
+        "title": "Glosario de viviendas, Censo 2024",
+        "url": "https://censo2024.ine.gob.cl/wp-content/uploads/2025/05/Glosario_viviendas_y_servicios-basicos_CPV2024.pdf",
+        "section": "Tipos de vivienda y materialidad",
+        "use": "Clasificación de vivienda y materiales; no resistencia mecánica",
+        "status": "Referencia tipológica"
+      },
+      {
+        "id": "minvu",
+        "institution": "MINVU · DITEC",
+        "title": "Manuales técnicos: espacio público, diseño y materiales",
+        "url": "https://www.minvu.gob.cl/ditec/manuales-tecnicos-ditec/",
+        "section": "Espacio público; diseño, ingeniería y materiales",
+        "use": "Índice oficial de documentos para parques, arbolado y construcción; no aporta los coeficientes de esta calibración",
+        "status": "Índice consultado; extracción de propiedades pendiente"
+      },
+      {
+        "id": "infor",
+        "institution": "INFOR / aportes CONAF",
+        "title": "Técnicas de Planificación y Manejo del Arbolado Urbano",
+        "url": "https://bibliotecadigital.infor.cl/bitstream/handle/20.500.12220/13191/13191.pdf?sequence=1",
+        "section": "Evaluación de riesgos en los árboles",
+        "use": "Referencia de riesgo de caída; no umbrales universales ni capacidades por especie",
+        "status": "Referencia localizada; calibración mecánica pendiente"
+      }
+    ],
+    "parameters": {
+      "treeHeight": {
+        "value": 3.8,
+        "unit": "m",
+        "evidence": "illustrative",
+        "sourceIds": [],
+        "status": "Supuesto educativo; calibración pendiente"
+      },
+      "woodDensity": {
+        "value": 550,
+        "unit": "kg/m³",
+        "evidence": "illustrative",
+        "sourceIds": [],
+        "status": "Supuesto educativo; calibración pendiente"
+      },
+      "treeAnchor": {
+        "value": 4000,
+        "unit": "N·m",
+        "evidence": "illustrative",
+        "sourceIds": [],
+        "status": "Supuesto educativo; calibración pendiente"
+      },
+      "treeWeakAnchor": {
+        "value": 1200,
+        "unit": "N·m",
+        "evidence": "illustrative",
+        "sourceIds": [],
+        "status": "Supuesto educativo; calibración pendiente"
+      },
+      "branchJoint": {
+        "value": 500,
+        "unit": "N·m",
+        "evidence": "illustrative",
+        "sourceIds": [],
+        "status": "Supuesto educativo; calibración pendiente"
+      },
+      "crownJoint": {
+        "value": 1600,
+        "unit": "N",
+        "evidence": "illustrative",
+        "sourceIds": [],
+        "status": "Supuesto educativo; calibración pendiente"
+      },
+      "benchAnchor": {
+        "value": 280,
+        "unit": "N·m",
+        "evidence": "illustrative",
+        "sourceIds": [],
+        "status": "Supuesto educativo; calibración pendiente"
+      },
+      "benchJoint": {
+        "value": 800,
+        "unit": "N",
+        "evidence": "illustrative",
+        "sourceIds": [],
+        "status": "Supuesto educativo; calibración pendiente"
+      },
+      "storeyHeight": {
+        "value": 3,
+        "unit": "m",
+        "evidence": "illustrative",
+        "sourceIds": [],
+        "status": "Supuesto educativo; calibración pendiente"
+      },
+      "buildingWidth": {
+        "value": 8,
+        "unit": "m",
+        "evidence": "illustrative",
+        "sourceIds": [],
+        "status": "Supuesto educativo; calibración pendiente"
+      },
+      "concreteDensity": {
+        "value": 2500,
+        "unit": "kg/m³",
+        "evidence": "illustrative",
+        "sourceIds": [],
+        "status": "Supuesto educativo; calibración pendiente"
+      },
+      "facadeMass": {
+        "value": 35,
+        "unit": "kg/m²",
+        "evidence": "illustrative",
+        "sourceIds": [],
+        "status": "Supuesto educativo; calibración pendiente"
+      },
+      "windowMass": {
+        "value": 20,
+        "unit": "kg/m²",
+        "evidence": "illustrative",
+        "sourceIds": [],
+        "status": "Supuesto educativo; calibración pendiente"
+      },
+      "facadeFixing": {
+        "value": 750,
+        "unit": "N/m²",
+        "evidence": "illustrative",
+        "sourceIds": [],
+        "status": "Supuesto educativo; calibración pendiente"
+      },
+      "windowFixing": {
+        "value": 450,
+        "unit": "N/m²",
+        "evidence": "illustrative",
+        "sourceIds": [],
+        "status": "Supuesto educativo; calibración pendiente"
+      },
+      "roofFixing": {
+        "value": 500,
+        "unit": "N/m²",
+        "evidence": "illustrative",
+        "sourceIds": [],
+        "status": "Supuesto educativo; calibración pendiente"
+      }
+    },
+    "geometry": "independent-nine-slots-v1"
+  },
+  "environmentInventory": {
+    "entities": [
+      {
+        "id": "E-O000007",
+        "type": "building",
+        "parcelId": "P01",
+        "pieces": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17
+        ]
+      },
+      {
+        "id": "V-O000008-T1",
+        "type": "tree",
+        "parcelId": "P02",
+        "pieces": [
+          18,
+          19,
+          20,
+          21,
+          22
+        ]
+      },
+      {
+        "id": "M-O000008-B1",
+        "type": "bench",
+        "parcelId": "P02",
+        "pieces": [
+          23,
+          24,
+          25
+        ]
+      },
+      {
+        "id": "V-O000008-T2",
+        "type": "tree",
+        "parcelId": "P02",
+        "pieces": [
+          26,
+          27,
+          28,
+          29,
+          30
+        ]
+      },
+      {
+        "id": "M-O000008-B2",
+        "type": "bench",
+        "parcelId": "P02",
+        "pieces": [
+          31,
+          32,
+          33
+        ]
+      },
+      {
+        "id": "E-O000009",
+        "type": "building",
+        "parcelId": "P03",
+        "pieces": [
+          34,
+          35,
+          36,
+          37,
+          38,
+          39,
+          40,
+          41,
+          42,
+          43,
+          44,
+          45,
+          46,
+          47,
+          48,
+          49,
+          50,
+          51,
+          52,
+          53,
+          54,
+          55,
+          56,
+          57,
+          58,
+          59,
+          60,
+          61,
+          62,
+          63,
+          64,
+          65,
+          66,
+          67
+        ]
+      },
+      {
+        "id": "V-O000011-T1",
+        "type": "tree",
+        "parcelId": "P05",
+        "pieces": [
+          68,
+          69,
+          70,
+          71,
+          72
+        ]
+      },
+      {
+        "id": "M-O000011-B1",
+        "type": "bench",
+        "parcelId": "P05",
+        "pieces": [
+          73,
+          74,
+          75
+        ]
+      },
+      {
+        "id": "V-O000011-T2",
+        "type": "tree",
+        "parcelId": "P05",
+        "pieces": [
+          76,
+          77,
+          78,
+          79,
+          80
+        ]
+      },
+      {
+        "id": "M-O000011-B2",
+        "type": "bench",
+        "parcelId": "P05",
+        "pieces": [
+          81,
+          82,
+          83
+        ]
+      },
+      {
+        "id": "V-O000013",
+        "type": "tree",
+        "parcelId": "P02",
+        "pieces": [
+          84,
+          85,
+          86,
+          87,
+          88
+        ]
+      },
+      {
+        "id": "M-O000014",
+        "type": "bench",
+        "parcelId": "P02",
+        "pieces": [
+          89,
+          90,
+          91
+        ]
+      }
+    ],
+    "pieces": [
+      {
+        "id": 0,
+        "entityId": "E-O000007",
+        "objectId": "O000007",
+        "entityType": "building",
+        "parcelId": "P01",
+        "kind": "core",
+        "size": [
+          7,
+          6,
+          7
+        ],
+        "position": [
+          -18.4,
+          3,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 735000,
+        "area": 0,
+        "parentId": null,
+        "capacity": null,
+        "unit": "N",
+        "shape": "box",
+        "material": "Hormigón, idealización fija"
+      },
+      {
+        "id": 1,
+        "entityId": "E-O000007",
+        "objectId": "O000007",
+        "entityType": "building",
+        "parcelId": "P01",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          -18.4,
+          1.5,
+          -5.4
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 0,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 2,
+        "entityId": "E-O000007",
+        "objectId": "O000007",
+        "entityType": "building",
+        "parcelId": "P01",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          -18.4,
+          1.5,
+          -5.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 1,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 3,
+        "entityId": "E-O000007",
+        "objectId": "O000007",
+        "entityType": "building",
+        "parcelId": "P01",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          -14.6,
+          1.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 0,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 4,
+        "entityId": "E-O000007",
+        "objectId": "O000007",
+        "entityType": "building",
+        "parcelId": "P01",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          -14.45,
+          1.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 3,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 5,
+        "entityId": "E-O000007",
+        "objectId": "O000007",
+        "entityType": "building",
+        "parcelId": "P01",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          -18.4,
+          1.5,
+          -13
+        ],
+        "rotation": [
+          0,
+          3.141592653589793,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 0,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 6,
+        "entityId": "E-O000007",
+        "objectId": "O000007",
+        "entityType": "building",
+        "parcelId": "P01",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          -18.4,
+          1.5,
+          -13.15
+        ],
+        "rotation": [
+          0,
+          3.141592653589793,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 5,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 7,
+        "entityId": "E-O000007",
+        "objectId": "O000007",
+        "entityType": "building",
+        "parcelId": "P01",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          -22.2,
+          1.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          4.71238898038469,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 0,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 8,
+        "entityId": "E-O000007",
+        "objectId": "O000007",
+        "entityType": "building",
+        "parcelId": "P01",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          -22.35,
+          1.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          4.71238898038469,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 7,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 9,
+        "entityId": "E-O000007",
+        "objectId": "O000007",
+        "entityType": "building",
+        "parcelId": "P01",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          -18.4,
+          4.5,
+          -5.4
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 0,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 10,
+        "entityId": "E-O000007",
+        "objectId": "O000007",
+        "entityType": "building",
+        "parcelId": "P01",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          -18.4,
+          4.5,
+          -5.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 9,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 11,
+        "entityId": "E-O000007",
+        "objectId": "O000007",
+        "entityType": "building",
+        "parcelId": "P01",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          -14.6,
+          4.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 0,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 12,
+        "entityId": "E-O000007",
+        "objectId": "O000007",
+        "entityType": "building",
+        "parcelId": "P01",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          -14.45,
+          4.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 11,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 13,
+        "entityId": "E-O000007",
+        "objectId": "O000007",
+        "entityType": "building",
+        "parcelId": "P01",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          -18.4,
+          4.5,
+          -13
+        ],
+        "rotation": [
+          0,
+          3.141592653589793,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 0,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 14,
+        "entityId": "E-O000007",
+        "objectId": "O000007",
+        "entityType": "building",
+        "parcelId": "P01",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          -18.4,
+          4.5,
+          -13.15
+        ],
+        "rotation": [
+          0,
+          3.141592653589793,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 13,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 15,
+        "entityId": "E-O000007",
+        "objectId": "O000007",
+        "entityType": "building",
+        "parcelId": "P01",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          -22.2,
+          4.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          4.71238898038469,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 0,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 16,
+        "entityId": "E-O000007",
+        "objectId": "O000007",
+        "entityType": "building",
+        "parcelId": "P01",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          -22.35,
+          4.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          4.71238898038469,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 15,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 17,
+        "entityId": "E-O000007",
+        "objectId": "O000007",
+        "entityType": "building",
+        "parcelId": "P01",
+        "kind": "terrace",
+        "size": [
+          8,
+          0.14,
+          8
+        ],
+        "position": [
+          -18.4,
+          6.08,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 2240,
+        "area": 64,
+        "parentId": 0,
+        "capacity": 32000,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 18,
+        "entityId": "V-O000008-T1",
+        "objectId": "O000008",
+        "entityType": "tree",
+        "parcelId": "P02",
+        "kind": "trunk",
+        "size": [
+          0.32,
+          2.6,
+          0.32
+        ],
+        "position": [
+          -3.36,
+          1.3,
+          -12.44
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 115.00742386261516,
+        "area": 0.8320000000000001,
+        "parentId": null,
+        "capacity": 4000,
+        "unit": "N·m",
+        "shape": "cylinder",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 19,
+        "entityId": "V-O000008-T1",
+        "objectId": "O000008",
+        "entityType": "tree",
+        "parcelId": "P02",
+        "kind": "branch",
+        "size": [
+          0.13,
+          1.2,
+          0.13
+        ],
+        "position": [
+          -3.91,
+          2.6,
+          -12.44
+        ],
+        "rotation": [
+          0,
+          0,
+          0.8
+        ],
+        "yaw": 0,
+        "mass": 8.76033111453514,
+        "area": 0.156,
+        "parentId": 18,
+        "capacity": 500,
+        "unit": "N·m",
+        "shape": "cylinder",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 20,
+        "entityId": "V-O000008-T1",
+        "objectId": "O000008",
+        "entityType": "tree",
+        "parcelId": "P02",
+        "kind": "crown",
+        "size": [
+          1.5,
+          1.6,
+          1.5
+        ],
+        "position": [
+          -4.36,
+          3,
+          -12.44
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 24,
+        "area": 1.8,
+        "parentId": 19,
+        "capacity": 1600,
+        "unit": "N",
+        "shape": "crown",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 21,
+        "entityId": "V-O000008-T1",
+        "objectId": "O000008",
+        "entityType": "tree",
+        "parcelId": "P02",
+        "kind": "branch",
+        "size": [
+          0.13,
+          1.2,
+          0.13
+        ],
+        "position": [
+          -2.81,
+          2.6,
+          -12.44
+        ],
+        "rotation": [
+          0,
+          0,
+          -0.8
+        ],
+        "yaw": 0,
+        "mass": 8.76033111453514,
+        "area": 0.156,
+        "parentId": 18,
+        "capacity": 500,
+        "unit": "N·m",
+        "shape": "cylinder",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 22,
+        "entityId": "V-O000008-T1",
+        "objectId": "O000008",
+        "entityType": "tree",
+        "parcelId": "P02",
+        "kind": "crown",
+        "size": [
+          1.5,
+          1.6,
+          1.5
+        ],
+        "position": [
+          -2.36,
+          3,
+          -12.44
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 24,
+        "area": 1.8,
+        "parentId": 21,
+        "capacity": 1600,
+        "unit": "N",
+        "shape": "crown",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 23,
+        "entityId": "M-O000008-B1",
+        "objectId": "O000008",
+        "entityType": "bench",
+        "parcelId": "P02",
+        "kind": "bench",
+        "size": [
+          1.6,
+          0.65,
+          0.45
+        ],
+        "position": [
+          -2.5,
+          0.325,
+          -10.7
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 22,
+        "area": 0.5599999999999999,
+        "parentId": null,
+        "capacity": 280,
+        "unit": "N·m",
+        "shape": "box",
+        "material": "Madera y anclaje ilustrativo"
+      },
+      {
+        "id": 24,
+        "entityId": "M-O000008-B1",
+        "objectId": "O000008",
+        "entityType": "bench",
+        "parcelId": "P02",
+        "kind": "seat",
+        "size": [
+          1.8,
+          0.14,
+          0.55
+        ],
+        "position": [
+          -2.5,
+          0.72,
+          -10.7
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 12,
+        "area": 0.9900000000000001,
+        "parentId": 23,
+        "capacity": 800,
+        "unit": "N",
+        "shape": "box",
+        "material": "Madera y anclaje ilustrativo"
+      },
+      {
+        "id": 25,
+        "entityId": "M-O000008-B1",
+        "objectId": "O000008",
+        "entityType": "bench",
+        "parcelId": "P02",
+        "kind": "back",
+        "size": [
+          1.8,
+          0.65,
+          0.1
+        ],
+        "position": [
+          -2.5,
+          1.05,
+          -11.05
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 9,
+        "area": 1.1700000000000002,
+        "parentId": 23,
+        "capacity": 800,
+        "unit": "N",
+        "shape": "box",
+        "material": "Madera y anclaje ilustrativo"
+      },
+      {
+        "id": 26,
+        "entityId": "V-O000008-T2",
+        "objectId": "O000008",
+        "entityType": "tree",
+        "parcelId": "P02",
+        "kind": "trunk",
+        "size": [
+          0.32,
+          2.6,
+          0.32
+        ],
+        "position": [
+          3.36,
+          1.3,
+          -5.96
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 115.00742386261516,
+        "area": 0.8320000000000001,
+        "parentId": null,
+        "capacity": 1200,
+        "unit": "N·m",
+        "shape": "cylinder",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 27,
+        "entityId": "V-O000008-T2",
+        "objectId": "O000008",
+        "entityType": "tree",
+        "parcelId": "P02",
+        "kind": "branch",
+        "size": [
+          0.13,
+          1.2,
+          0.13
+        ],
+        "position": [
+          2.81,
+          2.6,
+          -5.96
+        ],
+        "rotation": [
+          0,
+          0,
+          0.8
+        ],
+        "yaw": 0,
+        "mass": 8.76033111453514,
+        "area": 0.156,
+        "parentId": 26,
+        "capacity": 500,
+        "unit": "N·m",
+        "shape": "cylinder",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 28,
+        "entityId": "V-O000008-T2",
+        "objectId": "O000008",
+        "entityType": "tree",
+        "parcelId": "P02",
+        "kind": "crown",
+        "size": [
+          1.5,
+          1.6,
+          1.5
+        ],
+        "position": [
+          2.36,
+          3,
+          -5.96
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 24,
+        "area": 1.8,
+        "parentId": 27,
+        "capacity": 1600,
+        "unit": "N",
+        "shape": "crown",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 29,
+        "entityId": "V-O000008-T2",
+        "objectId": "O000008",
+        "entityType": "tree",
+        "parcelId": "P02",
+        "kind": "branch",
+        "size": [
+          0.13,
+          1.2,
+          0.13
+        ],
+        "position": [
+          3.91,
+          2.6,
+          -5.96
+        ],
+        "rotation": [
+          0,
+          0,
+          -0.8
+        ],
+        "yaw": 0,
+        "mass": 8.76033111453514,
+        "area": 0.156,
+        "parentId": 26,
+        "capacity": 500,
+        "unit": "N·m",
+        "shape": "cylinder",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 30,
+        "entityId": "V-O000008-T2",
+        "objectId": "O000008",
+        "entityType": "tree",
+        "parcelId": "P02",
+        "kind": "crown",
+        "size": [
+          1.5,
+          1.6,
+          1.5
+        ],
+        "position": [
+          4.36,
+          3,
+          -5.96
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 24,
+        "area": 1.8,
+        "parentId": 29,
+        "capacity": 1600,
+        "unit": "N",
+        "shape": "crown",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 31,
+        "entityId": "M-O000008-B2",
+        "objectId": "O000008",
+        "entityType": "bench",
+        "parcelId": "P02",
+        "kind": "bench",
+        "size": [
+          1.6,
+          0.65,
+          0.45
+        ],
+        "position": [
+          2.5,
+          0.325,
+          -7.7
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 22,
+        "area": 0.5599999999999999,
+        "parentId": null,
+        "capacity": 280,
+        "unit": "N·m",
+        "shape": "box",
+        "material": "Madera y anclaje ilustrativo"
+      },
+      {
+        "id": 32,
+        "entityId": "M-O000008-B2",
+        "objectId": "O000008",
+        "entityType": "bench",
+        "parcelId": "P02",
+        "kind": "seat",
+        "size": [
+          1.8,
+          0.14,
+          0.55
+        ],
+        "position": [
+          2.5,
+          0.72,
+          -7.7
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 12,
+        "area": 0.9900000000000001,
+        "parentId": 31,
+        "capacity": 800,
+        "unit": "N",
+        "shape": "box",
+        "material": "Madera y anclaje ilustrativo"
+      },
+      {
+        "id": 33,
+        "entityId": "M-O000008-B2",
+        "objectId": "O000008",
+        "entityType": "bench",
+        "parcelId": "P02",
+        "kind": "back",
+        "size": [
+          1.8,
+          0.65,
+          0.1
+        ],
+        "position": [
+          2.5,
+          1.05,
+          -7.35
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 9,
+        "area": 1.1700000000000002,
+        "parentId": 31,
+        "capacity": 800,
+        "unit": "N",
+        "shape": "box",
+        "material": "Madera y anclaje ilustrativo"
+      },
+      {
+        "id": 34,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "core",
+        "size": [
+          7,
+          12,
+          7
+        ],
+        "position": [
+          18.4,
+          6,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 1470000,
+        "area": 0,
+        "parentId": null,
+        "capacity": null,
+        "unit": "N",
+        "shape": "box",
+        "material": "Hormigón, idealización fija"
+      },
+      {
+        "id": 35,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          18.4,
+          1.5,
+          -5.4
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 34,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 36,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          18.4,
+          1.5,
+          -5.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 35,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 37,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          22.2,
+          1.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 34,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 38,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          22.35,
+          1.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 37,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 39,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          18.4,
+          1.5,
+          -13
+        ],
+        "rotation": [
+          0,
+          3.141592653589793,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 34,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 40,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          18.4,
+          1.5,
+          -13.15
+        ],
+        "rotation": [
+          0,
+          3.141592653589793,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 39,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 41,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          14.6,
+          1.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          4.71238898038469,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 34,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 42,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          14.45,
+          1.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          4.71238898038469,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 41,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 43,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          18.4,
+          4.5,
+          -5.4
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 34,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 44,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          18.4,
+          4.5,
+          -5.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 43,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 45,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          22.2,
+          4.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 34,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 46,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          22.35,
+          4.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 45,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 47,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          18.4,
+          4.5,
+          -13
+        ],
+        "rotation": [
+          0,
+          3.141592653589793,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 34,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 48,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          18.4,
+          4.5,
+          -13.15
+        ],
+        "rotation": [
+          0,
+          3.141592653589793,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 47,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 49,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          14.6,
+          4.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          4.71238898038469,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 34,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 50,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          14.45,
+          4.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          4.71238898038469,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 49,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 51,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          18.4,
+          7.5,
+          -5.4
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 34,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 52,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          18.4,
+          7.5,
+          -5.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 51,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 53,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          22.2,
+          7.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 34,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 54,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          22.35,
+          7.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 53,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 55,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          18.4,
+          7.5,
+          -13
+        ],
+        "rotation": [
+          0,
+          3.141592653589793,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 34,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 56,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          18.4,
+          7.5,
+          -13.15
+        ],
+        "rotation": [
+          0,
+          3.141592653589793,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 55,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 57,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          14.6,
+          7.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          4.71238898038469,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 34,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 58,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          14.45,
+          7.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          4.71238898038469,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 57,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 59,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          18.4,
+          10.5,
+          -5.4
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 34,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 60,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          18.4,
+          10.5,
+          -5.25
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 59,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 61,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          22.2,
+          10.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 34,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 62,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          22.35,
+          10.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          1.5707963267948966,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 61,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 63,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          18.4,
+          10.5,
+          -13
+        ],
+        "rotation": [
+          0,
+          3.141592653589793,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 34,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 64,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          18.4,
+          10.5,
+          -13.15
+        ],
+        "rotation": [
+          0,
+          3.141592653589793,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 63,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 65,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "facade",
+        "size": [
+          7.4,
+          2.8,
+          0.12
+        ],
+        "position": [
+          14.6,
+          10.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          4.71238898038469,
+          0
+        ],
+        "yaw": 0,
+        "mass": 725.1999999999999,
+        "area": 20.72,
+        "parentId": 34,
+        "capacity": 15540,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 66,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "window",
+        "size": [
+          1.4,
+          1.3,
+          0.07
+        ],
+        "position": [
+          14.45,
+          10.5,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          4.71238898038469,
+          0
+        ],
+        "yaw": 0,
+        "mass": 36.4,
+        "area": 1.8199999999999998,
+        "parentId": 65,
+        "capacity": 818.9999999999999,
+        "unit": "N",
+        "shape": "glass",
+        "material": "Vidrio ilustrativo"
+      },
+      {
+        "id": 67,
+        "entityId": "E-O000009",
+        "objectId": "O000009",
+        "entityType": "building",
+        "parcelId": "P03",
+        "kind": "terrace",
+        "size": [
+          8,
+          0.14,
+          8
+        ],
+        "position": [
+          18.4,
+          12.08,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 2240,
+        "area": 64,
+        "parentId": 34,
+        "capacity": 32000,
+        "unit": "N",
+        "shape": "box",
+        "material": "Panel ligero ilustrativo"
+      },
+      {
+        "id": 68,
+        "entityId": "V-O000011-T1",
+        "objectId": "O000011",
+        "entityType": "tree",
+        "parcelId": "P05",
+        "kind": "trunk",
+        "size": [
+          0.32,
+          2.6,
+          0.32
+        ],
+        "position": [
+          -3.36,
+          1.3,
+          5.96
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 115.00742386261516,
+        "area": 0.8320000000000001,
+        "parentId": null,
+        "capacity": 4000,
+        "unit": "N·m",
+        "shape": "cylinder",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 69,
+        "entityId": "V-O000011-T1",
+        "objectId": "O000011",
+        "entityType": "tree",
+        "parcelId": "P05",
+        "kind": "branch",
+        "size": [
+          0.13,
+          1.2,
+          0.13
+        ],
+        "position": [
+          -3.91,
+          2.6,
+          5.96
+        ],
+        "rotation": [
+          0,
+          0,
+          0.8
+        ],
+        "yaw": 0,
+        "mass": 8.76033111453514,
+        "area": 0.156,
+        "parentId": 68,
+        "capacity": 500,
+        "unit": "N·m",
+        "shape": "cylinder",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 70,
+        "entityId": "V-O000011-T1",
+        "objectId": "O000011",
+        "entityType": "tree",
+        "parcelId": "P05",
+        "kind": "crown",
+        "size": [
+          1.5,
+          1.6,
+          1.5
+        ],
+        "position": [
+          -4.36,
+          3,
+          5.96
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 24,
+        "area": 1.8,
+        "parentId": 69,
+        "capacity": 1600,
+        "unit": "N",
+        "shape": "crown",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 71,
+        "entityId": "V-O000011-T1",
+        "objectId": "O000011",
+        "entityType": "tree",
+        "parcelId": "P05",
+        "kind": "branch",
+        "size": [
+          0.13,
+          1.2,
+          0.13
+        ],
+        "position": [
+          -2.81,
+          2.6,
+          5.96
+        ],
+        "rotation": [
+          0,
+          0,
+          -0.8
+        ],
+        "yaw": 0,
+        "mass": 8.76033111453514,
+        "area": 0.156,
+        "parentId": 68,
+        "capacity": 500,
+        "unit": "N·m",
+        "shape": "cylinder",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 72,
+        "entityId": "V-O000011-T1",
+        "objectId": "O000011",
+        "entityType": "tree",
+        "parcelId": "P05",
+        "kind": "crown",
+        "size": [
+          1.5,
+          1.6,
+          1.5
+        ],
+        "position": [
+          -2.36,
+          3,
+          5.96
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 24,
+        "area": 1.8,
+        "parentId": 71,
+        "capacity": 1600,
+        "unit": "N",
+        "shape": "crown",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 73,
+        "entityId": "M-O000011-B1",
+        "objectId": "O000011",
+        "entityType": "bench",
+        "parcelId": "P05",
+        "kind": "bench",
+        "size": [
+          1.6,
+          0.65,
+          0.45
+        ],
+        "position": [
+          -2.5,
+          0.325,
+          7.7
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 22,
+        "area": 0.5599999999999999,
+        "parentId": null,
+        "capacity": 280,
+        "unit": "N·m",
+        "shape": "box",
+        "material": "Madera y anclaje ilustrativo"
+      },
+      {
+        "id": 74,
+        "entityId": "M-O000011-B1",
+        "objectId": "O000011",
+        "entityType": "bench",
+        "parcelId": "P05",
+        "kind": "seat",
+        "size": [
+          1.8,
+          0.14,
+          0.55
+        ],
+        "position": [
+          -2.5,
+          0.72,
+          7.7
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 12,
+        "area": 0.9900000000000001,
+        "parentId": 73,
+        "capacity": 800,
+        "unit": "N",
+        "shape": "box",
+        "material": "Madera y anclaje ilustrativo"
+      },
+      {
+        "id": 75,
+        "entityId": "M-O000011-B1",
+        "objectId": "O000011",
+        "entityType": "bench",
+        "parcelId": "P05",
+        "kind": "back",
+        "size": [
+          1.8,
+          0.65,
+          0.1
+        ],
+        "position": [
+          -2.5,
+          1.05,
+          7.35
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 9,
+        "area": 1.1700000000000002,
+        "parentId": 73,
+        "capacity": 800,
+        "unit": "N",
+        "shape": "box",
+        "material": "Madera y anclaje ilustrativo"
+      },
+      {
+        "id": 76,
+        "entityId": "V-O000011-T2",
+        "objectId": "O000011",
+        "entityType": "tree",
+        "parcelId": "P05",
+        "kind": "trunk",
+        "size": [
+          0.32,
+          2.6,
+          0.32
+        ],
+        "position": [
+          3.36,
+          1.3,
+          12.44
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 115.00742386261516,
+        "area": 0.8320000000000001,
+        "parentId": null,
+        "capacity": 1200,
+        "unit": "N·m",
+        "shape": "cylinder",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 77,
+        "entityId": "V-O000011-T2",
+        "objectId": "O000011",
+        "entityType": "tree",
+        "parcelId": "P05",
+        "kind": "branch",
+        "size": [
+          0.13,
+          1.2,
+          0.13
+        ],
+        "position": [
+          2.81,
+          2.6,
+          12.44
+        ],
+        "rotation": [
+          0,
+          0,
+          0.8
+        ],
+        "yaw": 0,
+        "mass": 8.76033111453514,
+        "area": 0.156,
+        "parentId": 76,
+        "capacity": 500,
+        "unit": "N·m",
+        "shape": "cylinder",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 78,
+        "entityId": "V-O000011-T2",
+        "objectId": "O000011",
+        "entityType": "tree",
+        "parcelId": "P05",
+        "kind": "crown",
+        "size": [
+          1.5,
+          1.6,
+          1.5
+        ],
+        "position": [
+          2.36,
+          3,
+          12.44
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 24,
+        "area": 1.8,
+        "parentId": 77,
+        "capacity": 1600,
+        "unit": "N",
+        "shape": "crown",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 79,
+        "entityId": "V-O000011-T2",
+        "objectId": "O000011",
+        "entityType": "tree",
+        "parcelId": "P05",
+        "kind": "branch",
+        "size": [
+          0.13,
+          1.2,
+          0.13
+        ],
+        "position": [
+          3.91,
+          2.6,
+          12.44
+        ],
+        "rotation": [
+          0,
+          0,
+          -0.8
+        ],
+        "yaw": 0,
+        "mass": 8.76033111453514,
+        "area": 0.156,
+        "parentId": 76,
+        "capacity": 500,
+        "unit": "N·m",
+        "shape": "cylinder",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 80,
+        "entityId": "V-O000011-T2",
+        "objectId": "O000011",
+        "entityType": "tree",
+        "parcelId": "P05",
+        "kind": "crown",
+        "size": [
+          1.5,
+          1.6,
+          1.5
+        ],
+        "position": [
+          4.36,
+          3,
+          12.44
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 24,
+        "area": 1.8,
+        "parentId": 79,
+        "capacity": 1600,
+        "unit": "N",
+        "shape": "crown",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 81,
+        "entityId": "M-O000011-B2",
+        "objectId": "O000011",
+        "entityType": "bench",
+        "parcelId": "P05",
+        "kind": "bench",
+        "size": [
+          1.6,
+          0.65,
+          0.45
+        ],
+        "position": [
+          2.5,
+          0.325,
+          10.7
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 22,
+        "area": 0.5599999999999999,
+        "parentId": null,
+        "capacity": 280,
+        "unit": "N·m",
+        "shape": "box",
+        "material": "Madera y anclaje ilustrativo"
+      },
+      {
+        "id": 82,
+        "entityId": "M-O000011-B2",
+        "objectId": "O000011",
+        "entityType": "bench",
+        "parcelId": "P05",
+        "kind": "seat",
+        "size": [
+          1.8,
+          0.14,
+          0.55
+        ],
+        "position": [
+          2.5,
+          0.72,
+          10.7
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 12,
+        "area": 0.9900000000000001,
+        "parentId": 81,
+        "capacity": 800,
+        "unit": "N",
+        "shape": "box",
+        "material": "Madera y anclaje ilustrativo"
+      },
+      {
+        "id": 83,
+        "entityId": "M-O000011-B2",
+        "objectId": "O000011",
+        "entityType": "bench",
+        "parcelId": "P05",
+        "kind": "back",
+        "size": [
+          1.8,
+          0.65,
+          0.1
+        ],
+        "position": [
+          2.5,
+          1.05,
+          11.05
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 9,
+        "area": 1.1700000000000002,
+        "parentId": 81,
+        "capacity": 800,
+        "unit": "N",
+        "shape": "box",
+        "material": "Madera y anclaje ilustrativo"
+      },
+      {
+        "id": 84,
+        "entityId": "V-O000013",
+        "objectId": "O000013",
+        "entityType": "tree",
+        "parcelId": "P02",
+        "kind": "trunk",
+        "size": [
+          0.32,
+          2.6,
+          0.32
+        ],
+        "position": [
+          3.6,
+          1.3,
+          -12.8
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 115.00742386261516,
+        "area": 0.8320000000000001,
+        "parentId": null,
+        "capacity": 4000,
+        "unit": "N·m",
+        "shape": "cylinder",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 85,
+        "entityId": "V-O000013",
+        "objectId": "O000013",
+        "entityType": "tree",
+        "parcelId": "P02",
+        "kind": "branch",
+        "size": [
+          0.13,
+          1.2,
+          0.13
+        ],
+        "position": [
+          3.05,
+          2.6,
+          -12.8
+        ],
+        "rotation": [
+          0,
+          0,
+          0.8
+        ],
+        "yaw": 0,
+        "mass": 8.76033111453514,
+        "area": 0.156,
+        "parentId": 84,
+        "capacity": 500,
+        "unit": "N·m",
+        "shape": "cylinder",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 86,
+        "entityId": "V-O000013",
+        "objectId": "O000013",
+        "entityType": "tree",
+        "parcelId": "P02",
+        "kind": "crown",
+        "size": [
+          1.5,
+          1.6,
+          1.5
+        ],
+        "position": [
+          2.6,
+          3,
+          -12.8
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 24,
+        "area": 1.8,
+        "parentId": 85,
+        "capacity": 1600,
+        "unit": "N",
+        "shape": "crown",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 87,
+        "entityId": "V-O000013",
+        "objectId": "O000013",
+        "entityType": "tree",
+        "parcelId": "P02",
+        "kind": "branch",
+        "size": [
+          0.13,
+          1.2,
+          0.13
+        ],
+        "position": [
+          4.15,
+          2.6,
+          -12.8
+        ],
+        "rotation": [
+          0,
+          0,
+          -0.8
+        ],
+        "yaw": 0,
+        "mass": 8.76033111453514,
+        "area": 0.156,
+        "parentId": 84,
+        "capacity": 500,
+        "unit": "N·m",
+        "shape": "cylinder",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 88,
+        "entityId": "V-O000013",
+        "objectId": "O000013",
+        "entityType": "tree",
+        "parcelId": "P02",
+        "kind": "crown",
+        "size": [
+          1.5,
+          1.6,
+          1.5
+        ],
+        "position": [
+          4.6,
+          3,
+          -12.8
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 24,
+        "area": 1.8,
+        "parentId": 87,
+        "capacity": 1600,
+        "unit": "N",
+        "shape": "crown",
+        "material": "Madera / copa ilustrativa"
+      },
+      {
+        "id": 89,
+        "entityId": "M-O000014",
+        "objectId": "O000014",
+        "entityType": "bench",
+        "parcelId": "P02",
+        "kind": "bench",
+        "size": [
+          1.6,
+          0.65,
+          0.45
+        ],
+        "position": [
+          0,
+          0.325,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 22,
+        "area": 0.5599999999999999,
+        "parentId": null,
+        "capacity": 280,
+        "unit": "N·m",
+        "shape": "box",
+        "material": "Madera y anclaje ilustrativo"
+      },
+      {
+        "id": 90,
+        "entityId": "M-O000014",
+        "objectId": "O000014",
+        "entityType": "bench",
+        "parcelId": "P02",
+        "kind": "seat",
+        "size": [
+          1.8,
+          0.14,
+          0.55
+        ],
+        "position": [
+          0,
+          0.72,
+          -9.2
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 12,
+        "area": 0.9900000000000001,
+        "parentId": 89,
+        "capacity": 800,
+        "unit": "N",
+        "shape": "box",
+        "material": "Madera y anclaje ilustrativo"
+      },
+      {
+        "id": 91,
+        "entityId": "M-O000014",
+        "objectId": "O000014",
+        "entityType": "bench",
+        "parcelId": "P02",
+        "kind": "back",
+        "size": [
+          1.8,
+          0.65,
+          0.1
+        ],
+        "position": [
+          0,
+          1.05,
+          -8.85
+        ],
+        "rotation": [
+          0,
+          0,
+          0
+        ],
+        "yaw": 0,
+        "mass": 9,
+        "area": 1.1700000000000002,
+        "parentId": 89,
+        "capacity": 800,
+        "unit": "N",
+        "shape": "box",
+        "material": "Madera y anclaje ilustrativo"
+      }
+    ]
+  },
+  "name": "Plaza con edificios",
+  "savedAt": "2026-11-03T18:02:43.806Z",
+  "initial": {
+    "profile": "timber",
+    "roof": "metal",
+    "wind": 250,
+    "radius": 12,
+    "reinforcement": 100,
+    "rows": 2,
+    "columns": 3,
+    "lotSize": 12,
+    "roadWidth": 4,
+    "orientation": 0,
+    "seed": 38,
+    "density": 100,
+    "greenPercent": 0,
+    "buildingPercent": 0,
+    "environment": "physical",
+    "buildingFloors": 3,
+    "sitePlan": {
+      "version": "parcel-editor-2",
+      "grid": {
+        "rows": 2,
+        "columns": 3,
+        "lotSize": 12,
+        "roadWidth": 4
+      },
+      "nextId": 15,
+      "objects": [
+        {
+          "id": "O000007",
+          "parcelId": "P01",
+          "type": "building",
+          "rotation": 0,
+          "floors": 2
+        },
+        {
+          "id": "O000008",
+          "parcelId": "P02",
+          "type": "green",
+          "rotation": 0
+        },
+        {
+          "id": "O000009",
+          "parcelId": "P03",
+          "type": "building",
+          "rotation": 0,
+          "floors": 4
+        },
+        {
+          "id": "O000010",
+          "parcelId": "P04",
+          "type": "house",
+          "rotation": 0,
+          "profile": "timber",
+          "roof": "metal"
+        },
+        {
+          "id": "O000011",
+          "parcelId": "P05",
+          "type": "green",
+          "rotation": 0
+        },
+        {
+          "id": "O000012",
+          "parcelId": "P06",
+          "type": "house",
+          "rotation": 0,
+          "profile": "timber",
+          "roof": "metal"
+        }
+      ],
+      "items": [
+        {
+          "id": "O000013",
+          "parcelId": "P02",
+          "type": "tree",
+          "slot": 2,
+          "rotation": 0,
+          "anchorage": "standard"
+        },
+        {
+          "id": "O000014",
+          "parcelId": "P02",
+          "type": "bench",
+          "slot": 4,
+          "rotation": 0
+        }
+      ]
+    },
+    "route": [
+      {
+        "x": -24,
+        "z": -9.2
+      },
+      {
+        "x": 0,
+        "z": 9.2
+      },
+      {
+        "x": 24,
+        "z": 9.2
+      }
+    ],
+    "travelSpeed": 3,
+    "duration": 45,
+    "lesson": "plaza",
+    "mode": "neighborhood",
+    "distribution": "uniform",
+    "spacing": 13,
+    "trajectory": "diagonal"
+  },
+  "layout": {
+    "version": "urban-editor-v2",
+    "seed": 38,
+    "yaw": 0,
+    "width": 59.199999999999996,
+    "depth": 40.8,
+    "pitch": 18.4,
+    "sidewalk": 1.2,
+    "parcels": [
+      {
+        "id": "P01",
+        "row": 0,
+        "column": 0,
+        "type": "building",
+        "x": -18.4,
+        "z": -9.2,
+        "world": {
+          "x": -18.4,
+          "z": -9.2
+        },
+        "yaw": 0,
+        "houseYaw": 0,
+        "size": 12,
+        "area": 144,
+        "profileOffset": 0,
+        "objectId": "O000007",
+        "objectRotation": 0,
+        "buildingFloors": 2
+      },
+      {
+        "id": "P02",
+        "row": 0,
+        "column": 1,
+        "type": "green",
+        "x": 0,
+        "z": -9.2,
+        "world": {
+          "x": 0,
+          "z": -9.2
+        },
+        "yaw": 0,
+        "houseYaw": 0,
+        "size": 12,
+        "area": 144,
+        "profileOffset": 2,
+        "objectId": "O000008",
+        "objectRotation": 0
+      },
+      {
+        "id": "P03",
+        "row": 0,
+        "column": 2,
+        "type": "building",
+        "x": 18.4,
+        "z": -9.2,
+        "world": {
+          "x": 18.4,
+          "z": -9.2
+        },
+        "yaw": 0,
+        "houseYaw": 0,
+        "size": 12,
+        "area": 144,
+        "profileOffset": 1,
+        "objectId": "O000009",
+        "objectRotation": 0,
+        "buildingFloors": 4
+      },
+      {
+        "id": "P04",
+        "row": 1,
+        "column": 0,
+        "type": "house",
+        "x": -18.4,
+        "z": 9.2,
+        "world": {
+          "x": -18.4,
+          "z": 9.2
+        },
+        "yaw": 0,
+        "houseYaw": 0,
+        "size": 12,
+        "area": 144,
+        "profileOffset": 3,
+        "objectId": "O000010",
+        "objectRotation": 0,
+        "houseProfile": "timber",
+        "houseRoof": "metal"
+      },
+      {
+        "id": "P05",
+        "row": 1,
+        "column": 1,
+        "type": "green",
+        "x": 0,
+        "z": 9.2,
+        "world": {
+          "x": 0,
+          "z": 9.2
+        },
+        "yaw": 0,
+        "houseYaw": 0,
+        "size": 12,
+        "area": 144,
+        "profileOffset": 3,
+        "objectId": "O000011",
+        "objectRotation": 0
+      },
+      {
+        "id": "P06",
+        "row": 1,
+        "column": 2,
+        "type": "house",
+        "x": 18.4,
+        "z": 9.2,
+        "world": {
+          "x": 18.4,
+          "z": 9.2
+        },
+        "yaw": 0,
+        "houseYaw": 0,
+        "size": 12,
+        "area": 144,
+        "profileOffset": 0,
+        "objectId": "O000012",
+        "objectRotation": 0,
+        "houseProfile": "timber",
+        "houseRoof": "metal"
+      }
+    ],
+    "roads": [
+      {
+        "id": "V1",
+        "x": -27.599999999999998,
+        "z": 0,
+        "width": 4,
+        "depth": 40.8
+      },
+      {
+        "id": "V2",
+        "x": -9.2,
+        "z": 0,
+        "width": 4,
+        "depth": 40.8
+      },
+      {
+        "id": "V3",
+        "x": 9.2,
+        "z": 0,
+        "width": 4,
+        "depth": 40.8
+      },
+      {
+        "id": "V4",
+        "x": 27.599999999999998,
+        "z": 0,
+        "width": 4,
+        "depth": 40.8
+      },
+      {
+        "id": "H1",
+        "x": 0,
+        "z": -18.4,
+        "width": 59.199999999999996,
+        "depth": 4
+      },
+      {
+        "id": "H2",
+        "x": 0,
+        "z": 0,
+        "width": 59.199999999999996,
+        "depth": 4
+      },
+      {
+        "id": "H3",
+        "x": 0,
+        "z": 18.4,
+        "width": 59.199999999999996,
+        "depth": 4
+      }
+    ],
+    "bounds": {
+      "width": 59.2,
+      "depth": 40.8
+    },
+    "counts": {
+      "house": 2,
+      "green": 2,
+      "building": 2,
+      "vacant": 0
+    },
+    "areas": {
+      "total": 2415.3599999999997,
+      "parcels": 864,
+      "green": 288
+    },
+    "source": "manual",
+    "features": [
+      {
+        "id": "O000013",
+        "parcelId": "P02",
+        "type": "tree",
+        "slot": 2,
+        "rotation": 0,
+        "anchorage": "standard"
+      },
+      {
+        "id": "O000014",
+        "parcelId": "P02",
+        "type": "bench",
+        "slot": 4,
+        "rotation": 0
+      }
+    ],
+    "itemCounts": {
+      "tree": 1,
+      "bench": 1
+    }
+  },
+  "createdAt": "2026-11-03T12:00:00.000Z"
+}

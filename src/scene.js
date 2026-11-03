@@ -245,6 +245,7 @@ export class SceneView {
   }
 
   createHouse() {
+    this.highlightPiece(null);
     if (this.houseRoot) {
       this.scene.remove(this.houseRoot);
       this.disposeObject(this.houseRoot);
@@ -326,10 +327,11 @@ export class SceneView {
       const a = experiment.active.path.start,
         b = experiment.active.path.end;
       const line = new THREE.Line(
-        new THREE.BufferGeometry().setFromPoints([
-          new THREE.Vector3(a[0], 0.08, a[1]),
-          new THREE.Vector3(b[0], 0.08, b[1]),
-        ]),
+        new THREE.BufferGeometry().setFromPoints(
+          experiment.active.path.points.map(
+            (p) => new THREE.Vector3(p[0], 0.08, p[1]),
+          ),
+        ),
         new THREE.LineDashedMaterial({
           color: "#e4b28a",
           dashSize: 1,
@@ -338,6 +340,7 @@ export class SceneView {
       );
       line.computeLineDistances();
       this.districtTerrain.add(line);
+      this.pathLine = line;
     }
     for (const house of experiment.houses ?? [{ simulation: experiment }]) {
       this.simulation = house.simulation;
@@ -347,6 +350,8 @@ export class SceneView {
       root.add(this.houseRoot);
       for (const [piece, mesh] of this.meshes) {
         mesh.userData.parcelId = house.parcelId;
+        mesh.userData.piece = piece;
+        mesh.userData.houseLabel = house.label ?? "C01";
         meshes.set(piece, mesh);
       }
     }
@@ -383,6 +388,8 @@ export class SceneView {
       mesh.receiveShadow = true;
       group.add(mesh);
       group.userData.parcelId = piece.parcelId;
+      group.userData.piece = piece;
+      group.userData.houseLabel = "ENV";
       root.add(group);
       meshes.set(piece, group);
     }
@@ -928,6 +935,7 @@ export class SceneView {
     this.camera.aspect = width / height;
     this.camera.updateProjectionMatrix();
     this.renderer.setSize(width, height, false);
+    this.onResize?.();
   }
 
   pickParcel(clientX, clientY, useObjects = true) {
@@ -971,8 +979,124 @@ export class SceneView {
       )?.id ?? null
     );
   }
+  groundPoint(clientX, clientY) {
+    const layout = this.simulation.active?.layout,
+      rect = this.canvas.getBoundingClientRect();
+    if (
+      !layout ||
+      !rect.width ||
+      clientX < rect.left ||
+      clientX > rect.right ||
+      clientY < rect.top ||
+      clientY > rect.bottom
+    )
+      return null;
+    const ray = new THREE.Raycaster();
+    ray.setFromCamera(
+      new THREE.Vector2(
+        ((clientX - rect.left) / rect.width) * 2 - 1,
+        (-(clientY - rect.top) / rect.height) * 2 + 1,
+      ),
+      this.camera,
+    );
+    const point = ray.ray.intersectPlane(
+      new THREE.Plane(new THREE.Vector3(0, 1, 0), 0),
+      new THREE.Vector3(),
+    );
+    return point
+      ? {
+          x:
+            Math.round(
+              (Math.cos(layout.yaw) * point.x -
+                Math.sin(layout.yaw) * point.z) *
+                100,
+            ) / 100,
+          z:
+            Math.round(
+              (Math.sin(layout.yaw) * point.x +
+                Math.cos(layout.yaw) * point.z) *
+                100,
+            ) / 100,
+        }
+      : null;
+  }
+  pickPiece(clientX, clientY) {
+    const rect = this.canvas.getBoundingClientRect();
+    if (!rect.width) return null;
+    const ray = new THREE.Raycaster();
+    ray.setFromCamera(
+      new THREE.Vector2(
+        ((clientX - rect.left) / rect.width) * 2 - 1,
+        (-(clientY - rect.top) / rect.height) * 2 + 1,
+      ),
+      this.camera,
+    );
+    for (const hit of ray.intersectObjects([...this.meshes.values()], true)) {
+      let obj = hit.object;
+      while (obj && !obj.userData.piece) obj = obj.parent;
+      if (obj?.userData.piece)
+        return { piece: obj.userData.piece, house: obj.userData.houseLabel };
+    }
+    return null;
+  }
+  showRoutePreview(points) {
+    if (this.routePreview) {
+      this.scene.remove(this.routePreview);
+      this.disposeObject(this.routePreview);
+      this.routePreview = null;
+    }
+    if (this.pathLine) this.pathLine.visible = !points?.length;
+    if (!points?.length) return;
+    const group = new THREE.Group(),
+      yaw = this.simulation.active.layout.yaw;
+    const world = points.map(
+      (p) =>
+        new THREE.Vector3(
+          Math.cos(yaw) * p.x + Math.sin(yaw) * p.z,
+          0.18,
+          -Math.sin(yaw) * p.x + Math.cos(yaw) * p.z,
+        ),
+    );
+    if (world.length > 1)
+      group.add(
+        new THREE.Line(
+          new THREE.BufferGeometry().setFromPoints(world),
+          new THREE.LineBasicMaterial({ color: 0xffbb78, depthTest: false }),
+        ),
+      );
+    world.forEach((p, i) => {
+      const dot = new THREE.Mesh(
+        new THREE.SphereGeometry(0.45, 8, 6),
+        new THREE.MeshBasicMaterial({
+          color: i === 0 ? 0x9de6b5 : 0xffbb78,
+          depthTest: false,
+        }),
+      );
+      dot.position.copy(p);
+      group.add(dot);
+      this.addParcelLabel(String(i + 1), p.x, 0.9, p.z, group, 1.8);
+    });
+    this.routePreview = group;
+    this.scene.add(group);
+  }
+  highlightPiece(piece) {
+    if (this.pieceHighlight) {
+      this.scene.remove(this.pieceHighlight);
+      this.pieceHighlight.geometry.dispose();
+      this.pieceHighlight.material.dispose();
+      this.pieceHighlight = null;
+    }
+    const mesh = this.meshes?.get(piece);
+    if (!mesh) return;
+    this.pieceHighlight = new THREE.BoxHelper(mesh, 0xffd79a);
+    this.scene.add(this.pieceHighlight);
+  }
+  setInitialView(value) {
+    this.initialView = value;
+    this.sync();
+  }
 
-  highlightParcel(id, state = "selected") {
+  highlightParcel(id, state = "selected", slot = null) {
     const p = this.simulation.active?.layout?.parcels.find((p) => p.id === id);
     if (!p) {
       if (this.editorMarker) this.editorMarker.visible = false;
@@ -991,8 +1115,18 @@ export class SceneView {
       this.scene.add(this.editorMarker);
     }
     this.editorMarker.visible = true;
-    this.editorMarker.scale.set(p.size, 1, p.size);
-    this.editorMarker.position.set(p.world.x, 0.12, p.world.z);
+    this.editorMarker.scale.set(
+      slot === null ? p.size : 3.6,
+      1,
+      slot === null ? p.size : 3.6,
+    );
+    const dx = slot === null ? 0 : ((slot % 3) - 1) * p.size * 0.3,
+      dz = slot === null ? 0 : (Math.floor(slot / 3) - 1) * p.size * 0.3;
+    this.editorMarker.position.set(
+      p.world.x + Math.cos(p.yaw) * dx + Math.sin(p.yaw) * dz,
+      0.12,
+      p.world.z - Math.sin(p.yaw) * dx + Math.cos(p.yaw) * dz,
+    );
     this.editorMarker.rotation.y = this.simulation.active.layout.yaw;
     this.editorMarker.material.color.set(
       state === "invalid"
@@ -1006,10 +1140,13 @@ export class SceneView {
   sync() {
     if (this.houseRevision !== this.simulation.revision) this.createHouse();
     for (const [piece, mesh] of this.meshes) {
-      mesh.position.copy(piece.body.position);
-      mesh.quaternion.copy(piece.body.quaternion);
+      mesh.position.copy(this.initialView ? piece.origin : piece.body.position);
+      mesh.quaternion.copy(
+        this.initialView ? piece.orientation : piece.body.quaternion,
+      );
       if (mesh.userData.damageLine)
-        mesh.userData.damageLine.visible = piece.damage > 0;
+        mesh.userData.damageLine.visible =
+          !this.initialView && piece.damage > 0;
     }
     for (const { house, tile } of this.districtMarkers ?? []) {
       const s = house.simulation.stats;
@@ -1023,6 +1160,7 @@ export class SceneView {
               : "#75836a",
       );
     }
+    this.pieceHighlight?.update();
     const center = this.simulation.center;
     this.vortex.position.set(center.x, 0, center.z);
     this.influence.position.set(center.x, 0, center.z);

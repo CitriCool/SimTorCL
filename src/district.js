@@ -4,6 +4,7 @@ import * as CANNON from "cannon-es";
 import { Simulation, FIXED_STEP, createWorld } from "./physics.js";
 import { RunRecorder, cleanConfig } from "./records.js";
 import { PROFILES, ROOFS, validateConfig } from "./catalog.js";
+import { routePoints, alongRoute } from "./route.js";
 
 export class District {
   constructor(config) {
@@ -32,6 +33,14 @@ export class District {
             : [-halfX, -halfZ],
     };
     this.path.end = this.path.start.map((v) => -v);
+    this.path.points = routePoints(config, this.layout) ?? [
+      this.path.start,
+      this.path.end,
+    ];
+    if (config.route) {
+      this.path.start = this.path.points[0];
+      this.path.end = this.path.points.at(-1);
+    }
     this.houses = [];
     this.elapsed = 0;
     this.center = new CANNON.Vec3();
@@ -97,9 +106,21 @@ export class District {
     this.updateCenter();
   }
   updateCenter() {
+    if (this.config.route) {
+      const position = alongRoute(
+        this.path.points,
+        this.elapsed * this.config.travelSpeed,
+      );
+      this.center.set(position.x, 0, position.z);
+      this.progress = position.progress;
+      return;
+    }
     const { start, end } = this.path;
     const length = Math.hypot(end[0] - start[0], end[1] - start[1]);
-    const progress = Math.min(1, (this.elapsed * 2) / length);
+    const progress = Math.min(
+      1,
+      (this.elapsed * this.config.travelSpeed) / length,
+    );
     this.center.set(
       start[0] + (end[0] - start[0]) * progress,
       0,
@@ -208,9 +229,17 @@ export class Experiment {
     this.recorder = this.recordEnabled ? new RunRecorder(this) : null;
   }
   step() {
+    if (this.finished) return false;
     this.active.step();
     this.steps++;
     this.recorder?.tick(this);
+    return true;
+  }
+  get finished() {
+    return (
+      this.config.duration !== null &&
+      this.steps >= Math.round(this.config.duration / FIXED_STEP)
+    );
   }
   setParameter(key, value) {
     if (!["wind", "radius", "reinforcement"].includes(key))

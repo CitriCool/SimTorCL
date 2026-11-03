@@ -1,6 +1,7 @@
 import * as CANNON from "cannon-es";
 import { windAt, FIXED_STEP, RULES } from "./physics.js";
 import { rotatePoint } from "./urban.js";
+import { featurePosition } from "./site-plan.js";
 
 export const ENV_LABELS = {
   trunk: "Tronco",
@@ -145,90 +146,104 @@ export function environmentBlueprint(config, layout) {
     e.pieces.push(def.id);
     return def;
   }
+  function addTree(p, id, x, z, anchor) {
+    const e = entity(id, "tree", p);
+    const trunk = part(
+      e,
+      p,
+      "trunk",
+      [0.32, 2.6, 0.32],
+      [x, 1.3, z],
+      Math.PI * 0.16 ** 2 * 2.6 * V.woodDensity,
+      0.32 * 2.6,
+      null,
+      anchor,
+      "N·m",
+      "cylinder",
+    );
+    for (const side of [-1, 1]) {
+      const branch = part(
+        e,
+        p,
+        "branch",
+        [0.13, 1.2, 0.13],
+        [x + side * 0.55, 2.6, z],
+        Math.PI * 0.065 ** 2 * 1.2 * V.woodDensity,
+        0.13 * 1.2,
+        trunk,
+        V.branchJoint,
+        "N·m",
+        "cylinder",
+        [0, 0, side * -0.8],
+      );
+      part(
+        e,
+        p,
+        "crown",
+        [1.5, 1.6, 1.5],
+        [x + side * 1.0, 3, z],
+        24,
+        1.8,
+        branch,
+        V.crownJoint,
+        "N",
+        "crown",
+      );
+    }
+  }
+  function addBench(p, id, bx, bz, sign = 1) {
+    const b = entity(id, "bench", p);
+    const frame = part(
+      b,
+      p,
+      "bench",
+      [1.6, 0.65, 0.45],
+      [bx, 0.325, bz],
+      22,
+      1.6 * 0.35,
+      null,
+      V.benchAnchor,
+      "N·m",
+    );
+    part(
+      b,
+      p,
+      "seat",
+      [1.8, 0.14, 0.55],
+      [bx, 0.72, bz],
+      12,
+      1.8 * 0.55,
+      frame,
+      V.benchJoint,
+    );
+    part(
+      b,
+      p,
+      "back",
+      [1.8, 0.65, 0.1],
+      [bx, 1.05, bz + sign * 0.35],
+      9,
+      1.8 * 0.65,
+      frame,
+      V.benchJoint,
+    );
+  }
   for (const p of layout.parcels) {
     if (p.type === "green")
       for (const [i, sign] of [-1, 1].entries()) {
-        const e = entity(`V-${p.objectId ?? p.id}-T${i + 1}`, "tree", p),
-          x = p.x + sign * p.size * 0.28,
-          z = p.z + sign * p.size * 0.27;
-        const trunk = part(
-          e,
+        addTree(
           p,
-          "trunk",
-          [0.32, 2.6, 0.32],
-          [x, 1.3, z],
-          Math.PI * 0.16 ** 2 * 2.6 * V.woodDensity,
-          0.32 * 2.6,
-          null,
+          `V-${p.objectId ?? p.id}-T${i + 1}`,
+          p.x + sign * p.size * 0.28,
+          p.z + sign * p.size * 0.27,
           i === 0 ? V.treeAnchor : V.treeWeakAnchor,
-          "N·m",
-          "cylinder",
         );
-        for (const side of [-1, 1]) {
-          const branch = part(
-            e,
-            p,
-            "branch",
-            [0.13, 1.2, 0.13],
-            [x + side * 0.55, 2.6, z],
-            Math.PI * 0.065 ** 2 * 1.2 * V.woodDensity,
-            0.13 * 1.2,
-            trunk,
-            V.branchJoint,
-            "N·m",
-            "cylinder",
-            [0, 0, side * -0.8],
-          );
-          part(
-            e,
-            p,
-            "crown",
-            [1.5, 1.6, 1.5],
-            [x + side * 1.0, 3, z],
-            24,
-            1.8,
-            branch,
-            V.crownJoint,
-            "N",
-            "crown",
-          );
-        }
-        const b = entity(`M-${p.objectId ?? p.id}-B${i + 1}`, "bench", p),
-          bx = p.x + sign * 2.5,
-          bz = p.z + sign * 1.5;
-        const frame = part(
-          b,
+        addBench(
           p,
-          "bench",
-          [1.6, 0.65, 0.45],
-          [bx, 0.325, bz],
-          22,
-          1.6 * 0.35,
-          null,
-          V.benchAnchor,
-          "N·m",
-        );
-        part(
-          b,
-          p,
-          "seat",
-          [1.8, 0.14, 0.55],
-          [bx, 0.72, bz],
-          12,
-          1.8 * 0.55,
-          frame,
-          V.benchJoint,
-        );
-        part(
-          b,
-          p,
-          "back",
-          [1.8, 0.65, 0.1],
-          [bx, 1.05, bz + sign * 0.35],
-          9,
-          1.8 * 0.65,
-          frame,
-          V.benchJoint,
+          `M-${p.objectId ?? p.id}-B${i + 1}`,
+          p.x + sign * 2.5,
+          p.z + sign * 1.5,
+          sign,
         );
       }
     if (p.type === "building") {
@@ -290,6 +305,26 @@ export function environmentBlueprint(config, layout) {
         64 * V.roofFixing,
       );
     }
+  }
+  for (const item of layout.features ?? []) {
+    const parcel = layout.parcels.find((p) => p.id === item.parcelId);
+    const point = featurePosition(item, parcel);
+    const p = {
+      ...parcel,
+      x: point.x,
+      z: point.z,
+      objectId: item.id,
+      objectRotation: item.rotation,
+    };
+    if (item.type === "tree")
+      addTree(
+        p,
+        `V-${item.id}`,
+        p.x,
+        p.z,
+        item.anchorage === "weak" ? V.treeWeakAnchor : V.treeAnchor,
+      );
+    else addBench(p, `M-${item.id}`, p.x, p.z);
   }
   return { entities, pieces };
 }
