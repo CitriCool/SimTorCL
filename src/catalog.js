@@ -206,6 +206,7 @@ export const DEFAULTS = Object.freeze({
   impact: "off",
   fragmentFlight: "legacy",
   enclosure: "off",
+  loadPath: "off",
 });
 export const PRESETS = Object.freeze({ suave: 85, fuerte: 160, extremo: 250 });
 export function validateConfig(values = {}) {
@@ -216,6 +217,8 @@ export function validateConfig(values = {}) {
     throw new RangeError("Modelo de vuelo desconocido.");
   if (!["off", "closed", "front-opening"].includes(config.enclosure))
     throw new RangeError("Modelo de recinto desconocido.");
+  if (!["off", "grounded-graph-v1"].includes(config.loadPath))
+    throw new RangeError("Modelo de transferencia de cargas desconocido.");
   const profile = Object.hasOwn(PROFILES, config.profile)
     ? PROFILES[config.profile]
     : null;

@@ -531,6 +531,7 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
         ...lessonConfig(id),
         fragmentFlight: draft.config.fragmentFlight,
         enclosure: draft.config.enclosure,
+        loadPath: draft.config.loadPath,
       });
       selected = null;
       selectedObject = null;

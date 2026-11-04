@@ -118,3 +118,11 @@ El esquema 8 guarda el descriptor de vuelo y reproduce archivos anteriores con s
 La presión se mide respecto al ambiente. Puede ser positiva en barlovento y negativa en sotavento. Se suma a la carga exterior en las superficies intactas, incluidas las fijaciones de la cubierta. La abertura frontal inicial representa un área de ventilación para el cálculo. La geometría de colisión sigue representando la envolvente original. Cada vivienda se calcula como un recinto independiente. Quedan pendientes los edificios de varios pisos, los compartimentos, los transitorios y la calibración de los coeficientes.
 
 El selector muestra la presión aplicada y el área de aberturas durante el ensayo. En una manzana muestra el rango de presiones y el área total, y el JSON conserva los valores por vivienda. El esquema 9 guarda el modelo y carga los ensayos de v2.10 y anteriores con presión interior desactivada.
+
+## Transferencia de cargas en v2.12
+
+Con **Transferencia de cargas**, las fijaciones activas reparten la carga lateral y el levantamiento neto de la cubierta entre los muros con camino a la base. El revestimiento también entrega su carga lateral al muro que lo sujeta. La red equilibra esas fuerzas junto con las cargas laterales de los propios muros. Cada unión activa de muro o base recibe el mismo peso en el modelo. Cuando falla una conexión, el siguiente paso vuelve a calcular el reparto. [Referencia sobre la trayectoria continua de cargas, FEMA](https://www.fema.gov/sites/default/files/documents/fema_rsl_fema-p-804-wind-retrofit-guide_042025.pdf)
+
+El equilibrio es estático y educativo. La demanda de cada unión es la magnitud de la fuerza que transmite, en N. El modelo usa las capacidades y tiempos de sobrecarga existentes. La elasticidad, los momentos y la respuesta de la fundación quedan pendientes. La opción se aplica a viviendas individuales y a viviendas de manzanas o barrios.
+
+Pausa la simulación y abre **Cuaderno de experimentos → Inspección** para consultar la demanda y capacidad de las uniones activas. Si una unión falla, su demanda al fallar queda en la línea de tiempo. El esquema 10 guarda el modelo de transferencia. Los ensayos de v2.11 y anteriores se cargan con esta opción desactivada.

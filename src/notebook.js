@@ -106,6 +106,7 @@ export function setupNotebook({
     "impact",
     "fragment-flight",
     "enclosure",
+    "load-path",
     "urban-open",
     "editor-open",
     ...Array.from(document.querySelectorAll("[data-preset]")),
@@ -323,6 +324,20 @@ export function setupNotebook({
       p.kind === "wall"
         ? `Movimiento actual de esta pared: ${displacement.toFixed(2)} m / ${tilt.toFixed(1)}°.\n`
         : "";
+    const connections = p.connections
+      .map((c) => {
+        const capacity = (
+          (c.capacity * experiment.config.reinforcement) /
+          100
+        ).toFixed(1);
+        const destination = c.b ? (c.a === p ? c.b.id : c.a.id) : "base";
+        const demand =
+          !replay && !c.broken && Number.isFinite(c.demand)
+            ? ` · demanda ${c.demand.toFixed(1)} N`
+            : "";
+        return `#${c.id} ${labels[c.kind] ?? c.kind} · ${c.broken ? "fallada" : "intacta"} · capacidad ${capacity} ${c.unit ?? "N"} · a ${destination}${demand}`;
+      })
+      .join("\n");
     $("piece-detail").textContent =
       movement +
       `${p.entityId ?? p.objectId ?? h.label} · ${labels[p.kind]} #${p.id}${p.parcelId ? " · " + p.parcelId : ""}\nMaterial / sistema: ${material}\nMasa: ${p.mass.toFixed(1)} kg · superficie: ${p.area.toFixed(2)} m²\nEstado actual: ${p.detached ? "liberada" : "con soporte"} · ${p.damage} uniones ${p.kind === "wall" ? "estructurales " : ""}falladas\nPosición: ${p.body.position
@@ -335,7 +350,7 @@ export function setupNotebook({
               .toArray()
               .map((n) => n.toFixed(1))
               .join(", ")} N\nDemanda de la pieza: ${p.demand.toFixed(1)} N`
-      }\nConexiones (capacidades con el refuerzo actual):\n${p.connections.map((c) => `#${c.id} ${labels[c.kind] ?? c.kind} · ${c.broken ? "fallada" : "intacta"} · ${((c.capacity * experiment.config.reinforcement) / 100).toFixed(1)} ${c.unit ?? "N"} · a ${c.b ? (c.a === p ? c.b.id : c.a.id) : "base"}`).join("\n")}\nMáximos históricos de paredes: ${(replayStats ?? experiment.stats).maxDisplacement.toFixed(2)} m / ${(replayStats ?? experiment.stats).maxTilt.toFixed(1)}°.`;
+      }\nConexiones (capacidades con el refuerzo actual):\n${connections}\nMáximos históricos de paredes: ${(replayStats ?? experiment.stats).maxDisplacement.toFixed(2)} m / ${(replayStats ?? experiment.stats).maxTilt.toFixed(1)}°.`;
   }
   function pieces() {
     const previous = $("inspect-piece").value;

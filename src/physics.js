@@ -3,6 +3,11 @@ import { dynamicPressure } from "./aerodynamics.js";
 import { DebrisImpacts } from "./impacts.js";
 import { applyFragmentAir, equivalentAir } from "./fragment-flight.js";
 import {
+  groundedWalls,
+  createLoadNetwork,
+  connectionLoads,
+} from "./load-path.js";
+import {
   ENCLOSURE_MODEL,
   openingState,
   roomPressure,
@@ -105,10 +110,12 @@ export class Simulation {
         this.pressureAreas[frontFace.id] -= ENCLOSURE_MODEL.initialOpeningArea;
     }
     this.impacts = null;
+    this.loadNetwork = null;
     this.updateCenter();
     this.revision++;
   }
   addPiece(kind, size, position, rotation, mass, details = {}) {
+    this.loadNetwork = null;
     // Intact bonds are ideal rigid attachments. This graph does not solve
     // elastic strain or stress redistribution. Released pieces become dynamic.
     const body = new CANNON.Body({
@@ -140,6 +147,7 @@ export class Simulation {
     return piece;
   }
   connect(kind, a, b, capacity) {
+    this.loadNetwork = null;
     const connection = {
       id: this.connections.length,
       kind,
@@ -335,6 +343,7 @@ export class Simulation {
   breakConnection(connection, cause, demand = 0, impact) {
     if (connection.broken) return;
     connection.broken = true;
+    this.loadNetwork = null;
     connection.cause = cause;
     const parents = [
       connection.b?.releaseEventId,
@@ -382,6 +391,7 @@ export class Simulation {
       parents: [...new Set(parents)],
     });
     piece.detached = true;
+    this.loadNetwork = null;
     piece.body.mass = piece.mass;
     piece.body.type = CANNON.Body.DYNAMIC;
     piece.body.updateMassProperties();
@@ -390,24 +400,7 @@ export class Simulation {
     piece.body.wakeUp();
   }
   resolveSupports() {
-    const anchored = new Set(
-      this.connections
-        .filter((c) => c.kind === "base" && !c.broken)
-        .map((c) => c.a.id),
-    );
-    const queue = [...anchored];
-    while (queue.length) {
-      const piece = this.pieces[queue.pop()];
-      for (const connection of piece.connections) {
-        if (connection.broken || !["wall", "corner"].includes(connection.kind))
-          continue;
-        const other = connection.a === piece ? connection.b : connection.a;
-        if (!anchored.has(other.id)) {
-          anchored.add(other.id);
-          queue.push(other.id);
-        }
-      }
-    }
+    const anchored = groundedWalls(this.pieces, this.connections);
     // Resolve structural supports first, then their roof and cladding dependents.
     for (const piece of this.pieces)
       if (piece.kind === "wall" && !anchored.has(piece.id)) this.release(piece);
@@ -513,16 +506,27 @@ export class Simulation {
           : Math.hypot(force.x, force.z);
       piece.load.copy(force);
     }
+    let routed;
+    if (this.config.loadPath !== "off") {
+      this.loadNetwork ??= createLoadNetwork(this.pieces, this.connections);
+      routed = connectionLoads(this.loadNetwork);
+    }
     let changed = false;
     for (const connection of this.connections) {
       if (connection.broken) continue;
       const { a, b, kind } = connection;
-      const sharing = a.connections.filter(
-        (c) => c.kind === kind && !c.broken,
-      ).length;
-      let demand = kind === "roof" ? a.demand / sharing : a.demand;
-      if (kind === "wall" || kind === "corner")
-        demand = Math.max(a.demand, b.demand) * 0.75;
+      let demand;
+      if (routed) {
+        demand = routed.get(connection)?.length() ?? 0;
+        connection.demand = demand;
+      } else {
+        const sharing = a.connections.filter(
+          (c) => c.kind === kind && !c.broken,
+        ).length;
+        demand = kind === "roof" ? a.demand / sharing : a.demand;
+        if (kind === "wall" || kind === "corner")
+          demand = Math.max(a.demand, b.demand) * 0.75;
+      }
       connection.stress =
         demand > (connection.capacity * this.config.reinforcement) / 100
           ? connection.stress + FIXED_STEP

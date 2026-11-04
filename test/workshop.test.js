@@ -243,7 +243,7 @@ test("the former v2.6 manual model preserves all numerical results, events, pose
   );
   assert.equal(old.schemaVersion, 5);
   const r = decode(old);
-  assert.equal(r.schemaVersion, 9);
+  assert.equal(r.schemaVersion, 10);
   assert.equal(r.scenarioModel, null);
   assert.equal(r.initial.route, null);
   assert.equal(r.initial.sitePlan.version, "parcel-editor-1");

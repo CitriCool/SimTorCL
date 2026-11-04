@@ -21,10 +21,11 @@ import { normalizeControls, controlModel } from "./route.js";
 import { IMPACT_MODEL, SWEPT_IMPACT_MODEL, impactModel } from "./impacts.js";
 import { FRAGMENT_MODEL } from "./fragment-flight.js";
 import { ENCLOSURE_MODEL } from "./enclosure.js";
+import { LOAD_PATH_MODEL } from "./load-path.js";
 
-export const APP_VERSION = "2.11.0";
+export const APP_VERSION = "2.12.0";
 
-export const SCHEMA_VERSION = 9;
+export const SCHEMA_VERSION = 10;
 
 export const MAX_FILE_BYTES = 40 * 1024 * 1024;
 
@@ -99,6 +100,7 @@ export const CONFIG_KEYS = [
   "impact",
   "fragmentFlight",
   "enclosure",
+  "loadPath",
   "mode",
   "distribution",
   "spacing",
@@ -311,6 +313,8 @@ export class RunRecorder {
       impactModel: clone(impactModel(this.initial.impact)),
       enclosureModel:
         this.initial.enclosure === "off" ? null : clone(ENCLOSURE_MODEL),
+      loadPathModel:
+        this.initial.loadPath === "off" ? null : clone(LOAD_PATH_MODEL),
       fragmentModel:
         this.initial.fragmentFlight === "projected-v1"
           ? clone(FRAGMENT_MODEL)
@@ -357,6 +361,7 @@ export function configurationDocument(config = {}, name) {
     scenarioModel: controlModel(initial),
     impactModel: clone(impactModel(initial.impact)),
     enclosureModel: initial.enclosure === "off" ? null : clone(ENCLOSURE_MODEL),
+    loadPathModel: initial.loadPath === "off" ? null : clone(LOAD_PATH_MODEL),
     fragmentModel:
       initial.fragmentFlight === "projected-v1" ? clone(FRAGMENT_MODEL) : null,
     parameterLibrary: parameterLibrary(MODEL, environmentModel(initial)),
@@ -401,7 +406,7 @@ export function parseShareHash(hash) {
     throw new Error("Enlace de configuración inválido.");
   }
   if (
-    ![1, 2, 3, 4, 5, 6, 7, 8, SCHEMA_VERSION].includes(data.schemaVersion) ||
+    ![1, 2, 3, 4, 5, 6, 7, 8, 9, SCHEMA_VERSION].includes(data.schemaVersion) ||
     data.modelId !== MODEL_ID
   )
     throw new Error("El enlace usa otra versión del modelo.");
@@ -427,6 +432,7 @@ export function parseShareHash(hash) {
       ...(data.schemaVersion < 7 ? { impact: "off" } : {}),
       ...(data.schemaVersion < 8 ? { fragmentFlight: "legacy" } : {}),
       ...(data.schemaVersion < 9 ? { enclosure: "off" } : {}),
+      ...(data.schemaVersion < 10 ? { loadPath: "off" } : {}),
     }),
     name: normalizeName(data.name),
   };
@@ -565,9 +571,16 @@ export function parseDocument(text) {
   if (record?.format === "simtorcl-experiment" && record.schemaVersion === 8)
     record = {
       ...record,
-      schemaVersion: SCHEMA_VERSION,
+      schemaVersion: 9,
       initial: { ...record.initial, enclosure: "off" },
       enclosureModel: null,
+    };
+  if (record?.format === "simtorcl-experiment" && record.schemaVersion === 9)
+    record = {
+      ...record,
+      schemaVersion: SCHEMA_VERSION,
+      initial: { ...record.initial, loadPath: "off" },
+      loadPathModel: null,
     };
   if (
     !record ||
@@ -586,6 +599,13 @@ export function parseDocument(text) {
 
   record.initial = cleanConfig(record.initial);
   record.name = normalizeName(record.name);
+  if (
+    canonical(record.loadPathModel) !==
+    canonical(record.initial.loadPath === "off" ? null : LOAD_PATH_MODEL)
+  )
+    throw new Error(
+      "El modelo de transferencia de cargas no coincide con esta versión.",
+    );
   if (
     canonical(record.enclosureModel) !==
     canonical(record.initial.enclosure === "off" ? null : ENCLOSURE_MODEL)

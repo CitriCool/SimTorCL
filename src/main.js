@@ -185,6 +185,7 @@ function updateScenarioInfo() {
     $(id).value = simulation.config[id];
   $("impact").checked = simulation.config.impact !== "off";
   $("enclosure").value = simulation.config.enclosure;
+  $("load-path").checked = simulation.config.loadPath !== "off";
   $("fragment-flight").checked =
     simulation.config.fragmentFlight === "projected-v1";
   $("impact-method").textContent =
@@ -399,6 +400,9 @@ $("fragment-flight").addEventListener("change", () =>
 );
 $("enclosure").addEventListener("change", () =>
   reset({ enclosure: $("enclosure").value }),
+);
+$("load-path").addEventListener("change", () =>
+  reset({ loadPath: $("load-path").checked ? "grounded-graph-v1" : "off" }),
 );
 for (const id of ["wind", "radius", "reinforcement"]) {
   $(id).addEventListener("input", () => updateRange(id));
