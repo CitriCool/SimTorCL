@@ -1,6 +1,7 @@
 import * as CANNON from "cannon-es";
 import { dynamicPressure } from "./aerodynamics.js";
 import { DebrisImpacts } from "./impacts.js";
+import { applyFragmentAir, equivalentAir } from "./fragment-flight.js";
 import {
   DEFAULTS,
   PRESETS,
@@ -486,6 +487,15 @@ export class Simulation {
     for (const piece of this.pieces) {
       if (!piece.detached) continue;
       const { body } = piece;
+      if (this.config.fragmentFlight === "projected-v1") {
+        applyFragmentAir(
+          body,
+          piece.size,
+          equivalentAir(windAt(body.position, this.center, this.config), ramp),
+          FIXED_STEP,
+        );
+        continue;
+      }
       const velocity = body.velocity.length();
       const drag = body.velocity.scale(
         -0.5 * 1.225 * piece.area * 0.7 * velocity,

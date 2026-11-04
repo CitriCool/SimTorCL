@@ -19,10 +19,11 @@ import { parameterLibrary } from "./parameters.js";
 import { normalizeSitePlan } from "./site-plan.js";
 import { normalizeControls, controlModel } from "./route.js";
 import { IMPACT_MODEL, SWEPT_IMPACT_MODEL, impactModel } from "./impacts.js";
+import { FRAGMENT_MODEL } from "./fragment-flight.js";
 
-export const APP_VERSION = "2.9.0";
+export const APP_VERSION = "2.10.0";
 
-export const SCHEMA_VERSION = 7;
+export const SCHEMA_VERSION = 8;
 
 export const MAX_FILE_BYTES = 40 * 1024 * 1024;
 
@@ -95,6 +96,7 @@ export const CONFIG_KEYS = [
   "radius",
   "reinforcement",
   "impact",
+  "fragmentFlight",
   "mode",
   "distribution",
   "spacing",
@@ -305,6 +307,10 @@ export class RunRecorder {
       model: clone(MODEL),
       scenarioModel: controlModel(this.initial),
       impactModel: clone(impactModel(this.initial.impact)),
+      fragmentModel:
+        this.initial.fragmentFlight === "projected-v1"
+          ? clone(FRAGMENT_MODEL)
+          : null,
       parameterLibrary: parameterLibrary(MODEL, environmentModel(this.initial)),
       environmentModel: clone(environmentModel(this.initial)),
       environmentInventory: experiment.environment
@@ -346,6 +352,8 @@ export function configurationDocument(config = {}, name) {
     model: clone(MODEL),
     scenarioModel: controlModel(initial),
     impactModel: clone(impactModel(initial.impact)),
+    fragmentModel:
+      initial.fragmentFlight === "projected-v1" ? clone(FRAGMENT_MODEL) : null,
     parameterLibrary: parameterLibrary(MODEL, environmentModel(initial)),
     environmentModel: clone(environmentModel(initial)),
     environmentInventory: environmentModel(initial)
@@ -388,7 +396,7 @@ export function parseShareHash(hash) {
     throw new Error("Enlace de configuración inválido.");
   }
   if (
-    ![1, 2, 3, 4, 5, 6, SCHEMA_VERSION].includes(data.schemaVersion) ||
+    ![1, 2, 3, 4, 5, 6, 7, SCHEMA_VERSION].includes(data.schemaVersion) ||
     data.modelId !== MODEL_ID
   )
     throw new Error("El enlace usa otra versión del modelo.");
@@ -412,6 +420,7 @@ export function parseShareHash(hash) {
         : {}),
       ...(data.schemaVersion < 3 ? { environment: "visual" } : {}),
       ...(data.schemaVersion < 7 ? { impact: "off" } : {}),
+      ...(data.schemaVersion < 8 ? { fragmentFlight: "legacy" } : {}),
     }),
     name: normalizeName(data.name),
   };
@@ -529,9 +538,16 @@ export function parseDocument(text) {
   if (record?.format === "simtorcl-experiment" && record.schemaVersion === 6)
     record = {
       ...record,
-      schemaVersion: SCHEMA_VERSION,
+      schemaVersion: 7,
       initial: { ...record.initial, impact: "off" },
       impactModel: null,
+    };
+  if (record?.format === "simtorcl-experiment" && record.schemaVersion === 7)
+    record = {
+      ...record,
+      schemaVersion: SCHEMA_VERSION,
+      initial: { ...record.initial, fragmentFlight: "legacy" },
+      fragmentModel: null,
     };
   if (
     !record ||
@@ -550,6 +566,15 @@ export function parseDocument(text) {
 
   record.initial = cleanConfig(record.initial);
   record.name = normalizeName(record.name);
+  if (
+    canonical(record.fragmentModel) !==
+    canonical(
+      record.initial.fragmentFlight === "projected-v1" ? FRAGMENT_MODEL : null,
+    )
+  )
+    throw new Error(
+      "El modelo de vuelo de fragmentos no coincide con esta versión.",
+    );
   if (
     canonical(record.impactModel) !==
     canonical(impactModel(record.initial.impact))

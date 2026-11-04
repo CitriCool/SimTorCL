@@ -9,9 +9,10 @@ import { PROFILES, ROOFS, HOUSE, CENSUS, SOURCES, PRESETS } from "./catalog.js";
 import { Experiment } from "./district.js";
 import { setupNotebook } from "./notebook.js";
 import { SceneView } from "./scene.js";
+import { compareFragmentFlight } from "./fragment-trial.js";
 
 const $ = (id) => document.getElementById(id);
-const simulation = new Experiment();
+const simulation = new Experiment({ fragmentFlight: "projected-v1" });
 let view, frame, worker, comparisonConfig, notebook, urban, editor, learning;
 let running = false,
   accumulator = 0,
@@ -171,6 +172,8 @@ function updateScenarioInfo() {
   for (const id of ["mode", "distribution", "spacing", "trajectory", "profile"])
     $(id).value = simulation.config[id];
   $("impact").checked = simulation.config.impact !== "off";
+  $("fragment-flight").checked =
+    simulation.config.fragmentFlight === "projected-v1";
   $("impact-method").textContent =
     simulation.config.impact === "contact-v1"
       ? "Detección discreta · ensayo v2.8"
@@ -376,6 +379,11 @@ $("roof").addEventListener("change", () => reset({ roof: $("roof").value }));
 $("impact").addEventListener("change", () =>
   reset({ impact: $("impact").checked ? "swept-v2" : "off" }),
 );
+$("fragment-flight").addEventListener("change", () =>
+  reset({
+    fragmentFlight: $("fragment-flight").checked ? "projected-v1" : "legacy",
+  }),
+);
 for (const id of ["wind", "radius", "reinforcement"]) {
   $(id).addEventListener("input", () => updateRange(id));
   updateRange(id);
@@ -413,6 +421,38 @@ function showDialog(id) {
   $(id).showModal();
 }
 $("about-button").addEventListener("click", () => showDialog("about-dialog"));
+$("fragment-trial-open").addEventListener("click", () => {
+  const wind = simulation.config.wind;
+  $("fragment-trial-conditions").textContent =
+    `Viento horizontal constante de ${wind} km/h. Ambas piezas parten en reposo, a 4 m libres del suelo y con la cara a 45° del viento. Los datos se toman al primer contacto con el suelo.`;
+  $("fragment-trial-results").replaceChildren(
+    ...compareFragmentFlight(wind).map((row) => {
+      const tr = document.createElement("tr");
+      const format = (value) =>
+        value.toLocaleString("es-CL", { maximumFractionDigits: 2 });
+      const label = document.createElement("th");
+      label.scope = "row";
+      label.textContent = row.label;
+      tr.append(label);
+      for (const value of [
+        format(row.mass),
+        format(row.distance),
+        format(row.turn),
+        row.speed === null ? "Sin impacto" : format(row.speed),
+        format(row.time),
+      ]) {
+        const td = document.createElement("td");
+        td.textContent = value;
+        tr.append(td);
+      }
+      return tr;
+    }),
+  );
+  showDialog("fragment-trial-dialog");
+});
+$("fragment-trial-close").addEventListener("click", () =>
+  $("fragment-trial-dialog").close(),
+);
 $("close-about").addEventListener("click", () => $("about-dialog").close());
 for (const dialog of document.querySelectorAll("dialog"))
   dialog.addEventListener("click", (event) => {

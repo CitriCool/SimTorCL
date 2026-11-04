@@ -2,6 +2,7 @@ import * as CANNON from "cannon-es";
 import { windAt, FIXED_STEP, RULES } from "./physics.js";
 import { rotatePoint } from "./urban.js";
 import { featurePosition } from "./site-plan.js";
+import { applyFragmentAir, equivalentAir } from "./fragment-flight.js";
 
 export const ENV_LABELS = {
   trunk: "Tronco",
@@ -527,6 +528,18 @@ export class UrbanEnvironment {
     this.resolveSupports();
     for (const p of this.pieces)
       if (p.detached) {
+        if (this.config.fragmentFlight === "projected-v1") {
+          applyFragmentAir(
+            p.body,
+            p.size,
+            equivalentAir(
+              windAt(p.body.position, center, this.config),
+              Math.min(time / 1.8, 1),
+            ),
+            FIXED_STEP,
+          );
+          continue;
+        }
         const speed = p.body.velocity.length(),
           drag = p.body.velocity.scale(-0.5 * 1.225 * p.area * 0.7 * speed);
         p.body.applyForce(p.load.vadd(drag));

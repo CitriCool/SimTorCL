@@ -527,7 +527,10 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
     "click",
     attempt(() => {
       const id = $("editor-example").value;
-      draft.loadExample(lessonConfig(id));
+      draft.loadExample({
+        ...lessonConfig(id),
+        fragmentFlight: draft.config.fragmentFlight,
+      });
       selected = null;
       selectedObject = null;
       tools();

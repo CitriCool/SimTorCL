@@ -204,12 +204,15 @@ export const DEFAULTS = Object.freeze({
   radius: 8,
   reinforcement: 100,
   impact: "off",
+  fragmentFlight: "legacy",
 });
 export const PRESETS = Object.freeze({ suave: 85, fuerte: 160, extremo: 250 });
 export function validateConfig(values = {}) {
   const config = { ...DEFAULTS, ...values };
   if (!["off", "contact-v1", "swept-v2"].includes(config.impact))
     throw new RangeError("Modelo de impactos desconocido.");
+  if (!["legacy", "projected-v1"].includes(config.fragmentFlight))
+    throw new RangeError("Modelo de vuelo desconocido.");
   const profile = Object.hasOwn(PROFILES, config.profile)
     ? PROFILES[config.profile]
     : null;

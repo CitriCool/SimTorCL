@@ -1,6 +1,6 @@
 {
   "name": "simtorcl",
-  "version": "2.9.0",
+  "version": "2.10.0",
   "private": true,
   "type": "module",
   "description": "Laboratorio interactivo de daños por tornados en una vivienda chilena.",

@@ -22,6 +22,8 @@ Consulta [la guía del taller v2.7](docs/taller.md), [el editor y su compatibili
 
 Carga **Plaza con edificios**, aplica 280 km/h en el editor y usa la manzana. Activa **Roturas por impacto** en las condiciones del tornado y ejecuta el ensayo. En el cuaderno, abre **Eventos y gráficos** y filtra por **Roturas por impacto**. Cada falla identifica la pieza receptora y permite saltar al desprendimiento que originó el fragmento. El filtro **Impactos por barrido** muestra las roturas recuperadas entre pasos. [Criterio y compatibilidad](docs/experimentos.md#roturas-por-impacto-v28-y-esquema-7)
 
+En v2.10, desactiva **Vuelo sensible a la orientación** para reproducir ese ejemplo con la trayectoria de v2.9. Usa **Comparar vuelo de fragmentos** para comparar una plancha y un panel con el modelo nuevo. [Ensayo de vuelo](docs/experimentos.md#vuelo-de-fragmentos-en-v210)
+
 ## Biblioteca y comprobación (v2.5)
 
 Desde **Parámetros y fuentes** se puede explorar y exportar la biblioteca versionada: 73 parámetros base y 16 adicionales en barrios con entorno físico. Las nuevas configuraciones, ejecuciones e informes conservan su procedencia. Una comprobación analítica contrasta 10 magnitudes de presión y carga con referencias fijas y permite descargar errores y tolerancias. Los archivos antiguos conservan su modelo y resultados sin atribuirles evidencia nueva.

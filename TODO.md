@@ -146,7 +146,7 @@ Detalle y ejemplo: [editor v2.6](docs/editor.md).
 
 - [x] **B2 · Construir:** paleta de casas, edificios y parques, colocación por arrastre o selección, ajuste a parcelas, prevención de solapamientos, selección y transformación, propiedades por objeto, deshacer/rehacer y guardado compatible. URB-06/07, UX-01/02/06, PRO-01/08/09.
 - [x] **B3 · Simular y entender:** árboles y bancos independientes, ejemplos guiados, trayectorias dibujadas y controles de duración/intensidad; explicación de eventos, revisión visual y comparación sobre el mismo plano editado. URB-08/09/12, VER-02/04, FIS-08/09, UX-03/04/05, PRO-12.
-- [ ] **C · Física:** nuevas roturas por impacto y cadenas causales, modelos de edificios y vegetación ampliados, cargas y uniones más completas. FIS-01/02 listos en v2.8. El primer alcance de FIS-04 se incorporó en v2.9. FIS-03, FIS-05 a FIS-07/11, EDI y VER siguen pendientes.
+- [ ] **C · Física:** FIS-01/02 listos en v2.8. Primeros alcances de FIS-04 en v2.9 y FIS-03 en v2.10. Quedan pendientes calibración, fragmentación física, detección continua entre piezas móviles, FIS-05 a FIS-07/11, EDI y VER.
 - [ ] **D · Transversal desde B2:** fuentes técnicas por parámetro, calibración, caso físico de referencia, errores, sensibilidad y estabilidad. VAL-01 a VAL-05/08/10.
 - [ ] **B4 / E · Escala y territorio:** calles y terrenos libres, mayor catálogo, rendimiento, datos por región/comuna e inventarios geográficos. URB-03/11, EDI, VER, GEO y PRO.
 - [ ] **E / F · Análisis avanzado:** incertidumbre y fragilidad, viento urbano/CFD, suelo y fundaciones y modelos de consecuencias. VAL-06/07/09, CFD, FIS-12, EDI-11, GEO-07 y CON.

@@ -102,3 +102,11 @@ Al activar **Roturas por impacto** en v2.9, el modelo `swept-v2` conserva los co
 En un cruce recuperado, el modelo corrige la posición hasta el primer contacto y aplica un rebote normal simplificado. Estima la fuerza equivalente a partir del impulso normal dividido por el paso y usa las capacidades educativas existentes. El cuaderno, el JSON y el CSV identifican el barrido y su fracción del paso. El ensayo conserva el paso fijo de 1/120 s y usa su final como tiempo del evento. Quedan pendientes la rotación continua, los cruces entre fragmentos móviles y la calibración.
 
 Para probarlo, carga **Plaza con edificios**, aplica 280 km/h y activa **Roturas por impacto**. Tras ejecutar el ensayo unos segundos, usa el filtro **Impactos por barrido** en el cuaderno. Los archivos guardados con `contact-v1` conservan la detección discreta de v2.8. Para cambiar un ensayo antiguo al barrido, apaga y vuelve a encender el interruptor.
+
+## Vuelo de fragmentos en v2.10
+
+Con **Vuelo sensible a la orientación**, cada pieza desprendida usa su caja física y la velocidad del aire relativa al movimiento local de sus caras. La fuerza depende del área proyectada, la presión dinámica y un coeficiente de arrastre común de 0,7. Un desplazamiento ilustrativo del centro de presión hacia el borde de ataque permite que un flujo oblicuo genere giro. La masa y la inercia de cada pieza determinan su respuesta. [Ecuación de arrastre, NASA Glenn](https://www1.grc.nasa.gov/beginners-guide-to-aeronautics/factors-that-affect-drag/)
+
+**Comparar vuelo de fragmentos** suelta por separado una plancha metálica y un panel de fachada del catálogo bajo el mismo viento horizontal constante. Ambas piezas parten en reposo con 4 m libres hasta el suelo y una inclinación de 45° respecto al viento. El ensayo registra el desplazamiento horizontal, giro acumulado, velocidad y tiempo al primer contacto con el suelo. La fuerza y el giro son aproximaciones educativas. La calibración por material y la rotura en piezas más pequeñas quedan pendientes.
+
+El esquema 8 guarda el descriptor de vuelo y reproduce archivos anteriores con su modelo original. Para repetir el ejemplo de impacto por barrido de v2.9 en una sesión nueva, desactiva **Vuelo sensible a la orientación** antes de iniciar el ensayo.

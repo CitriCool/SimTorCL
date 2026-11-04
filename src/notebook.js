@@ -104,6 +104,7 @@ export function setupNotebook({
     "radius",
     "reinforcement",
     "impact",
+    "fragment-flight",
     "urban-open",
     "editor-open",
     ...Array.from(document.querySelectorAll("[data-preset]")),

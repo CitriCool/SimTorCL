@@ -212,7 +212,15 @@
             <input id="impact" type="checkbox" role="switch" />
             <span class="switch" aria-hidden="true"></span>
           </label>
-          <p class="selection-note">Cambiar esta opción reinicia el ensayo.</p>
+          <label class="switch-row" for="fragment-flight">
+            <span>Vuelo sensible a la orientación</span>
+            <input id="fragment-flight" type="checkbox" role="switch" />
+            <span class="switch" aria-hidden="true"></span>
+          </label>
+          <p class="selection-note">Cambiar un modelo reinicia el ensayo.</p>
+          <button type="button" class="reset-button" id="fragment-trial-open">
+            Comparar vuelo de fragmentos
+          </button>
         </section>
 
         <section class="control-section visual-controls">
@@ -609,7 +617,7 @@
           <span
             ><span class="footer-dot"></span> MOTOR FÍSICO ACTIVO
             <i>/</i> THREE.JS + CANNON-ES</span
-          ><span>SimTorCL <b>v2.9</b></span>
+          ><span>SimTorCL <b>v2.10</b></span>
         </footer>
       </section>
     </main>
@@ -931,6 +939,41 @@
           <tbody id="reference-rows"></tbody>
         </table>
       </div>
+    </dialog>
+    <dialog
+      id="fragment-trial-dialog"
+      class="comparison-dialog"
+      aria-labelledby="fragment-trial-title"
+    >
+      <button
+        id="fragment-trial-close"
+        class="dialog-close"
+        aria-label="Cerrar ensayo"
+      >
+        ×
+      </button>
+      <div class="eyebrow">ENSAYO DE CAÍDA CON VIENTO</div>
+      <h2 id="fragment-trial-title">Vuelo de fragmentos</h2>
+      <p id="fragment-trial-conditions"></p>
+      <div class="table-scroll">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th scope="col">Pieza</th>
+              <th scope="col">Masa (kg)</th>
+              <th scope="col">Distancia horizontal (m)</th>
+              <th scope="col">Giro acumulado (°)</th>
+              <th scope="col">Velocidad de impacto (m/s)</th>
+              <th scope="col">Tiempo (s)</th>
+            </tr>
+          </thead>
+          <tbody id="fragment-trial-results"></tbody>
+        </table>
+      </div>
+      <p>
+        Comparación educativa con las dimensiones y masas del simulador. Límite
+        de 10 s.
+      </p>
     </dialog>
     <dialog
       id="comparison-dialog"
