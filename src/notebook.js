@@ -111,6 +111,7 @@ export function setupNotebook({
     "editor-open",
     "puerto-varas-open",
     "puerto-varas-corridor-open",
+    "itata-open",
     ...Array.from(document.querySelectorAll("[data-preset]")),
   ];
   let disabled = [];

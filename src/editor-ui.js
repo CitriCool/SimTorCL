@@ -727,6 +727,7 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
   $("editor-open").addEventListener("click", () => open());
   $("puerto-varas-open").addEventListener("click", () => open("puerto-varas-2025"));
   $("puerto-varas-corridor-open").addEventListener("click", () => open("puerto-varas-corridor"));
+  $("itata-open").addEventListener("click", () => open("itata-2019"));
   $("editor-close").addEventListener("click", () => dialog.close());
   dialog.addEventListener("cancel", (event) => {
     if (applying) event.preventDefault();

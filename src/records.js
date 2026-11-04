@@ -152,6 +152,7 @@ export function cleanConfig(input = {}) {
       "reinforced",
       "puerto-varas-2025",
       "puerto-varas-corridor",
+      "itata-2019",
     ].includes(config.lesson)
   )
     throw new Error("Ejemplo guiado desconocido.");

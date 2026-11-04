@@ -25,6 +25,12 @@ Abre **Caso histórico · Puerto Varas 2025** en la pantalla principal, o selecc
 
 **Puerto Varas 2025 · Corredor ampliado** prepara otro ensayo de 60 s, con aproximadamente 273 × 183 m, 12 viviendas, 3 edificios y 3 parques. Las 96 parcelas permiten editar la distribución. El trazado local conserva la dirección general del evento y el radio de influencia del ensayo original. Las calles y las construcciones siguen siendo ilustrativas.
 
+## Caso rural de Rinconada de Itata 2019
+
+Abre **Rinconada de Itata 2019 · Escenario rural**. El informe especial de la DMC recoge 42 viviendas afectadas y voladuras de techumbre en Yungay el 30 de mayo de 2019. La DMC incluyó el episodio entre los tornados sin confirmar. [Informe especial de la DMC](https://climatologia.meteochile.gob.cl/publicaciones/climaHoy/climaHoy20201204.pdf)
+
+El ensayo de 45 s ocupa unos 215 × 110 m. Cuatro de las seis viviendas y dos de los tres árboles están cerca de un recorrido ilustrativo. Las posiciones, los 160 km/h, los 12 m de radio, los 6 m/s de avance y el 50 % de refuerzo se eligieron para comparar la exposición de las parcelas. El recuento histórico de viviendas afectadas y el recuento simulado de piezas desprendidas se expresan en unidades distintas.
+
 ## Ejecutar e interpretar
 
 El avance se mide por longitud recorrida, también en los giros de la polilínea. Al llegar al último punto el tornado permanece allí; la física continúa hasta la duración declarada o hasta que se pause. Al cumplir la duración se detiene exactamente el cálculo. **Repetir ensayo** reconstruye el escenario desde cero. Llegar al final del recorrido no significa que haya cesado el viento.

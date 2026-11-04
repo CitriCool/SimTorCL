@@ -11,7 +11,9 @@ export function renderHistoricalContext(container, lesson) {
   container.querySelector("[data-case-title]").textContent = lesson.title;
   container.querySelector("[data-case-event]").textContent = historical.event;
   container.querySelector("[data-case-model]").textContent = historical.model;
-  container.querySelector("[data-case-source]").href = historical.source;
+  const source = container.querySelector("[data-case-source]");
+  source.href = historical.source;
+  source.textContent = historical.sourceLabel ?? "Mapa y análisis de la DMC ↗";
 }
 
 export function setupLearning({
