@@ -1,6 +1,7 @@
 import { ENV_MODEL } from "./environment.js";
 import { setupEditor } from "./editor-ui.js";
 import { setupLearning } from "./learning-ui.js";
+import { LESSONS } from "./lessons.js";
 import { refreshParameterLibrary } from "./parameters-ui.js";
 import { setupUrban } from "./urban-ui.js";
 import "./style.css";
@@ -289,11 +290,16 @@ function updateScenarioInfo() {
     $("profile-description").textContent =
       "El plano conserva el perfil, la cubierta y la orientación de cada casa. Selecciona un objeto en el editor para cambiarlo.";
   }
-  document.querySelector(".scene-header h2").textContent = district
-    ? simulation.config.mode === "neighborhood"
-      ? "Barrio bajo el vórtice"
-      : "Manzana bajo el vórtice"
-    : "Vivienda bajo el vórtice";
+  const lesson = LESSONS[simulation.config.lesson];
+  $("scene-location").textContent =
+    lesson?.historical?.location ?? "36° S / CHILE CENTRAL";
+  document.querySelector(".scene-header h2").textContent = lesson?.historical
+    ? lesson.title
+    : district
+      ? simulation.config.mode === "neighborhood"
+        ? "Barrio bajo el vórtice"
+        : "Manzana bajo el vórtice"
+      : "Vivienda bajo el vórtice";
   if (district)
     $("scene").setAttribute(
       "aria-label",

@@ -5,6 +5,7 @@ import { PROFILES, ROOFS } from "./catalog.js";
 import { configurationDocument, normalizeName } from "./records.js";
 import { saveEntry } from "./library.js";
 import { LESSONS, lessonConfig } from "./lessons.js";
+import { renderHistoricalContext } from "./learning-ui.js";
 
 const $ = (id) => document.getElementById(id);
 const names = {
@@ -280,8 +281,10 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
     $("editor-duration").value = duration;
     $("editor-route-remove").disabled = !route?.length;
     view.showRoutePreview(route);
+    const lesson = LESSONS[draft.settings.lesson];
+    renderHistoricalContext($("editor-case"), lesson);
     $("editor-lesson-goal").textContent =
-      LESSONS[draft.settings.lesson]?.goal ??
+      lesson?.goal ??
       "Elige un ejemplo para explorar una pregunta concreta.";
     const items = draft.plan.items;
     if (items.length)
@@ -558,12 +561,17 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
     "click",
     attempt(() => {
       const id = $("editor-example").value;
-      draft.loadExample({
-        ...lessonConfig(id),
-        fragmentFlight: draft.config.fragmentFlight,
-        enclosure: draft.config.enclosure,
-        loadPath: draft.config.loadPath,
-      });
+      const example = lessonConfig(id);
+      draft.loadExample(
+        LESSONS[id].historical
+          ? example
+          : {
+              ...example,
+              fragmentFlight: draft.config.fragmentFlight,
+              enclosure: draft.config.enclosure,
+              loadPath: draft.config.loadPath,
+            },
+      );
       selected = null;
       selectedObject = null;
       tools();
@@ -652,7 +660,7 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
     view = null;
     preview = null;
   }
-  function open() {
+  function open(exampleId = null) {
     if (isReplaying()) return;
     pause();
     const base =
@@ -675,7 +683,9 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
         : {}),
     };
     try {
-      draft = new EditorState(settings);
+      draft = new EditorState(exampleId ? lessonConfig(exampleId) : settings);
+      $("editor-name").value = LESSONS[draft.settings.lesson]?.title ?? "Mi manzana";
+      if (draft.settings.lesson) $("editor-example").value = draft.settings.lesson;
       selected = null;
       selectedObject = null;
       $("editor-replace").hidden = true;
@@ -700,7 +710,9 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
       };
       animate();
       say(
-        "Borrador independiente. Elige una infraestructura o selecciona una parcela; tu experimento permanece intacto.",
+        exampleId
+          ? "Revisa el recorrido y pulsa «Usar esta manzana» para preparar el ensayo."
+          : "Borrador independiente. Elige una infraestructura o selecciona una parcela; tu experimento permanece intacto.",
       );
     } catch (error) {
       cleanup();
@@ -709,7 +721,8 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
         `No se pudo abrir el editor: ${error.message}`;
     }
   }
-  $("editor-open").addEventListener("click", open);
+  $("editor-open").addEventListener("click", () => open());
+  $("puerto-varas-open").addEventListener("click", () => open("puerto-varas-2025"));
   $("editor-close").addEventListener("click", () => dialog.close());
   dialog.addEventListener("cancel", (event) => {
     if (applying) event.preventDefault();

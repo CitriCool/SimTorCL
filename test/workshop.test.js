@@ -186,6 +186,7 @@ test("one pending route point cannot be saved; invalid geometry and weather leav
 });
 test("all four examples are valid, modifiable, undoable synthetic configurations with reproducible physics", () => {
   for (const id of Object.keys(LESSONS)) {
+    if (LESSONS[id].historical) continue;
     const config = lessonConfig(id),
       e = new Experiment(config);
     for (let i = 0; i < 60; i++) e.step();
@@ -203,6 +204,30 @@ test("all four examples are valid, modifiable, undoable synthetic configurations
   d.redo();
   assert.equal(d.settings.lesson, "plaza");
 });
+
+test("Puerto Varas advances southeast, records damage and can be replayed from its saved configuration", () => {
+  const config = lessonConfig("puerto-varas-2025");
+  assert.equal(config.rows * config.columns, 16);
+  assert.equal(config.wind, 175);
+  assert.equal(config.sitePlan.objects.length, 10);
+  const e = new Experiment(config);
+  const start = [e.center.x, e.center.z];
+  for (let i = 0; i < 1200; i++) e.step();
+  assert.ok(e.center.x > start[0] && e.center.z > start[1]);
+  assert.ok(e.active.progress > 0 && e.active.progress < 1);
+  while (e.step()) {}
+  const end = config.route.at(-1);
+  assert.deepEqual([e.center.x, e.center.z], [end.x, end.z]);
+  assert.equal(e.active.progress, 1);
+  assert.ok(e.stats.detached > 0);
+  assert.ok(e.stats.wallDetached > 0);
+  assert.ok(e.environment.stats.rows.some((row) => row.type === "tree" && row.detached > 0));
+  const record = decode(e.document());
+  assert.deepEqual(record.initial, config);
+  assert.ok(record.events.length > 0);
+  assert.deepEqual(recalculate(record), record.results);
+});
+
 test("explanations preserve force versus moment units and distinguish overload, support and absent evidence", () => {
   const parent = {
     id: "ENV:E1",

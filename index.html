@@ -59,6 +59,9 @@
         <p class="selection-note" id="editor-open-note">
           Coloca casas, edificios y parques en un plano 3D.
         </p>
+        <button class="details-button editor-entry" id="puerto-varas-open">
+          Caso histórico · Puerto Varas 2025 ↗
+        </button>
 
         <section class="control-section">
           <div class="section-heading">
@@ -296,7 +299,7 @@
           <div class="viewport-top">
             <span class="live-tag"><span></span> VISTA EN TIEMPO REAL</span
             ><span class="coordinates"
-              >36° S &nbsp; / &nbsp; CHILE CENTRAL
+              ><span id="scene-location">36° S / CHILE CENTRAL</span>
               <small>ESCENARIO ILUSTRATIVO</small></span
             >
           </div>
@@ -488,6 +491,12 @@
               Abrir ejemplos y editor
             </button>
           </details>
+          <section id="learning-case" class="historical-case" hidden>
+            <h4 data-case-title></h4>
+            <p data-case-event></p>
+            <p data-case-model></p>
+            <a data-case-source target="_blank" rel="noopener noreferrer">Mapa y análisis de la DMC ↗</a>
+          </section>
           <p>
             Haz clic en una pieza para consultar la falla registrada. Arrastrar
             sigue moviendo la cámara.
@@ -1297,6 +1306,12 @@
         Arrastra una infraestructura a una parcela libre o selecciónala y toca
         su destino. Para mover un objeto, arrástralo o usa «Mover».
       </p>
+      <section id="editor-case" class="historical-case" hidden>
+        <h3 data-case-title></h3>
+        <p data-case-event></p>
+        <p data-case-model></p>
+        <a data-case-source target="_blank" rel="noopener noreferrer">Mapa y análisis de la DMC ↗</a>
+      </section>
       <section class="editor-route-box" aria-labelledby="editor-size-title">
         <h3 id="editor-size-title">Tamaño de la manzana</h3>
         <form id="editor-size-form" class="editor-weather editor-size-form">
@@ -1323,7 +1338,8 @@
           <option value="residential">Barrio residencial</option>
           <option value="mixed">Barrio mixto</option>
           <option value="plaza">Plaza con edificios</option>
-          <option value="reinforced">Viviendas reforzadas</option></select
+          <option value="reinforced">Viviendas reforzadas</option>
+          <option value="puerto-varas-2025">Puerto Varas 2025 · Caso histórico</option></select
         ><button type="button" id="editor-load-example" class="reset-button">
           Cargar ejemplo en el borrador
         </button>

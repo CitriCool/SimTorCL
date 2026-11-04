@@ -3,6 +3,17 @@ import { LESSONS } from "./lessons.js";
 
 const $ = (id) => document.getElementById(id);
 const names = { tree: "Árbol", bench: "Banca", building: "Edificio" };
+
+export function renderHistoricalContext(container, lesson) {
+  const historical = lesson?.historical;
+  container.hidden = !historical;
+  if (!historical) return;
+  container.querySelector("[data-case-title]").textContent = lesson.title;
+  container.querySelector("[data-case-event]").textContent = historical.event;
+  container.querySelector("[data-case-model]").textContent = historical.model;
+  container.querySelector("[data-case-source]").href = historical.source;
+}
+
 export function setupLearning({
   experiment,
   getView,
@@ -55,6 +66,7 @@ export function setupLearning({
         ),
       ];
       $("learning-object").replaceChildren(...options);
+      renderHistoricalContext($("learning-case"), LESSONS[experiment.config.lesson]);
     }
     const record = notebook?.replayRecord;
     const events = (record?.events ?? experiment.events).filter(
@@ -78,7 +90,7 @@ export function setupLearning({
     $("learning-compare").disabled = !!record || !experiment.pieces.length;
     const lesson = LESSONS[experiment.config.lesson];
     $("learning-lesson").textContent = lesson
-      ? `${lesson.title} · ejemplo sintético modificable. ${lesson.goal}\n${lesson.steps.map((s, i) => `${i + 1}. ${s}`).join("\n")}`
+      ? `${lesson.title} · ${lesson.historical ? "escenario inspirado en un caso documentado" : "ejemplo sintético modificable"}. ${lesson.goal}\n${lesson.steps.map((s, i) => `${i + 1}. ${s}`).join("\n")}`
       : "Elige un ejemplo en el editor para seguir una pregunta guiada. Todas las capacidades mecánicas actuales son educativas.";
     if (next === key) return;
     key = next;

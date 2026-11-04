@@ -109,6 +109,7 @@ export function setupNotebook({
     "load-path",
     "urban-open",
     "editor-open",
+    "puerto-varas-open",
     ...Array.from(document.querySelectorAll("[data-preset]")),
   ];
   let disabled = [];

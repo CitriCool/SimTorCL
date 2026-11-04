@@ -11,7 +11,8 @@
   color-scheme: dark;
 }
 .editor-example-panel,
-.editor-route-box {
+.editor-route-box,
+.historical-case {
   border: 1px solid #435e4c;
   border-radius: 7px;
   padding: 12px;
@@ -29,6 +30,14 @@
 .editor-route-box p,
 .editor-weather label {
   font-size: 11px;
+}
+.historical-case p,
+.historical-case a {
+  font-size: 12px;
+  line-height: 1.6;
+}
+.historical-case a {
+  color: var(--teal);
 }
 .editor-weather {
   display: grid;

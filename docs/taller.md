@@ -1,6 +1,6 @@
 # Taller: construir, simular y entender — v2.7
 
-B3 amplía el editor de parcelas de v2.6. Los cuatro ejemplos son distribuciones sintéticas modificables, sin proporciones censales ni ubicación territorial real. Las categorías oficiales orientan el catálogo; las capacidades mecánicas siguen siendo supuestos educativos.
+B3 amplía el editor de parcelas de v2.6. Los cuatro ejemplos originales son distribuciones sintéticas modificables. Las categorías oficiales orientan el catálogo. Las capacidades mecánicas siguen siendo supuestos educativos.
 
 ## Preparar un ejemplo
 
@@ -14,6 +14,14 @@ B3 amplía el editor de parcelas de v2.6. Los cuatro ejemplos son distribuciones
 Ejemplo descargable: [Plaza con edificios](examples/plaza-v2.7.json), importable desde el cuaderno.
 
 ![Editor del taller](taller-b3.png)
+
+## Caso histórico de Puerto Varas 2025
+
+Abre **Caso histórico · Puerto Varas 2025** en la pantalla principal, o selecciona el caso en **Aprender con un ejemplo**. El recorrido aparece en el borrador. Pulsa **Usar esta manzana** y luego **Iniciar simulación**. Puedes volver a ver la geometría intacta desde **Entiende lo que ocurrió** y consultar los daños calculados en el cuaderno.
+
+- **Evento documentado.** El 25 de mayo de 2025, un tornado de categoría EF1 según la DMC afectó a Puerto Varas. La inspección documentó pérdidas de techumbre y permitió trazar su recorrido a partir de daños. El informe preliminar indica un avance general de noroeste a sureste. El municipio documenta afectación en Walker Martínez. [Mapa de la DMC](https://blog.meteochile.gob.cl/2025/06/18/encontrando-el-rastro-del-tornado-en-puerto-varas/) · [Dirección del recorrido](https://blog.meteochile.gob.cl/2025/05/26/siguiendo-las-huellas-de-un-destructivo-tornado-en-puerto-varas/) · [Municipalidad](https://www.ptovaras.cl/noticias/puerto-varas-conmemora-el-primer-aniversario-del-tornado-con-foco-en-reconstruccion-resiliencia-y-preparacion-climatica)
+- **Escenario simulado.** Una cuadrícula sintética de 4 × 4 parcelas representa un tramo urbano inspirado en Walker Martínez. Incluye seis casas, dos edificios bajos, dos parques y un árbol independiente. La polilínea conserva la dirección general publicada y usa coordenadas locales aproximadas. Los materiales, calles y posiciones se asignaron con fines educativos.
+- **Parámetros del ensayo.** 175 km/h de intensidad de referencia dentro del intervalo estimado por la DMC, 6 m/s de avance, 12 m de radio de influencia, 50 % de refuerzo y 25 s de duración. El refuerzo ilustra un caso de uniones vulnerables. El modelo calcula los desprendimientos y las fallas durante el ensayo. El radio y la velocidad de avance se ajustan al tramo local. La configuración, el recorrido y los resultados se conservan en el cuaderno.
 
 ## Ejecutar e interpretar
 

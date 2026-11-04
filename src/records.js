@@ -144,7 +144,13 @@ export function cleanConfig(input = {}) {
   config.route = normalizeControls(config);
   if (
     config.lesson !== null &&
-    !["residential", "mixed", "plaza", "reinforced"].includes(config.lesson)
+    ![
+      "residential",
+      "mixed",
+      "plaza",
+      "reinforced",
+      "puerto-varas-2025",
+    ].includes(config.lesson)
   )
     throw new Error("Ejemplo guiado desconocido.");
   if (
