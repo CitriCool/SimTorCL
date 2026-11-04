@@ -105,6 +105,7 @@ export function setupNotebook({
     "reinforcement",
     "impact",
     "fragment-flight",
+    "enclosure",
     "urban-open",
     "editor-open",
     ...Array.from(document.querySelectorAll("[data-preset]")),

@@ -212,7 +212,7 @@ test("edited damaged runs retain custom roofs, object identities, events, poses 
   for (let i = 0; i < 1500; i++) e.step();
   const r = decode(e.document("Manzana manual"));
   assert.ok(r.events.length > 0);
-  assert.equal(r.schemaVersion, 8);
+  assert.equal(r.schemaVersion, 9);
   assert.equal(r.environmentModel.version, "urban-environment-workshop-1");
   assert.deepEqual(recalculate(r), r.results);
   const copy = new Experiment(r.initial, { record: false });
@@ -266,7 +266,7 @@ test("schema-4 v2.5 recordings preserve their library, generated layout, histori
   );
   assert.equal(original.schemaVersion, 4);
   const r = decode(original);
-  assert.equal(r.schemaVersion, 8);
+  assert.equal(r.schemaVersion, 9);
   assert.equal(r.initial.sitePlan, null);
   assert.equal(r.appVersion, "2.5.0");
   assert.equal(MODEL_ID, "simtorcl-33082313");

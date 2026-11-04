@@ -26,7 +26,7 @@ Entrega B2 implementada en v2.6: [editor de manzanas](docs/editor.md) sobre las 
 - [x] **BASE-06** Comparación determinista de perfiles individuales con condiciones comunes, cancelación, pausa y reinicio.
 - [x] **BASE-07** Interfaz adaptable, documentación, 88 pruebas automatizadas y compilación comprobadas; código en GitHub.
 
-Límites actuales: trazados sintéticos; propiedades físicas ilustrativas; roturas por impacto opcionales con criterio educativo; viento sin apantallamiento ni canalización por edificios; sin presión interior ni validación experimental. El modo visual conserva vegetación decorativa; el modo físico incluye uniones rompibles de árboles y bancos.
+Los trazados son sintéticos y las propiedades físicas, ilustrativas. El viento sigue un campo simplificado y la presión interior opcional representa un recinto por vivienda. La validación experimental queda pendiente. El modo visual conserva vegetación decorativa y el modo físico incluye uniones rompibles de árboles y bancos.
 
 ## 1. Experimentos reproducibles y explicación del daño — P0
 
@@ -115,7 +115,7 @@ Depende de eventos y trazabilidad de la etapa 1. Se desarrolla por mecanismos in
 - [x] **FIS-02** Representar cadenas de daño entre construcciones y vegetación y comprobar que cada evento adicional tenga una causa física registrada.
 - [x] **FIS-03 (primer alcance)** Aplicar arrastre y giro según geometría, masa y orientación. Comparar plancha y panel bajo el mismo viento. La calibración por material y la fragmentación física quedan pendientes.
 - [x] **FIS-04 (primer alcance)** Barrer fragmentos rápidos contra piezas fijas y verificar cruces, pasos laterales y reproducibilidad. Quedan pendientes la rotación continua y los cruces entre cuerpos móviles.
-- [ ] **FIS-05** Incorporar presión interior, aberturas y cambios de carga posteriores a rotura de ventanas, puertas o cubierta.
+- [x] **FIS-05 (primer alcance)** Calcular presión interior de un recinto por vivienda y actualizar cargas de techo y paredes al perder ventanas, revestimientos, muros o piezas de cubierta. Abertura frontal inicial configurable. Quedan pendientes los recintos múltiples, la respuesta transitoria y la calibración.
 - [ ] **FIS-06** Mejorar la transferencia y redistribución de cargas entre cubierta, paredes, estructura, anclajes y base.
 - [ ] **FIS-07** Evaluar conexiones elásticas y modos de falla específicos, ampliando gradualmente la idealización rígida actual.
 - [ ] **FIS-08** Parametrizar velocidad de traslación, duración, anchura, intensidad variable, ráfagas y perfil vertical del viento.

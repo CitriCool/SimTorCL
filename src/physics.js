@@ -3,6 +3,12 @@ import { dynamicPressure } from "./aerodynamics.js";
 import { DebrisImpacts } from "./impacts.js";
 import { applyFragmentAir, equivalentAir } from "./fragment-flight.js";
 import {
+  ENCLOSURE_MODEL,
+  openingState,
+  roomPressure,
+  addRoomLoad,
+} from "./enclosure.js";
+import {
   DEFAULTS,
   PRESETS,
   PROFILES,
@@ -75,6 +81,29 @@ export class Simulation {
     this.peakDisplacement = 0;
     this.peakTilt = 0;
     this.createHouse();
+    this.frontOpening =
+      this.config.enclosure === "front-opening"
+        ? this.facades[0].walls[1]
+        : null;
+    this.indoorPressure = 0;
+    this.indoorOpeningArea = this.frontOpening
+      ? ENCLOSURE_MODEL.initialOpeningArea
+      : 0;
+    if (this.config.enclosure !== "off") {
+      this.pressureAreas = this.pieces.map((piece) =>
+        piece.kind === "wall" && piece.details.framed ? 0 : piece.area,
+      );
+      let frontFace = this.frontOpening;
+      for (const piece of this.pieces) {
+        if (piece.kind !== "cladding") continue;
+        const wall = piece.connections[0].b;
+        if (piece.details.secondary) this.pressureAreas[wall.id] -= piece.area;
+        if (wall === this.frontOpening && wall.details.framed)
+          frontFace = piece;
+      }
+      if (frontFace)
+        this.pressureAreas[frontFace.id] -= ENCLOSURE_MODEL.initialOpeningArea;
+    }
     this.impacts = null;
     this.updateCenter();
     this.revision++;
@@ -450,6 +479,16 @@ export class Simulation {
     if (field) this.center.copy(field);
     if (time !== null) this.elapsed = time;
     const ramp = Math.min(this.elapsed / 1.8, 1);
+    if (this.config.enclosure !== "off") {
+      const openings = openingState(this.pieces, this.frontOpening);
+      this.indoorOpeningArea = openings.reduce(
+        (sum, opening) => sum + opening.area,
+        0,
+      );
+      this.indoorPressure = roomPressure(openings, (position) =>
+        windAt(position, this.center, this.config).scale(ramp),
+      );
+    }
     for (const piece of this.pieces) {
       const { body } = piece;
       const force = windAt(body.position, this.center, this.config, piece.area);
@@ -460,8 +499,18 @@ export class Simulation {
         force.x = normal.x * normalLoad + force.x * 0.12;
         force.z = normal.z * normalLoad + force.z * 0.12;
         force.y *= 0.12;
-        piece.demand = Math.hypot(force.x, force.z);
-      } else piece.demand = Math.max(0, force.y - piece.mass * 9.82);
+      }
+      if (!piece.detached && this.indoorPressure !== 0)
+        addRoomLoad(
+          force,
+          piece,
+          this.indoorPressure,
+          this.pressureAreas[piece.id] ?? piece.area,
+        );
+      piece.demand =
+        piece.kind === "roof"
+          ? Math.max(0, force.y - piece.mass * 9.82)
+          : Math.hypot(force.x, force.z);
       piece.load.copy(force);
     }
     let changed = false;
@@ -580,6 +629,14 @@ export class Simulation {
       maxDisplacement: this.peakDisplacement,
       maxTilt: this.peakTilt,
       elapsed: this.elapsed,
+      ...(this.config.enclosure !== "off"
+        ? {
+            enclosure: {
+              pressure: this.indoorPressure,
+              openingArea: this.indoorOpeningArea,
+            },
+          }
+        : {}),
     };
   }
 }

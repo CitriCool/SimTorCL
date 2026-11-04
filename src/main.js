@@ -25,6 +25,18 @@ const number = (value) =>
 
 function updateReadout() {
   const s = notebook?.replayStats ?? simulation.stats;
+  const indoor = (s.rows ?? [s]).map((row) => row.enclosure).filter(Boolean);
+  $("enclosure-summary").hidden = indoor.length === 0;
+  if (indoor.length) {
+    const pressures = indoor.map(({ pressure }) => pressure);
+    const range =
+      indoor.length === 1
+        ? number(pressures[0])
+        : `${number(Math.min(...pressures))} a ${number(Math.max(...pressures))}`;
+    const area = indoor.reduce((sum, entry) => sum + entry.openingArea, 0);
+    $("enclosure-summary").textContent =
+      `Presión interior aplicada ${range} Pa respecto al ambiente · Aberturas ${number(area)} m².`;
+  }
   $("roof-count").textContent = s.detached;
   $("roof-total").textContent =
     `${s.total} ${simulation.houses ? "piezas" : simulation.roof.unit}`;
@@ -172,6 +184,7 @@ function updateScenarioInfo() {
   for (const id of ["mode", "distribution", "spacing", "trajectory", "profile"])
     $(id).value = simulation.config[id];
   $("impact").checked = simulation.config.impact !== "off";
+  $("enclosure").value = simulation.config.enclosure;
   $("fragment-flight").checked =
     simulation.config.fragmentFlight === "projected-v1";
   $("impact-method").textContent =
@@ -383,6 +396,9 @@ $("fragment-flight").addEventListener("change", () =>
   reset({
     fragmentFlight: $("fragment-flight").checked ? "projected-v1" : "legacy",
   }),
+);
+$("enclosure").addEventListener("change", () =>
+  reset({ enclosure: $("enclosure").value }),
 );
 for (const id of ["wind", "radius", "reinforcement"]) {
   $(id).addEventListener("input", () => updateRange(id));

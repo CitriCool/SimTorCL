@@ -530,6 +530,7 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
       draft.loadExample({
         ...lessonConfig(id),
         fragmentFlight: draft.config.fragmentFlight,
+        enclosure: draft.config.enclosure,
       });
       selected = null;
       selectedObject = null;

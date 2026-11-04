@@ -129,7 +129,7 @@ test("configuration-only format migrates v0 and never carries calculated results
     name: "Anterior",
     config: { wind: 0 },
   });
-  assert.equal(old.schemaVersion, 8);
+  assert.equal(old.schemaVersion, 9);
   assert.equal(old.initial.wind, 0);
   assert.equal(old.modelId, MODEL_ID);
 });

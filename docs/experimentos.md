@@ -110,3 +110,11 @@ Con **Vuelo sensible a la orientación**, cada pieza desprendida usa su caja fí
 **Comparar vuelo de fragmentos** suelta por separado una plancha metálica y un panel de fachada del catálogo bajo el mismo viento horizontal constante. Ambas piezas parten en reposo con 4 m libres hasta el suelo y una inclinación de 45° respecto al viento. El ensayo registra el desplazamiento horizontal, giro acumulado, velocidad y tiempo al primer contacto con el suelo. La fuerza y el giro son aproximaciones educativas. La calibración por material y la rotura en piezas más pequeñas quedan pendientes.
 
 El esquema 8 guarda el descriptor de vuelo y reproduce archivos anteriores con su modelo original. Para repetir el ejemplo de impacto por barrido de v2.9 en una sesión nueva, desactiva **Vuelo sensible a la orientación** antes de iniciar el ensayo.
+
+## Presión interior de viviendas en v2.11
+
+**Presión interior de viviendas** ofrece un recinto inicialmente cerrado y una abertura frontal equivalente de 1 m². Con el modelo activo, los huecos de ventanas, revestimientos, paredes y cubiertas desprendidas participan en el balance en el paso siguiente. El recinto toma la presión con la que los caudales de entrada y salida se equilibran. El modelo usa la raíz cuadrada de la diferencia de presión y un área de fuga ilustrativa de 0,1 m² a presión ambiente. [Referencia de balance de caudal y orificios, NIST](https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=915632)
+
+La presión se mide respecto al ambiente. Puede ser positiva en barlovento y negativa en sotavento. Se suma a la carga exterior en las superficies intactas, incluidas las fijaciones de la cubierta. La abertura frontal inicial representa un área de ventilación para el cálculo. La geometría de colisión sigue representando la envolvente original. Cada vivienda se calcula como un recinto independiente. Quedan pendientes los edificios de varios pisos, los compartimentos, los transitorios y la calibración de los coeficientes.
+
+El selector muestra la presión aplicada y el área de aberturas durante el ensayo. En una manzana muestra el rango de presiones y el área total, y el JSON conserva los valores por vivienda. El esquema 9 guarda el modelo y carga los ensayos de v2.10 y anteriores con presión interior desactivada.

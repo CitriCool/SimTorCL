@@ -20,10 +20,11 @@ import { normalizeSitePlan } from "./site-plan.js";
 import { normalizeControls, controlModel } from "./route.js";
 import { IMPACT_MODEL, SWEPT_IMPACT_MODEL, impactModel } from "./impacts.js";
 import { FRAGMENT_MODEL } from "./fragment-flight.js";
+import { ENCLOSURE_MODEL } from "./enclosure.js";
 
-export const APP_VERSION = "2.10.0";
+export const APP_VERSION = "2.11.0";
 
-export const SCHEMA_VERSION = 8;
+export const SCHEMA_VERSION = 9;
 
 export const MAX_FILE_BYTES = 40 * 1024 * 1024;
 
@@ -97,6 +98,7 @@ export const CONFIG_KEYS = [
   "reinforcement",
   "impact",
   "fragmentFlight",
+  "enclosure",
   "mode",
   "distribution",
   "spacing",
@@ -307,6 +309,8 @@ export class RunRecorder {
       model: clone(MODEL),
       scenarioModel: controlModel(this.initial),
       impactModel: clone(impactModel(this.initial.impact)),
+      enclosureModel:
+        this.initial.enclosure === "off" ? null : clone(ENCLOSURE_MODEL),
       fragmentModel:
         this.initial.fragmentFlight === "projected-v1"
           ? clone(FRAGMENT_MODEL)
@@ -352,6 +356,7 @@ export function configurationDocument(config = {}, name) {
     model: clone(MODEL),
     scenarioModel: controlModel(initial),
     impactModel: clone(impactModel(initial.impact)),
+    enclosureModel: initial.enclosure === "off" ? null : clone(ENCLOSURE_MODEL),
     fragmentModel:
       initial.fragmentFlight === "projected-v1" ? clone(FRAGMENT_MODEL) : null,
     parameterLibrary: parameterLibrary(MODEL, environmentModel(initial)),
@@ -396,7 +401,7 @@ export function parseShareHash(hash) {
     throw new Error("Enlace de configuración inválido.");
   }
   if (
-    ![1, 2, 3, 4, 5, 6, 7, SCHEMA_VERSION].includes(data.schemaVersion) ||
+    ![1, 2, 3, 4, 5, 6, 7, 8, SCHEMA_VERSION].includes(data.schemaVersion) ||
     data.modelId !== MODEL_ID
   )
     throw new Error("El enlace usa otra versión del modelo.");
@@ -421,6 +426,7 @@ export function parseShareHash(hash) {
       ...(data.schemaVersion < 3 ? { environment: "visual" } : {}),
       ...(data.schemaVersion < 7 ? { impact: "off" } : {}),
       ...(data.schemaVersion < 8 ? { fragmentFlight: "legacy" } : {}),
+      ...(data.schemaVersion < 9 ? { enclosure: "off" } : {}),
     }),
     name: normalizeName(data.name),
   };
@@ -459,6 +465,13 @@ function checkStats(stats) {
 
   if (typeof stats.state !== "string" || stats.state.length > 100)
     throw new Error("Estado inválido.");
+  if (
+    Object.hasOwn(stats, "enclosure") &&
+    (!Number.isFinite(stats.enclosure?.pressure) ||
+      !Number.isFinite(stats.enclosure?.openingArea) ||
+      stats.enclosure.openingArea < 0)
+  )
+    throw new Error("Presión interior o área de aberturas inválida.");
   for (const [key, max] of [
     ["wallDamaged", stats.wallTotal],
     ["fallen", stats.wallTotal],
@@ -545,9 +558,16 @@ export function parseDocument(text) {
   if (record?.format === "simtorcl-experiment" && record.schemaVersion === 7)
     record = {
       ...record,
-      schemaVersion: SCHEMA_VERSION,
+      schemaVersion: 8,
       initial: { ...record.initial, fragmentFlight: "legacy" },
       fragmentModel: null,
+    };
+  if (record?.format === "simtorcl-experiment" && record.schemaVersion === 8)
+    record = {
+      ...record,
+      schemaVersion: SCHEMA_VERSION,
+      initial: { ...record.initial, enclosure: "off" },
+      enclosureModel: null,
     };
   if (
     !record ||
@@ -566,6 +586,13 @@ export function parseDocument(text) {
 
   record.initial = cleanConfig(record.initial);
   record.name = normalizeName(record.name);
+  if (
+    canonical(record.enclosureModel) !==
+    canonical(record.initial.enclosure === "off" ? null : ENCLOSURE_MODEL)
+  )
+    throw new Error(
+      "El modelo de presión interior no coincide con esta versión.",
+    );
   if (
     canonical(record.fragmentModel) !==
     canonical(
