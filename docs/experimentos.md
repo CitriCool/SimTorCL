@@ -86,3 +86,11 @@ El esquema 5 añade `initial.sitePlan` para el plano manual del [editor v2.6](ed
 El [taller](taller.md) añade `route`, `travelSpeed`, `duration` y `lesson` a la configuración. `scenarioModel` describe las unidades y reglas de recorrido/tiempo cuando se usan controles nuevos. Los planos nuevos `parcel-editor-2` incorporan `items`, identificadores persistentes y posiciones discretas por parcela; el inventario físico conserva cada componente y su capacidad educativa. El informe incluye el descriptor y el CSV de parcelas lista los elementos independientes. Los enlaces de configuración admiten estos datos y siguen sin incluir resultados.
 
 Los archivos anteriores mantienen las versiones de geometría, capacidades, procedencia disponible y resultados con las que fueron creados. La migración agrega controles predeterminados sin modificar una ejecución guardada ni atribuirle una nueva biblioteca de propiedades. El recálculo sigue siendo una acción explícita.
+
+## Roturas por impacto v2.8 y esquema 7
+
+Al activar **Roturas por impacto**, un fragmento liberado puede fallar uniones de una pieza todavía sujeta. El modelo toma los contactos con velocidad normal de acercamiento de al menos 0,5 m/s y suma sus fuerzas normales por par de piezas. Reparte la demanda entre los apoyos intactos del receptor y compara con sus capacidades, incluido el refuerzo. Para anclajes en N·m calcula el momento horizontal de esas fuerzas respecto al apoyo. La rotura ocurre tras el paso de contacto y puede liberar otras piezas por pérdida de soporte.
+
+El umbral, el reparto y las capacidades son supuestos educativos. La carga estimada depende del paso de 1/120 s y del solucionador de contacto. El cálculo usa los contactos discretos del motor, por lo que puede omitir fragmentos rápidos que atraviesen piezas delgadas entre pasos. [Solucionador de Cannon-es 0.20.0](https://github.com/pmndrs/cannon-es/blob/v0.20.0/src/solver/GSSolver.ts)
+
+El esquema 7 guarda `initial.impact` e `impactModel`. Las ejecuciones y enlaces de esquemas anteriores se migran con impactos desactivados. Los eventos de impacto incluyen la pieza receptora, la velocidad normal y el identificador del desprendimiento de origen. El cuaderno permite filtrar estos eventos y saltar a su origen. El JSON y el CSV conservan la relación.

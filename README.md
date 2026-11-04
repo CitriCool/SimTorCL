@@ -18,6 +18,10 @@ El borrador conserva el experimento original hasta aplicarlo y ofrece guardar lo
 
 Consulta [la guía del taller v2.7](docs/taller.md), [el editor y su compatibilidad](docs/editor.md) y [un ejemplo importable](docs/examples/plaza-v2.7.json).
 
+## Roturas por impacto (v2.8)
+
+Carga **Plaza con edificios**, aplica 280 km/h en el editor y usa la manzana. Activa **Roturas por impacto** en las condiciones del tornado y ejecuta el ensayo. En el cuaderno, abre **Eventos y gráficos** y filtra por **Roturas por impacto**. Cada falla identifica la pieza receptora y permite saltar al desprendimiento que originó el fragmento. [Criterio y compatibilidad](docs/experimentos.md#roturas-por-impacto-v28-y-esquema-7)
+
 ## Biblioteca y comprobación (v2.5)
 
 Desde **Parámetros y fuentes** se puede explorar y exportar la biblioteca versionada: 73 parámetros base y 16 adicionales en barrios con entorno físico. Las nuevas configuraciones, ejecuciones e informes conservan su procedencia. Una comprobación analítica contrasta 10 magnitudes de presión y carga con referencias fijas y permite descargar errores y tolerancias. Los archivos antiguos conservan su modelo y resultados sin atribuirles evidencia nueva.
@@ -145,7 +149,7 @@ Documentación de bibliotecas: [Three.js](https://threejs.org/docs/), [Cannon-es
 
 El selector de escala permite mantener la casa individual o generar 9 o 16 viviendas, con separación de centros de 10, 13 o 16 m. Se puede usar el mismo perfil en todas las casas o una mezcla determinista de cuatro variantes; esa mezcla no representa frecuencias del censo. La cubierta es común. La losa queda excluida de mezclas que incluyen entramados livianos. Las filas alternan orientación y cada casa tiene un identificador C01, C02, etc.
 
-Las casas comparten un único mundo Cannon-es y un único plano físico. Los fragmentos pueden colisionar con otras viviendas, aunque el modelo de uniones aún no convierte esos impactos en roturas adicionales. El viento sigue siendo el campo simplificado, sin canalización ni apantallamiento entre edificios. Las calles, las parcelas y sus dimensiones son ilustrativas.
+Las casas comparten un único mundo Cannon-es y un único plano físico. Al activar Roturas por impacto, los fragmentos pueden romper uniones de otras viviendas y de objetos urbanos. El viento sigue siendo el campo simplificado, sin canalización ni apantallamiento entre edificios. Las calles, las parcelas y sus dimensiones son ilustrativas.
 
 El tornado cruza en diagonal, de oeste a este o de sur a norte a 2 m/s; al terminar permanece en el extremo de salida. Reiniciar devuelve todas las viviendas y el tornado a sus estados iniciales. La tabla muestra los resultados de cada casa y los contadores superiores suman las piezas del conjunto. Los lotes cambian de color según daños secundarios, fallas de uniones estructurales y colapso del modelo. El selector de enfoque permite inspeccionar cada vivienda. El comparador independiente de perfiles queda disponible en modo individual.
 

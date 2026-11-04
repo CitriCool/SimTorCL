@@ -202,6 +202,15 @@
             Factor aplicado a las capacidades ilustrativas de las uniones de
             techo, muros y revestimientos.
           </p>
+          <label class="switch-row" for="impact">
+            <span
+              >Roturas por impacto
+              <small>Modelo educativo de fragmentos</small></span
+            >
+            <input id="impact" type="checkbox" role="switch" />
+            <span class="switch" aria-hidden="true"></span>
+          </label>
+          <p class="selection-note">Cambiar esta opción reinicia el ensayo.</p>
         </section>
 
         <section class="control-section visual-controls">
@@ -598,7 +607,7 @@
           <span
             ><span class="footer-dot"></span> MOTOR FÍSICO ACTIVO
             <i>/</i> THREE.JS + CANNON-ES</span
-          ><span>SimTorCL <b>v2.7</b></span>
+          ><span>SimTorCL <b>v2.8</b></span>
         </footer>
       </section>
     </main>
@@ -765,10 +774,10 @@
       <p>
         En modo manzana, las viviendas comparten mundo físico y colisiones. El
         tornado sigue una trayectoria marcada, con avance configurable en los
-        escenarios urbanos (2 m/s por defecto). Los fragmentos pueden colisionar
-        con otras viviendas, pero no se convierten en nuevas roturas por
-        impacto: las uniones siguen evaluándose por viento y pérdida de soporte.
-        La mezcla y el trazado urbano son ilustrativos.
+        escenarios urbanos (2 m/s por defecto). Si activas Roturas por impacto,
+        un fragmento desprendido puede romper uniones de otras piezas mediante
+        la carga normal de contacto. Las capacidades son ilustrativas. La mezcla
+        y el trazado urbano son ilustrativos.
       </p>
       <h2 id="about-title">Cubierta, paredes y soporte.</h2>
       <p>
@@ -1121,6 +1130,7 @@
               <option value="all">Todos</option>
               <option value="connection">Uniones falladas</option>
               <option value="release">Piezas liberadas</option>
+              <option value="impact">Roturas por impacto</option>
             </select></label
           >
         </div>
@@ -1128,6 +1138,9 @@
         ><select id="event-list" size="7"></select>
         <pre id="event-detail"></pre>
         <button class="reset-button" id="event-view">Ver evento en 3D</button>
+        <button class="reset-button" id="event-source" hidden>
+          Ver desprendimiento de origen
+        </button>
       </section>
       <section
         id="panel-inspect"

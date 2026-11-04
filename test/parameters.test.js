@@ -122,7 +122,7 @@ test("new configurations and runs retain the library; altered values, units or s
     wind: 0,
   });
   const config = decode(configurationDocument(e.config));
-  assert.equal(config.schemaVersion, 6);
+  assert.equal(config.schemaVersion, 7);
   assert.deepEqual(config.parameterLibrary, parameterLibrary(MODEL, ENV_MODEL));
   e.step();
   const run = decode(e.document());
@@ -164,7 +164,7 @@ test("v2.4 damaged urban run retains its mechanics, events and poses without ret
   assert.equal(original.schemaVersion, 3);
   assert.ok(original.events.some((e) => e.house === "ENV"));
   const migrated = decode(original);
-  assert.equal(migrated.schemaVersion, 6);
+  assert.equal(migrated.schemaVersion, 7);
   assert.equal(migrated.parameterLibrary, null);
   assert.equal(migrated.appVersion, "2.4.0");
   assert.equal(MODEL_ID, "simtorcl-33082313");

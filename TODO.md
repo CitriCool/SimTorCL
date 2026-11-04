@@ -75,7 +75,7 @@ Fuentes para la preparación del catálogo:
    - [x] Mostrar resultados por casa, agregados, identificadores y color de daño por lote.
    - [x] Incorporar enfoque por casa y conservar el modo individual.
    - [x] Probar estabilidad sin viento, distribución, recorrido, reinicio y colisiones entre casas.
-   - [ ] Incorporar rotura de uniones por impactos de fragmentos, además de viento y pérdida de soporte.
+   - [x] Incorporar rotura de uniones por impactos de fragmentos, además de viento y pérdida de soporte (v2.8).
    - [ ] Sustituir el trazado ilustrativo por geometría territorial y distribuciones respaldadas por datos.
 
 ## Entrega A: cuaderno de experimentos (v2.2)
@@ -101,7 +101,7 @@ Las ampliaciones de generación urbana, edificios y zonas verdes se detallan en 
 - [ ] Registrar fuentes oficiales por tipología y propiedad, con unidad, sección y nivel de evidencia.
 - [x] Integrar árboles y mobiliario en la física, con sus modos de fallo y resultados educativos.
 - [x] Crear una primera versión de edificios con estructura fija y envolvente desprendible; efectos y límites documentados.
-- [x] Verificar guardado, repetición, recálculo y colisiones de los objetos nuevos. El daño adicional por impacto permanece pendiente.
+- [x] Verificar guardado, repetición, recálculo y colisiones de los objetos nuevos.
 
 La física inicial y la biblioteca ya están disponibles en v2.4/v2.5. El editor manual está disponible en v2.6; la calibración y los mecanismos físicos restantes continúan según el [plan integrado](docs/editor-didactico.md). Ver también [alcance y fuentes localizadas](docs/pendientes-fisicos.md).
 
@@ -114,7 +114,7 @@ La física inicial y la biblioteca ya están disponibles en v2.4/v2.5. El editor
 - [x] Inventario urbano versionado, esquema 3 y migración visual de archivos antiguos.
 - [x] CSV por objeto y unidades de fuerza/momento en eventos; informes con procedencia.
 - [ ] Calibración numérica con fuentes técnicas y validación experimental.
-- [ ] Colapso estructural de edificios, rotura adicional por impacto, daño de suelo y acoplamiento aerodinámico.
+- [ ] Colapso estructural de edificios, detección de colisiones rápidas, daño de suelo y acoplamiento aerodinámico.
 
 ## Biblioteca y comprobación (v2.5)
 
@@ -146,7 +146,7 @@ Detalle y ejemplo: [editor v2.6](docs/editor.md).
 
 - [x] **B2 · Construir:** paleta de casas, edificios y parques, colocación por arrastre o selección, ajuste a parcelas, prevención de solapamientos, selección y transformación, propiedades por objeto, deshacer/rehacer y guardado compatible. URB-06/07, UX-01/02/06, PRO-01/08/09.
 - [x] **B3 · Simular y entender:** árboles y bancos independientes, ejemplos guiados, trayectorias dibujadas y controles de duración/intensidad; explicación de eventos, revisión visual y comparación sobre el mismo plano editado. URB-08/09/12, VER-02/04, FIS-08/09, UX-03/04/05, PRO-12.
-- [ ] **C · Física:** nuevas roturas por impacto y cadenas causales, modelos de edificios y vegetación ampliados, cargas y uniones más completas. FIS-01 a FIS-07/11, EDI y VER pendientes.
+- [ ] **C · Física:** nuevas roturas por impacto y cadenas causales, modelos de edificios y vegetación ampliados, cargas y uniones más completas. FIS-01/02 listos en v2.8. FIS-03 a FIS-07/11, EDI y VER siguen pendientes.
 - [ ] **D · Transversal desde B2:** fuentes técnicas por parámetro, calibración, caso físico de referencia, errores, sensibilidad y estabilidad. VAL-01 a VAL-05/08/10.
 - [ ] **B4 / E · Escala y territorio:** calles y terrenos libres, mayor catálogo, rendimiento, datos por región/comuna e inventarios geográficos. URB-03/11, EDI, VER, GEO y PRO.
 - [ ] **E / F · Análisis avanzado:** incertidumbre y fragilidad, viento urbano/CFD, suelo y fundaciones y modelos de consecuencias. VAL-06/07/09, CFD, FIS-12, EDI-11, GEO-07 y CON.
@@ -162,6 +162,7 @@ La navegación prevista será **Construir → Simular → Entender**. Los parám
 - [x] Geometría inicial/calculada y barras A/B de cubierta perdida, conservando el plano al variar refuerzo.
 - [x] Esquema 6, descriptores de escenario y entorno, exportaciones y compatibilidad exacta con una ejecución v2.6 dañada.
 - [x] 88 pruebas, compilación y revisión del flujo en navegador.
-- [ ] La siguiente entrega C incorpora nuevas roturas por impacto. D mantiene calibración y validación como trabajo transversal. Calles libres, catálogo ampliado, ráfagas y perfil vertical siguen pendientes.
+- [x] El primer tramo de C incorpora roturas por impacto opcionales y cadenas causales.
+- [ ] D mantiene calibración y validación como trabajo transversal. Calles libres, catálogo ampliado, ráfagas y perfil vertical siguen pendientes.
 
 Guía y alcance: [taller v2.7](docs/taller.md).

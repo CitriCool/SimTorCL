@@ -5,6 +5,7 @@ import { Simulation, FIXED_STEP, createWorld } from "./physics.js";
 import { RunRecorder, cleanConfig } from "./records.js";
 import { PROFILES, ROOFS, validateConfig } from "./catalog.js";
 import { routePoints, alongRoute } from "./route.js";
+import { DebrisImpacts } from "./impacts.js";
 
 export class District {
   constructor(config) {
@@ -103,6 +104,15 @@ export class District {
         ? new UrbanEnvironment(config, this.layout, this.world)
         : null;
     this.world.broadphase.dirty = true;
+    this.impacts =
+      config.impact === "contact-v1"
+        ? new DebrisImpacts([
+            ...this.houses,
+            ...(this.environment
+              ? [{ label: "ENV", simulation: this.environment }]
+              : []),
+          ])
+        : null;
     this.updateCenter();
   }
   updateCenter() {
@@ -138,7 +148,8 @@ export class District {
       simulation.prepareStep(this.center, this.elapsed);
     }
     this.environment?.prepareStep(this.center, this.elapsed);
-    this.world.step(FIXED_STEP);
+    if (this.impacts) this.impacts.step(this.world, FIXED_STEP);
+    else this.world.step(FIXED_STEP);
     this.environment?.finishStep();
     for (const { simulation } of this.houses) simulation.finishStep();
   }

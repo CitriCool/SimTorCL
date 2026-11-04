@@ -231,7 +231,7 @@ test("explanations preserve force versus moment units and distinguish overload, 
     [parent],
   );
   assert.equal(release.parents[0].id, "ENV:E1");
-  assert.match(release.body, /no implica una nueva rotura por impacto/);
+  assert.match(release.body, /perdió sus apoyos/);
   assert.match(explainEvent(null).body, /ausencia de fallas no valida/);
 });
 test("the former v2.6 manual model preserves all numerical results, events, poses and provenance", () => {
@@ -243,7 +243,7 @@ test("the former v2.6 manual model preserves all numerical results, events, pose
   );
   assert.equal(old.schemaVersion, 5);
   const r = decode(old);
-  assert.equal(r.schemaVersion, 6);
+  assert.equal(r.schemaVersion, 7);
   assert.equal(r.scenarioModel, null);
   assert.equal(r.initial.route, null);
   assert.equal(r.initial.sitePlan.version, "parcel-editor-1");

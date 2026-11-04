@@ -99,7 +99,7 @@ export function setupLearning({
         ? visible.map(
             (e) =>
               new Option(
-                `${e.time.toFixed(2)} s · ${e.type === "connection" ? "Unión fallada" : "Pieza liberada"} · ${e.id}`,
+                `${e.time.toFixed(2)} s · ${e.cause === "impact" ? "Rotura por impacto" : e.type === "connection" ? "Unión fallada" : "Pieza liberada"} · ${e.id}`,
                 e.id,
               ),
           )

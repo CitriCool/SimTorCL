@@ -1,5 +1,6 @@
 import * as CANNON from "cannon-es";
 import { dynamicPressure } from "./aerodynamics.js";
+import { DebrisImpacts } from "./impacts.js";
 import {
   DEFAULTS,
   PRESETS,
@@ -73,6 +74,7 @@ export class Simulation {
     this.peakDisplacement = 0;
     this.peakTilt = 0;
     this.createHouse();
+    this.impacts = null;
     this.updateCenter();
     this.revision++;
   }
@@ -300,7 +302,7 @@ export class Simulation {
     this.events.push(event);
     return event.id;
   }
-  breakConnection(connection, cause, demand = 0) {
+  breakConnection(connection, cause, demand = 0, impact) {
     if (connection.broken) return;
     connection.broken = true;
     connection.cause = cause;
@@ -320,7 +322,11 @@ export class Simulation {
       demand,
       capacity: (connection.capacity * this.config.reinforcement) / 100,
       parents: [...new Set(parents)],
+      ...(impact ? { impact } : {}),
     });
+  }
+  breakImpact(connection, demand, impact) {
+    this.breakConnection(connection, "impact", demand, impact);
   }
   release(piece) {
     if (piece.detached) return;
@@ -427,7 +433,10 @@ export class Simulation {
   }
   step() {
     this.prepareStep();
-    this.world.step(FIXED_STEP);
+    if (this.config.impact === "contact-v1") {
+      this.impacts ??= new DebrisImpacts([{ label: "C01", simulation: this }]);
+      this.impacts.step(this.world, FIXED_STEP);
+    } else this.world.step(FIXED_STEP);
     this.finishStep();
   }
   prepareStep(field = null, time = null) {

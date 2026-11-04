@@ -18,10 +18,11 @@ import { RULES, FIXED_STEP } from "./physics.js";
 import { parameterLibrary } from "./parameters.js";
 import { normalizeSitePlan } from "./site-plan.js";
 import { normalizeControls, controlModel } from "./route.js";
+import { IMPACT_MODEL } from "./impacts.js";
 
-export const APP_VERSION = "2.7.0";
+export const APP_VERSION = "2.8.0";
 
-export const SCHEMA_VERSION = 6;
+export const SCHEMA_VERSION = 7;
 
 export const MAX_FILE_BYTES = 40 * 1024 * 1024;
 
@@ -93,6 +94,7 @@ export const CONFIG_KEYS = [
   "wind",
   "radius",
   "reinforcement",
+  "impact",
   "mode",
   "distribution",
   "spacing",
@@ -258,11 +260,15 @@ export class RunRecorder {
   }
 
   tick(experiment) {
+    const afterContact = [];
     for (const { label, simulation } of objectSimulations(experiment)) {
       const offset = this.offsets.get(label) ?? 0;
+      let contactPhase = false;
 
-      for (const event of simulation.events.slice(offset))
-        this.events.push({
+      for (const event of simulation.events.slice(offset)) {
+        contactPhase ||= event.cause === "impact";
+        const destination = contactPhase ? afterContact : this.events;
+        destination.push({
           ...clone(event),
           ...(simulation.pieces[event.pieceId]?.objectId
             ? {
@@ -272,12 +278,17 @@ export class RunRecorder {
             : {}),
           id: `${label}:E${event.id}`,
           house: label,
-          parents: event.parents.map((id) => `${label}:E${id}`),
+          parents: [
+            ...event.parents.map((id) => `${label}:E${id}`),
+            ...(event.impact ? [event.impact.sourceReleaseId] : []),
+          ],
           step: experiment.steps,
         });
+      }
 
       this.offsets.set(label, simulation.events.length);
     }
+    for (const event of afterContact) this.events.push(event);
 
     if (experiment.steps % this.sampleEvery === 0) this.capture(experiment);
   }
@@ -293,6 +304,8 @@ export class RunRecorder {
       modelId: MODEL_ID,
       model: clone(MODEL),
       scenarioModel: controlModel(this.initial),
+      impactModel:
+        this.initial.impact === "contact-v1" ? clone(IMPACT_MODEL) : null,
       parameterLibrary: parameterLibrary(MODEL, environmentModel(this.initial)),
       environmentModel: clone(environmentModel(this.initial)),
       environmentInventory: experiment.environment
@@ -333,6 +346,7 @@ export function configurationDocument(config = {}, name) {
     modelId: MODEL_ID,
     model: clone(MODEL),
     scenarioModel: controlModel(initial),
+    impactModel: initial.impact === "contact-v1" ? clone(IMPACT_MODEL) : null,
     parameterLibrary: parameterLibrary(MODEL, environmentModel(initial)),
     environmentModel: clone(environmentModel(initial)),
     environmentInventory: environmentModel(initial)
@@ -375,7 +389,7 @@ export function parseShareHash(hash) {
     throw new Error("Enlace de configuración inválido.");
   }
   if (
-    ![1, 2, 3, 4, 5, SCHEMA_VERSION].includes(data.schemaVersion) ||
+    ![1, 2, 3, 4, 5, 6, SCHEMA_VERSION].includes(data.schemaVersion) ||
     data.modelId !== MODEL_ID
   )
     throw new Error("El enlace usa otra versión del modelo.");
@@ -398,6 +412,7 @@ export function parseShareHash(hash) {
         ? { route: null, travelSpeed: 2, duration: null, lesson: null }
         : {}),
       ...(data.schemaVersion < 3 ? { environment: "visual" } : {}),
+      ...(data.schemaVersion < 7 ? { impact: "off" } : {}),
     }),
     name: normalizeName(data.name),
   };
@@ -502,7 +517,7 @@ export function parseDocument(text) {
   if (record?.format === "simtorcl-experiment" && record.schemaVersion === 5)
     record = {
       ...record,
-      schemaVersion: SCHEMA_VERSION,
+      schemaVersion: 6,
       scenarioModel: null,
       initial: {
         ...record.initial,
@@ -511,6 +526,13 @@ export function parseDocument(text) {
         duration: null,
         lesson: null,
       },
+    };
+  if (record?.format === "simtorcl-experiment" && record.schemaVersion === 6)
+    record = {
+      ...record,
+      schemaVersion: SCHEMA_VERSION,
+      initial: { ...record.initial, impact: "off" },
+      impactModel: null,
     };
   if (
     !record ||
@@ -529,6 +551,11 @@ export function parseDocument(text) {
 
   record.initial = cleanConfig(record.initial);
   record.name = normalizeName(record.name);
+  if (
+    canonical(record.impactModel) !==
+    canonical(record.initial.impact === "contact-v1" ? IMPACT_MODEL : null)
+  )
+    throw new Error("El modelo de impactos no coincide con esta versión.");
   if (
     canonical(record.scenarioModel) !== canonical(controlModel(record.initial))
   )
@@ -704,13 +731,14 @@ export function parseDocument(text) {
   const expectedPieces =
     pieceCounts.reduce((a, b) => a + b, 0) + envBlueprint.pieces.length;
 
-  const ids = new Set(),
+  const seenEvents = new Map(),
     envConnections = envBlueprint.pieces.filter((p) => p.capacity !== null),
     envBroken = new Set(),
     envReleased = new Set();
   last = -1;
 
   for (const event of record.events) {
+    if (!event) throw new Error("Registro de eventos inválido.");
     if (record.initial.sitePlan && event.house !== "ENV") {
       const plan = plans[Number(event.house?.slice(1)) - 1];
       if (
@@ -724,7 +752,7 @@ export function parseDocument(text) {
       !event ||
       typeof event.id !== "string" ||
       event.id.length > 40 ||
-      ids.has(event.id) ||
+      seenEvents.has(event.id) ||
       (!/^C\d{2}$/.test(event.house) && event.house !== "ENV") ||
       (event.house !== "ENV" && Number(event.house.slice(1)) < 1) ||
       (event.house !== "ENV" && Number(event.house.slice(1)) > homes) ||
@@ -741,7 +769,7 @@ export function parseDocument(text) {
         "corner",
         ...(event.house === "ENV" ? Object.keys(ENV_LABELS) : []),
       ].includes(event.kind) ||
-      !["overload", "support"].includes(event.cause) ||
+      !["overload", "support", "impact"].includes(event.cause) ||
       !count(
         event.pieceId,
         (event.house === "ENV"
@@ -749,7 +777,7 @@ export function parseDocument(text) {
           : pieceCounts[Number(event.house.slice(1)) - 1]) - 1,
       ) ||
       !Array.isArray(event.parents) ||
-      event.parents.some((id) => !ids.has(id))
+      event.parents.some((id) => !seenEvents.has(id))
     )
       throw new Error("Registro de eventos inválido.");
 
@@ -768,6 +796,32 @@ export function parseDocument(text) {
         event.demand < 0)
     )
       throw new Error("Carga o capacidad inválida.");
+
+    if (event.cause === "impact") {
+      const hit = event.impact;
+      const source = seenEvents.get(hit?.sourceReleaseId);
+      if (
+        record.initial.impact !== "contact-v1" ||
+        event.type !== "connection" ||
+        source?.type !== "release" ||
+        !event.parents.includes(source.id) ||
+        (source.house === event.house &&
+          source.pieceId === hit.targetPieceId) ||
+        !count(
+          hit.targetPieceId,
+          (event.house === "ENV"
+            ? envBlueprint.pieces.length
+            : pieceCounts[Number(event.house.slice(1)) - 1]) - 1,
+        ) ||
+        (hit.targetPieceId !== event.pieceId &&
+          hit.targetPieceId !== event.otherPieceId) ||
+        !Number.isFinite(hit.closingSpeed) ||
+        hit.closingSpeed < IMPACT_MODEL.minimumClosingSpeed ||
+        event.demand <= event.capacity
+      )
+        throw new Error("Origen, receptor o demanda de impacto inválidos.");
+    } else if (Object.hasOwn(event, "impact"))
+      throw new Error("Datos de impacto en un evento con otra causa.");
 
     if (event.house === "ENV") {
       const p = envBlueprint.pieces[event.pieceId];
@@ -800,7 +854,7 @@ export function parseDocument(text) {
       )
         throw new Error("Identidad o unidades de evento urbano inválidas.");
     }
-    ids.add(event.id);
+    seenEvents.set(event.id, event);
     last = event.step;
   }
 
@@ -1009,6 +1063,9 @@ export function eventsCSV(record) {
       "objeto_id",
       "parcela",
       "eventos_relacionados",
+      "desprendimiento_origen",
+      "pieza_receptora_id",
+      "velocidad_normal_m_s",
     ],
     ...record.events.map((e) => [
       e.id,
@@ -1025,6 +1082,9 @@ export function eventsCSV(record) {
       e.entityId ?? e.objectId ?? "",
       e.parcelId ?? "",
       e.parents.join(" | "),
+      e.impact?.sourceReleaseId ?? "",
+      e.impact?.targetPieceId ?? "",
+      e.impact?.closingSpeed ?? "",
     ]),
   ]);
 }
@@ -1157,7 +1217,7 @@ export function htmlReport(record, image = "") {
     .slice(0, 200)
     .map(
       (v) =>
-        `<tr><td>${v.time.toFixed(3)} s</td><td>${e(v.house)}</td><td>${e(v.id)} · ${e(v.type)} ${e(v.kind)} #${v.pieceId}</td><td>${e(v.cause)}</td></tr>`,
+        `<tr><td>${v.time.toFixed(3)} s</td><td>${e(v.house)}</td><td>${e(v.id)} · ${e(v.type)} ${e(v.kind)} #${v.pieceId}</td><td>${v.impact ? `Impacto de ${e(v.impact.sourceReleaseId)} sobre pieza #${v.impact.targetPieceId} · ${v.demand.toFixed(1)} ${e(v.unit ?? "N")} frente a ${v.capacity.toFixed(1)} ${e(v.unit ?? "N")}` : e(v.cause)}</td></tr>`,
     )
     .join(
       "",

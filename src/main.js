@@ -170,6 +170,7 @@ function updateScenarioInfo() {
   }
   for (const id of ["mode", "distribution", "spacing", "trajectory", "profile"])
     $(id).value = simulation.config[id];
+  $("impact").checked = simulation.config.impact === "contact-v1";
   $("trajectory").querySelector("[data-custom]")?.remove();
   if (simulation.config.route) {
     const option = new Option(
@@ -368,6 +369,9 @@ $("profile").addEventListener("change", () => {
   });
 });
 $("roof").addEventListener("change", () => reset({ roof: $("roof").value }));
+$("impact").addEventListener("change", () =>
+  reset({ impact: $("impact").checked ? "contact-v1" : "off" }),
+);
 for (const id of ["wind", "radius", "reinforcement"]) {
   $(id).addEventListener("input", () => updateRange(id));
   updateRange(id);

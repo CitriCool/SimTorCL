@@ -11,7 +11,7 @@ La prueba del formulario genera 2 × 2 parcelas con semilla 38, un parque sobre 
 - Al perder soporte, una pieza pasa de fijación ideal a cuerpo dinámico con masa, gravedad y arrastre. Los enlaces aún intactos entre piezas liberadas se conservan como restricciones rígidas. Se distinguen caída por fallo del anclaje y desprendimiento de ramas/copas.
 - Cada parcela de edificio contiene un edificio residencial ilustrativo de 2 a 5 pisos, con altura de piso de 3 m. Su núcleo resistente es una caja fija que representa de forma gruesa estructura y losas. No es un modelo de colapso estructural, pórticos ni elementos finitos.
 - Fachadas, ventanas y cubierta del edificio tienen piezas y fijaciones independientes. Pueden liberarse por sobrecarga o por pérdida del soporte que las une al núcleo.
-- Las piezas liberadas pueden colisionar con viviendas, edificios, vegetación, mobiliario y suelo. Las colisiones producen contacto y movimiento, pero todavía no rompen conexiones del receptor por impacto. El suelo sigue siendo un plano fijo; el campo de viento no incluye apantallamiento, canalización ni interacción con copas.
+- Las piezas liberadas pueden colisionar con viviendas, edificios, vegetación, mobiliario y suelo. Las colisiones producen contacto y movimiento. Con [Roturas por impacto](experimentos.md#roturas-por-impacto-v28-y-esquema-7) activadas, un golpe puede romper uniones del receptor. El suelo sigue siendo un plano fijo; el campo de viento no incluye apantallamiento, canalización ni interacción con copas.
 
 La representación visual de cilindros y copas usa colisionadores de caja. Las fachadas son paneles completos y los vanos son esquemáticos. Las capacidades no dependen de especie, edad, enfermedad, humedad, diseño de anclaje o armaduras reales. Estas limitaciones impiden usar la simulación para evaluar un árbol o edificio concreto.
 
@@ -39,6 +39,6 @@ El esquema 3 incorpora `environmentModel` y `environmentInventory`, además de l
 
 Los esquemas 1 y 2 se migran con `environment: "visual"`; las viviendas y la geometría de parcelas conservan sus condiciones anteriores. Las nuevas ejecuciones físicas requieren comenzar desde una configuración física. Los fotogramas incluyen las piezas urbanas, pero no permiten continuar la física desde un fotograma.
 
-La versión `urban-environment-1` debe cambiar cuando se altere su algoritmo o calibración. Toda evolución de propiedades numéricas necesita conservar la procedencia y las condiciones de aplicación. Siguen pendientes la calibración con datos técnicos, los modelos de colapso de edificios, el daño adicional por impactos, la deformación del suelo y el acoplamiento aerodinámico.
+La versión `urban-environment-1` debe cambiar cuando se altere su algoritmo o calibración. Toda evolución de propiedades numéricas necesita conservar la procedencia y las condiciones de aplicación. Siguen pendientes la calibración con datos técnicos, los modelos de colapso de edificios, la detección de impactos rápidos, la deformación del suelo y el acoplamiento aerodinámico.
 
 Desde v2.5, el esquema 4 añade la [biblioteca de procedencia](parametros.md), sin modificar `urban-environment-1`. Los archivos de esquema 3 conservan su entorno físico y migran sin añadir una biblioteca histórica inexistente.

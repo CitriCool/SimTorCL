@@ -8,6 +8,14 @@ const labels = {
   corner: "unión de esquina",
 };
 const number = (n) => n.toLocaleString("es-CL", { maximumFractionDigits: 2 });
+export function describeImpact(event, events) {
+  const hit = event.impact;
+  const source = events.find((e) => e.id === hit.sourceReleaseId);
+  const origin = source
+    ? `${source.entityId ?? source.house} · ${labels[source.kind]} #${source.pieceId} (${source.id})`
+    : hit.sourceReleaseId;
+  return `Fragmento de origen ${origin}. Receptor ${event.entityId ?? event.house} · pieza #${hit.targetPieceId}. Velocidad normal de acercamiento ${number(hit.closingSpeed)} m/s.`;
+}
 export function explainEvent(event, events = []) {
   if (!event)
     return {
@@ -21,6 +29,12 @@ export function explainEvent(event, events = []) {
     .map((id) => events.find((e) => e.id === id))
     .filter(Boolean)
     .map((e) => ({ id: e.id, time: e.time, label: labels[e.kind] ?? e.kind }));
+  if (event.cause === "impact")
+    return {
+      title: `Rotura por impacto${location}`,
+      body: `${describeImpact(event, events)} A los ${number(event.time)} s, la demanda de contacto fue ${number(event.demand)} ${event.unit ?? "N"} y superó la capacidad ilustrativa de ${number(event.capacity)} ${event.unit ?? "N"}.`,
+      parents,
+    };
   if (event.type === "connection")
     return {
       title: `Falló una unión de ${name}${location}`,
@@ -29,7 +43,7 @@ export function explainEvent(event, events = []) {
     };
   return {
     title: `${name[0].toUpperCase() + name.slice(1)} sin soporte${location}`,
-    body: `Según el registro, a los ${number(event.time)} s esta pieza perdió sus apoyos del grafo y quedó liberada. ${parents.length ? "Las uniones anteriores relacionadas se indican abajo." : "El registro no incluye un apoyo previo identificable."} Esto no implica una nueva rotura por impacto: ese mecanismo aún no se calcula.`,
+    body: `Según el registro, a los ${number(event.time)} s esta pieza perdió sus apoyos del grafo y quedó liberada. ${parents.length ? "Las fallas relacionadas se indican abajo." : "El registro no incluye un apoyo previo identificable."}`,
     parents,
   };
 }

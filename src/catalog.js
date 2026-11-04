@@ -203,10 +203,13 @@ export const DEFAULTS = Object.freeze({
   wind: 160,
   radius: 8,
   reinforcement: 100,
+  impact: "off",
 });
 export const PRESETS = Object.freeze({ suave: 85, fuerte: 160, extremo: 250 });
 export function validateConfig(values = {}) {
   const config = { ...DEFAULTS, ...values };
+  if (!["off", "contact-v1"].includes(config.impact))
+    throw new RangeError("Modelo de impactos desconocido.");
   const profile = Object.hasOwn(PROFILES, config.profile)
     ? PROFILES[config.profile]
     : null;

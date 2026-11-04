@@ -393,10 +393,11 @@ export class UrbanEnvironment {
     this.events.push(e);
     return e.id;
   }
-  breakConnection(c, demand) {
+  breakConnection(c, demand, impact) {
     if (c.broken) return;
+    const cause = impact ? "impact" : "overload";
     c.broken = true;
-    c.cause = "overload";
+    c.cause = cause;
     c.eventId = this.log({
       type: "connection",
       kind: c.kind,
@@ -405,12 +406,16 @@ export class UrbanEnvironment {
       otherPieceId: c.b?.id ?? null,
       entityId: c.a.entityId,
       parcelId: c.a.parcelId,
-      cause: "overload",
+      cause,
       demand,
       capacity: (c.capacity * this.config.reinforcement) / 100,
       unit: c.unit,
       parents: [],
+      ...(impact ? { impact } : {}),
     });
+  }
+  breakImpact(connection, demand, impact) {
+    this.breakConnection(connection, demand, impact);
   }
   resolveSupports() {
     const supported = new Set(

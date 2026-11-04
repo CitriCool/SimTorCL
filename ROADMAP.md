@@ -10,7 +10,7 @@ Prioridades: **P0** base necesaria para trabajar con confianza; **P1** ampliaci�
 
 Tras probar v2.3 se priorizó el [entorno físico y el catálogo con procedencia](docs/pendientes-fisicos.md). En v2.4 se incorporó una primera física urbana y en v2.5 una biblioteca de parámetros. Con esa base disponible, se adelanta el editor didáctico URB-06/07: construir la manzana arrastrando elementos, preparar el tornado y comprender los daños. La calibración y validación continúan como trabajo transversal; no es necesario completarlas para editar escenarios educativos, pero su nivel de respaldo debe permanecer visible.
 
-Primera implementación v2.4: [entorno físico urbano](docs/entorno-fisico.md). Incluye árboles y bancos con uniones rompibles, edificios residenciales de 2 a 5 pisos con núcleo fijo y envolvente desprendible, colisiones, registro y procedencia. Las capacidades mecánicas siguen siendo educativas. Permanecen pendientes calibración técnica, colapso estructural de edificios, rotura adicional por impacto, daño de suelo y modificación del campo de viento.
+Primera implementación v2.4: [entorno físico urbano](docs/entorno-fisico.md). Incluye árboles y bancos con uniones rompibles, edificios residenciales de 2 a 5 pisos con núcleo fijo y envolvente desprendible, colisiones, registro y procedencia. Las capacidades mecánicas siguen siendo educativas. Permanecen pendientes calibración técnica, colapso estructural de edificios, detección de colisiones rápidas, daño de suelo y modificación del campo de viento.
 
 Avance v2.5: [biblioteca versionada y comprobación analítica](docs/parametros.md), con 73 parámetros del modelo base y 16 del entorno, procedencia exportable y preservada en archivos. Caso de presión y cargas con referencias fijas, errores y tolerancias. VAL-01/02/04/10 tienen avance parcial: siguen pendientes resistencias con fuente técnica, casos experimentales y validación física.
 
@@ -26,7 +26,7 @@ Entrega B2 implementada en v2.6: [editor de manzanas](docs/editor.md) sobre las 
 - [x] **BASE-06** Comparación determinista de perfiles individuales con condiciones comunes, cancelación, pausa y reinicio.
 - [x] **BASE-07** Interfaz adaptable, documentación, 88 pruebas automatizadas y compilación comprobadas; código en GitHub.
 
-Límites actuales: trazados sintéticos; propiedades físicas ilustrativas; ausencia de daño adicional por impacto; viento sin apantallamiento ni canalización por edificios; sin presión interior ni validación experimental. El modo visual conserva vegetación decorativa; el modo físico incluye uniones rompibles de árboles y bancos.
+Límites actuales: trazados sintéticos; propiedades físicas ilustrativas; roturas por impacto opcionales con criterio educativo; viento sin apantallamiento ni canalización por edificios; sin presión interior ni validación experimental. El modo visual conserva vegetación decorativa; el modo físico incluye uniones rompibles de árboles y bancos.
 
 ## 1. Experimentos reproducibles y explicación del daño — P0
 
@@ -111,8 +111,8 @@ Criterio de salida inicial: las zonas verdes forman parte del escenario guardado
 
 Depende de eventos y trazabilidad de la etapa 1. Se desarrolla por mecanismos independientes y comprobables.
 
-- [ ] **FIS-01** Incorporar daño por impacto de fragmentos con un criterio explícito de demanda y capacidad, registrando origen, receptor y causa.
-- [ ] **FIS-02** Representar cadenas de daño entre construcciones y vegetación y comprobar que cada evento adicional tenga una causa física registrada.
+- [x] **FIS-01** Incorporar daño por impacto de fragmentos con un criterio explícito de demanda y capacidad, registrando origen, receptor y causa.
+- [x] **FIS-02** Representar cadenas de daño entre construcciones y vegetación y comprobar que cada evento adicional tenga una causa física registrada.
 - [ ] **FIS-03** Mejorar geometría, masa, arrastre y orientación de fragmentos según el material; distinguir fragmentación física de simplificación visual.
 - [ ] **FIS-04** Revisar detección de colisiones rápidas entre todos los cuerpos relevantes y evaluar detección continua o subdivisión del paso.
 - [ ] **FIS-05** Incorporar presión interior, aberturas y cambios de carga posteriores a rotura de ventanas, puertas o cubierta.
@@ -226,7 +226,7 @@ Punto de partida: A y B1/B2/B3 disponibles; C y D tienen avances parciales en v2
 | --- | --- | --- | --- |
 | Completada en v2.6 | B2 · Construir | Editor por parcelas, arrastre/selección, propiedades, deshacer/rehacer, guardado; URB-06/07, UX-01/02/06, PRO-01/08 | Barrio mixto editable, sin solapamientos indebidos, guardable y reproducible; compatibilidad histórica |
 | Completada en v2.7 | B3 · Simular y entender | Objetos verdes independientes, ejemplos guiados, trayectorias dibujadas, controles de duración/intensidad y explicación visual; URB-08/09/12, VER-02/04, FIS-08/09, UX-03/04/05 | Recorrido guardable, eventos explicables y comparación con la misma geometría editada |
-| Siguiente | C · Interacción física | Nuevas roturas por impacto y cadenas causales; ampliar árboles, mobiliario y edificios; FIS-01/02, EDI y VER pendientes | Pruebas por mecanismo, origen/receptor de impactos y límites físicos documentados |
+| En curso | C · Interacción física | Roturas por impacto y cadenas causales en v2.8 (FIS-01/02). Pendientes detección de colisiones rápidas, calibración y ampliación de árboles, mobiliario y edificios. | Pruebas por mecanismo, origen/receptor de impactos y límites físicos documentados |
 | Transversal desde B2 | D · Respaldo y validación | Fuentes por propiedad, calibración, caso físico de referencia, error, sensibilidad y estabilidad; VAL-01 a VAL-05/08/10 | Evidencia y criterios específicos para cada capacidad que se incorpore |
 | 4 | B4 / E · Escala y territorio | Calles y terrenos libres, catálogo ampliado, rendimiento, datos por región/comuna e importación geográfica; URB-03/11, EDI, VER, GEO y PRO | Geometría válida, procedencia y distinción entre datos observados y supuestos |
 | 5 | E / F · Análisis avanzado | Incertidumbre y fragilidad, viento urbano/CFD, suelo/fundaciones y consecuencias; VAL-06/07/09, CFD, FIS-12, EDI-11, GEO-07 y CON | Datos suficientes, modelos propios y validación de cada acoplamiento; daño de suelo con alcance explícito |

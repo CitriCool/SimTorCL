@@ -1,4 +1,5 @@
 import { ENV_LABELS } from "./environment.js";
+import { describeImpact } from "./explanations.js";
 import { Experiment } from "./district.js";
 import { PROFILES, ROOFS } from "./catalog.js";
 import { FIXED_STEP } from "./physics.js";
@@ -102,6 +103,7 @@ export function setupNotebook({
     "wind",
     "radius",
     "reinforcement",
+    "impact",
     "urban-open",
     "editor-open",
     ...Array.from(document.querySelectorAll("[data-preset]")),
@@ -240,8 +242,14 @@ export function setupNotebook({
   function eventDetail() {
     const e = snapshot?.events.find((e) => e.id === $("event-list").value);
     $("event-view").disabled = !e;
+    $("event-source").hidden = !e?.impact;
+    const cause = {
+      overload: "sobrecarga sostenida",
+      support: "pérdida de soporte",
+      impact: "impacto de fragmento",
+    };
     $("event-detail").textContent = e
-      ? `${e.id} · ${seconds(e.time)} · paso ${e.step}\n${e.entityId ?? e.house} · ${labels[e.kind]} #${e.pieceId}\n${e.type === "connection" ? `Unión #${e.connectionId} fallada\nDemanda al fallar: ${e.demand.toFixed(1)} ${e.unit ?? "N"} · capacidad: ${e.capacity.toFixed(1)} ${e.unit ?? "N"}` : `Pieza liberada · masa ${e.mass.toFixed(1)} kg`}\nCausa: ${e.cause === "overload" ? "sobrecarga sostenida" : "pérdida de soporte"}\nEventos anteriores relacionados: ${e.parents.join(", ") || "ninguno"}\nLas relaciones describen fallas y apoyos del grafo idealizado; no cuantifican transferencia de cargas.`
+      ? `${e.id} · ${seconds(e.time)} · paso ${e.step}\n${e.entityId ?? e.house} · ${labels[e.kind]} #${e.pieceId}\n${e.type === "connection" ? `Unión #${e.connectionId} fallada\nDemanda al fallar: ${e.demand.toFixed(1)} ${e.unit ?? "N"} · capacidad: ${e.capacity.toFixed(1)} ${e.unit ?? "N"}` : `Pieza liberada · masa ${e.mass.toFixed(1)} kg`}\nCausa: ${cause[e.cause]}${e.impact ? "\n" + describeImpact(e, snapshot.events) : ""}\nEventos anteriores relacionados: ${e.parents.join(", ") || "ninguno"}`
       : "No hay eventos para este filtro. Ejecuta la simulación para registrar fallas.";
   }
   function events() {
@@ -251,13 +259,15 @@ export function setupNotebook({
       (e) =>
         ($("event-house").value === "all" ||
           e.house === $("event-house").value) &&
-        ($("event-type").value === "all" || e.type === $("event-type").value),
+        ($("event-type").value === "all" ||
+          e.type === $("event-type").value ||
+          e.cause === $("event-type").value),
     );
     $("event-list").replaceChildren(
       ...filtered.map(
         (e) =>
           new Option(
-            `${e.time.toFixed(3)} s · ${e.house} · ${e.type === "connection" ? `Unión #${e.connectionId}` : "Liberación"} · ${labels[e.kind]} #${e.pieceId}`,
+            `${e.time.toFixed(3)} s · ${e.house} · ${e.cause === "impact" ? "Impacto · " : ""}${e.type === "connection" ? `Unión #${e.connectionId}` : "Liberación"} · ${labels[e.kind]} #${e.pieceId}`,
             e.id,
           ),
       ),
@@ -573,6 +583,18 @@ export function setupNotebook({
   for (const id of ["event-house", "event-type"])
     $(id).addEventListener("change", events);
   $("event-list").addEventListener("change", eventDetail);
+  $("event-source").addEventListener("click", () => {
+    const event = snapshot.events.find((e) => e.id === $("event-list").value);
+    const source = snapshot.events.find(
+      (e) => e.id === event?.impact?.sourceReleaseId,
+    );
+    if (!source) return;
+    $("event-house").value = source.house;
+    $("event-type").value = "all";
+    events();
+    $("event-list").value = source.id;
+    eventDetail();
+  });
   $("event-view").addEventListener(
     "click",
     attempt(() => {
