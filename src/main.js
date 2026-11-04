@@ -170,7 +170,11 @@ function updateScenarioInfo() {
   }
   for (const id of ["mode", "distribution", "spacing", "trajectory", "profile"])
     $(id).value = simulation.config[id];
-  $("impact").checked = simulation.config.impact === "contact-v1";
+  $("impact").checked = simulation.config.impact !== "off";
+  $("impact-method").textContent =
+    simulation.config.impact === "contact-v1"
+      ? "Detección discreta · ensayo v2.8"
+      : "Barrido de fragmentos rápidos";
   $("trajectory").querySelector("[data-custom]")?.remove();
   if (simulation.config.route) {
     const option = new Option(
@@ -370,7 +374,7 @@ $("profile").addEventListener("change", () => {
 });
 $("roof").addEventListener("change", () => reset({ roof: $("roof").value }));
 $("impact").addEventListener("change", () =>
-  reset({ impact: $("impact").checked ? "contact-v1" : "off" }),
+  reset({ impact: $("impact").checked ? "swept-v2" : "off" }),
 );
 for (const id of ["wind", "radius", "reinforcement"]) {
   $(id).addEventListener("input", () => updateRange(id));

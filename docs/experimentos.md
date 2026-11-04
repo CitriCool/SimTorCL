@@ -94,3 +94,11 @@ Al activar **Roturas por impacto**, un fragmento liberado puede fallar uniones d
 El umbral, el reparto y las capacidades son supuestos educativos. La carga estimada depende del paso de 1/120 s y del solucionador de contacto. El cálculo usa los contactos discretos del motor, por lo que puede omitir fragmentos rápidos que atraviesen piezas delgadas entre pasos. [Solucionador de Cannon-es 0.20.0](https://github.com/pmndrs/cannon-es/blob/v0.20.0/src/solver/GSSolver.ts)
 
 El esquema 7 guarda `initial.impact` e `impactModel`. Las ejecuciones y enlaces de esquemas anteriores se migran con impactos desactivados. Los eventos de impacto incluyen la pieza receptora, la velocidad normal y el identificador del desprendimiento de origen. El cuaderno permite filtrar estos eventos y saltar a su origen. El JSON y el CSV conservan la relación.
+
+## Barrido de fragmentos en v2.9
+
+Al activar **Roturas por impacto** en v2.9, el modelo `swept-v2` conserva los contactos discretos y comprueba los cruces completos de un fragmento a través de piezas fijas entre dos posiciones consecutivas. Prueba el solapamiento de las cajas físicas orientadas durante el recorrido y conserva el primer obstáculo. La orientación del fragmento se fija al inicio del paso para esa consulta. [Detección con cajas orientadas, David Eberly](https://www.geometrictools.com/Documentation/DynamicCollisionDetection.pdf)
+
+En un cruce recuperado, el modelo corrige la posición hasta el primer contacto y aplica un rebote normal simplificado. Estima la fuerza equivalente a partir del impulso normal dividido por el paso y usa las capacidades educativas existentes. El cuaderno, el JSON y el CSV identifican el barrido y su fracción del paso. El ensayo conserva el paso fijo de 1/120 s y usa su final como tiempo del evento. Quedan pendientes la rotación continua, los cruces entre fragmentos móviles y la calibración.
+
+Para probarlo, carga **Plaza con edificios**, aplica 280 km/h y activa **Roturas por impacto**. Tras ejecutar el ensayo unos segundos, usa el filtro **Impactos por barrido** en el cuaderno. Los archivos guardados con `contact-v1` conservan la detección discreta de v2.8. Para cambiar un ensayo antiguo al barrido, apaga y vuelve a encender el interruptor.

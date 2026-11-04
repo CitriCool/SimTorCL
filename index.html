@@ -205,7 +205,9 @@
           <label class="switch-row" for="impact">
             <span
               >Roturas por impacto
-              <small>Modelo educativo de fragmentos</small></span
+              <small id="impact-method"
+                >Barrido de fragmentos rápidos</small
+              ></span
             >
             <input id="impact" type="checkbox" role="switch" />
             <span class="switch" aria-hidden="true"></span>
@@ -607,7 +609,7 @@
           <span
             ><span class="footer-dot"></span> MOTOR FÍSICO ACTIVO
             <i>/</i> THREE.JS + CANNON-ES</span
-          ><span>SimTorCL <b>v2.8</b></span>
+          ><span>SimTorCL <b>v2.9</b></span>
         </footer>
       </section>
     </main>
@@ -1131,6 +1133,7 @@
               <option value="connection">Uniones falladas</option>
               <option value="release">Piezas liberadas</option>
               <option value="impact">Roturas por impacto</option>
+              <option value="swept-impact">Impactos por barrido</option>
             </select></label
           >
         </div>

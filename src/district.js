@@ -105,13 +105,16 @@ export class District {
         : null;
     this.world.broadphase.dirty = true;
     this.impacts =
-      config.impact === "contact-v1"
-        ? new DebrisImpacts([
-            ...this.houses,
-            ...(this.environment
-              ? [{ label: "ENV", simulation: this.environment }]
-              : []),
-          ])
+      config.impact !== "off"
+        ? new DebrisImpacts(
+            [
+              ...this.houses,
+              ...(this.environment
+                ? [{ label: "ENV", simulation: this.environment }]
+                : []),
+            ],
+            config.impact,
+          )
         : null;
     this.updateCenter();
   }

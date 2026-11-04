@@ -18,9 +18,9 @@ import { RULES, FIXED_STEP } from "./physics.js";
 import { parameterLibrary } from "./parameters.js";
 import { normalizeSitePlan } from "./site-plan.js";
 import { normalizeControls, controlModel } from "./route.js";
-import { IMPACT_MODEL } from "./impacts.js";
+import { IMPACT_MODEL, SWEPT_IMPACT_MODEL, impactModel } from "./impacts.js";
 
-export const APP_VERSION = "2.8.0";
+export const APP_VERSION = "2.9.0";
 
 export const SCHEMA_VERSION = 7;
 
@@ -304,8 +304,7 @@ export class RunRecorder {
       modelId: MODEL_ID,
       model: clone(MODEL),
       scenarioModel: controlModel(this.initial),
-      impactModel:
-        this.initial.impact === "contact-v1" ? clone(IMPACT_MODEL) : null,
+      impactModel: clone(impactModel(this.initial.impact)),
       parameterLibrary: parameterLibrary(MODEL, environmentModel(this.initial)),
       environmentModel: clone(environmentModel(this.initial)),
       environmentInventory: experiment.environment
@@ -346,7 +345,7 @@ export function configurationDocument(config = {}, name) {
     modelId: MODEL_ID,
     model: clone(MODEL),
     scenarioModel: controlModel(initial),
-    impactModel: initial.impact === "contact-v1" ? clone(IMPACT_MODEL) : null,
+    impactModel: clone(impactModel(initial.impact)),
     parameterLibrary: parameterLibrary(MODEL, environmentModel(initial)),
     environmentModel: clone(environmentModel(initial)),
     environmentInventory: environmentModel(initial)
@@ -553,7 +552,7 @@ export function parseDocument(text) {
   record.name = normalizeName(record.name);
   if (
     canonical(record.impactModel) !==
-    canonical(record.initial.impact === "contact-v1" ? IMPACT_MODEL : null)
+    canonical(impactModel(record.initial.impact))
   )
     throw new Error("El modelo de impactos no coincide con esta versión.");
   if (
@@ -801,7 +800,7 @@ export function parseDocument(text) {
       const hit = event.impact;
       const source = seenEvents.get(hit?.sourceReleaseId);
       if (
-        record.initial.impact !== "contact-v1" ||
+        record.initial.impact === "off" ||
         event.type !== "connection" ||
         source?.type !== "release" ||
         !event.parents.includes(source.id) ||
@@ -820,6 +819,14 @@ export function parseDocument(text) {
         event.demand <= event.capacity
       )
         throw new Error("Origen, receptor o demanda de impacto inválidos.");
+      if (
+        Object.hasOwn(hit, "sweepFraction") &&
+        (record.initial.impact !== SWEPT_IMPACT_MODEL.version ||
+          !Number.isFinite(hit.sweepFraction) ||
+          hit.sweepFraction < 0 ||
+          hit.sweepFraction >= 1)
+      )
+        throw new Error("Fracción de barrido inválida.");
     } else if (Object.hasOwn(event, "impact"))
       throw new Error("Datos de impacto en un evento con otra causa.");
 
@@ -1066,6 +1073,7 @@ export function eventsCSV(record) {
       "desprendimiento_origen",
       "pieza_receptora_id",
       "velocidad_normal_m_s",
+      "fraccion_barrido_del_paso",
     ],
     ...record.events.map((e) => [
       e.id,
@@ -1085,6 +1093,7 @@ export function eventsCSV(record) {
       e.impact?.sourceReleaseId ?? "",
       e.impact?.targetPieceId ?? "",
       e.impact?.closingSpeed ?? "",
+      e.impact?.sweepFraction ?? "",
     ]),
   ]);
 }

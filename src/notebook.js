@@ -261,7 +261,9 @@ export function setupNotebook({
           e.house === $("event-house").value) &&
         ($("event-type").value === "all" ||
           e.type === $("event-type").value ||
-          e.cause === $("event-type").value),
+          e.cause === $("event-type").value ||
+          ($("event-type").value === "swept-impact" &&
+            e.impact?.sweepFraction !== undefined)),
     );
     $("event-list").replaceChildren(
       ...filtered.map(

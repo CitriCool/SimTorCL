@@ -433,8 +433,11 @@ export class Simulation {
   }
   step() {
     this.prepareStep();
-    if (this.config.impact === "contact-v1") {
-      this.impacts ??= new DebrisImpacts([{ label: "C01", simulation: this }]);
+    if (this.config.impact !== "off") {
+      this.impacts ??= new DebrisImpacts(
+        [{ label: "C01", simulation: this }],
+        this.config.impact,
+      );
       this.impacts.step(this.world, FIXED_STEP);
     } else this.world.step(FIXED_STEP);
     this.finishStep();

@@ -14,7 +14,11 @@ export function describeImpact(event, events) {
   const origin = source
     ? `${source.entityId ?? source.house} · ${labels[source.kind]} #${source.pieceId} (${source.id})`
     : hit.sourceReleaseId;
-  return `Fragmento de origen ${origin}. Receptor ${event.entityId ?? event.house} · pieza #${hit.targetPieceId}. Velocidad normal de acercamiento ${number(hit.closingSpeed)} m/s.`;
+  const detection =
+    hit.sweepFraction === undefined
+      ? ""
+      : ` El barrido detectó el golpe al ${number(100 * hit.sweepFraction)} % del paso.`;
+  return `Fragmento de origen ${origin}. Receptor ${event.entityId ?? event.house} · pieza #${hit.targetPieceId}. Velocidad normal de acercamiento ${number(hit.closingSpeed)} m/s.${detection}`;
 }
 export function explainEvent(event, events = []) {
   if (!event)

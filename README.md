@@ -18,9 +18,9 @@ El borrador conserva el experimento original hasta aplicarlo y ofrece guardar lo
 
 Consulta [la guía del taller v2.7](docs/taller.md), [el editor y su compatibilidad](docs/editor.md) y [un ejemplo importable](docs/examples/plaza-v2.7.json).
 
-## Roturas por impacto (v2.8)
+## Roturas por impacto (v2.9)
 
-Carga **Plaza con edificios**, aplica 280 km/h en el editor y usa la manzana. Activa **Roturas por impacto** en las condiciones del tornado y ejecuta el ensayo. En el cuaderno, abre **Eventos y gráficos** y filtra por **Roturas por impacto**. Cada falla identifica la pieza receptora y permite saltar al desprendimiento que originó el fragmento. [Criterio y compatibilidad](docs/experimentos.md#roturas-por-impacto-v28-y-esquema-7)
+Carga **Plaza con edificios**, aplica 280 km/h en el editor y usa la manzana. Activa **Roturas por impacto** en las condiciones del tornado y ejecuta el ensayo. En el cuaderno, abre **Eventos y gráficos** y filtra por **Roturas por impacto**. Cada falla identifica la pieza receptora y permite saltar al desprendimiento que originó el fragmento. El filtro **Impactos por barrido** muestra las roturas recuperadas entre pasos. [Criterio y compatibilidad](docs/experimentos.md#roturas-por-impacto-v28-y-esquema-7)
 
 ## Biblioteca y comprobación (v2.5)
 

@@ -1,4 +1,5 @@
 import { Vec3 } from "cannon-es";
+import { recoverMissedContact } from "./swept-box.js";
 
 export const IMPACT_MODEL = Object.freeze({
   version: "contact-v1",
@@ -8,10 +9,21 @@ export const IMPACT_MODEL = Object.freeze({
   momentUnit: "N·m",
   evidence: "Criterio educativo sin calibración experimental.",
 });
+export const SWEPT_IMPACT_MODEL = Object.freeze({
+  ...IMPACT_MODEL,
+  version: "swept-v2",
+  restitution: 0.03,
+  separation: 0.00001,
+  detection: "Barrido lineal de cajas orientadas entre posiciones del paso.",
+});
+const models = { "contact-v1": IMPACT_MODEL, "swept-v2": SWEPT_IMPACT_MODEL };
+export const impactModel = (mode) =>
+  Object.hasOwn(models, mode) ? models[mode] : null;
 
 // Read solved normal forces without changing Cannon's collision response.
 export class DebrisImpacts {
-  constructor(owners) {
+  constructor(owners, mode) {
+    this.model = impactModel(mode);
     this.bodies = new Map();
     for (const owner of owners)
       for (const piece of owner.simulation.pieces)
@@ -72,6 +84,26 @@ export class DebrisImpacts {
       hit.speed = Math.max(hit.speed, closingSpeed);
     }
 
+    if (this.model === SWEPT_IMPACT_MODEL) {
+      for (const body of incoming.keys()) {
+        const hit = recoverMissedContact(
+          world,
+          body,
+          this.bodies,
+          hits,
+          dt,
+          this.model,
+        );
+        if (!hit) continue;
+        const target = this.bodies.get(hit.target);
+        hits.set(`${body.id}:${hit.target.id}`, {
+          ...hit,
+          source: this.bodies.get(body),
+          target,
+        });
+      }
+    }
+
     const failures = new Map();
     for (const hit of hits.values()) {
       const { piece, simulation } = hit.target;
@@ -110,6 +142,7 @@ export class DebrisImpacts {
         sourceReleaseId: `${source.label}:E${source.piece.releaseEventId}`,
         targetPieceId: target.piece.id,
         closingSpeed: hit.speed,
+        ...(hit.fraction === undefined ? {} : { sweepFraction: hit.fraction }),
       });
       changed.add(target.simulation);
     }
