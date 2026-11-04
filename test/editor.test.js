@@ -97,6 +97,60 @@ test("the editor draft never mutates the paused source experiment or input confi
   assert.deepEqual(source.document().results, record.results);
 });
 
+test("resizing a draft preserves its objects and route, adds empty lots and supports undo/redo", () => {
+  const d = mixed();
+  d.execute("place-item", { type: "tree", parcelId: "P04", slot: 0 });
+  for (const index of [0, 3]) {
+    const { x, z } = d.layout.parcels[index];
+    d.execute("route-point", { x, z });
+  }
+  const before = d.snapshot();
+  assert.equal(d.execute("resize-grid", { rows: 4, columns: 4 }), true);
+  assert.equal(d.layout.parcels.length, 16);
+  assert.equal(d.layout.counts.vacant, 13);
+  assert.deepEqual(d.plan.objects, [
+    before.plan.objects[0],
+    before.plan.objects[1],
+    { ...before.plan.objects[2], parcelId: "P05" },
+  ]);
+  assert.deepEqual(d.plan.items, [{ ...before.plan.items[0], parcelId: "P06" }]);
+  assert.deepEqual(
+    d.config.route,
+    [0, 5].map((i) => {
+      const { x, z } = d.layout.parcels[i];
+      return { x, z };
+    }),
+  );
+  const expanded = d.snapshot();
+  assert.equal(d.execute("resize-grid", { rows: 4, columns: 4 }), false);
+  assert.equal(d.undo(), true);
+  assert.deepEqual(d.snapshot(), before);
+  assert.equal(d.redo(), true);
+  assert.deepEqual(d.snapshot(), expanded);
+  assert.deepEqual(decode(configurationDocument(d.config)).initial, d.config);
+});
+
+test("shrinking a draft rejects lost objects or invalid routes without changing history", () => {
+  const d = blank({ ...config, rows: 4, columns: 4 });
+  d.execute("place-item", { type: "bench", parcelId: "P16", slot: 4 });
+  const smaller = { rows: 2, columns: 2 };
+  const assertRejected = (pattern) => {
+    const before = d.snapshot();
+    const history = d.past.length;
+    assert.throws(() => d.execute("resize-grid", smaller), pattern);
+    assert.deepEqual(d.snapshot(), before);
+    assert.equal(d.past.length, history);
+  };
+  assertRejected(/Mueve los objetos/);
+  d.execute("remove", { id: d.plan.items[0].id });
+  const { x, z } = d.layout.parcels[15];
+  d.execute("route-point", { x, z });
+  assertRejected(/recorrido debe quedar dentro/);
+  d.execute("route-clear");
+  assert.equal(d.execute("resize-grid", smaller), true);
+  assert.equal(d.layout.parcels.length, 4);
+});
+
 test("manual layout regenerates declared geometry, counts and per-object physical properties", () => {
   const d = mixed(),
     c = d.config,

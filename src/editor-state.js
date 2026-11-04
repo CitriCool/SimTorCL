@@ -1,5 +1,5 @@
 import { cleanConfig } from "./records.js";
-import { generateNeighborhood } from "./urban.js";
+import { generateNeighborhood, validateUrban } from "./urban.js";
 import {
   initialSitePlan,
   normalizeSitePlan,
@@ -83,6 +83,7 @@ export class EditorState {
     this.future = [];
   }
   execute(action, args = {}) {
+    let base = this.base;
     const next = structuredClone(this.plan),
       settings = structuredClone(this.settings),
       source =
@@ -98,7 +99,34 @@ export class EditorState {
         );
     };
     const allocate = () => `O${String(next.nextId++).padStart(6, "0")}`;
-    if (action === "route-point") {
+    if (action === "resize-grid") {
+      const { rows, columns } = args;
+      if (rows === base.rows && columns === base.columns) return false;
+      base = { ...base, rows, columns };
+      validateUrban(base);
+      next.grid = { ...next.grid, rows, columns };
+      for (const object of [...next.objects, ...next.items]) {
+        const index = Number(object.parcelId.slice(1)) - 1;
+        const row = Math.floor(index / this.base.columns);
+        const column = index % this.base.columns;
+        if (row >= rows || column >= columns)
+          throw new Error(
+            "Mueve los objetos de las filas o columnas que quieres quitar.",
+          );
+        object.parcelId = `P${String(row * columns + column + 1).padStart(2, "0")}`;
+      }
+      if (settings.route) {
+        // Resizing adds or removes parcels on the east and south edges.
+        // The grid is centered, so shift the route with the retained parcels.
+        const { pitch } = this.layout;
+        const dx = (this.base.columns - columns) * pitch / 2;
+        const dz = (this.base.rows - rows) * pitch / 2;
+        settings.route = settings.route.map(({ x, z }) => ({
+          x: x + dx,
+          z: z + dz,
+        }));
+      }
+    } else if (action === "route-point") {
       settings.route = [...(settings.route ?? []), { x: args.x, z: args.z }];
     } else if (action === "route-remove") {
       settings.route = settings.route?.slice(0, -1) ?? null;
@@ -166,10 +194,10 @@ export class EditorState {
       for (const key of ["profile", "roof", "floors", "rotation", "anchorage"])
         if (Object.hasOwn(args, key)) source[key] = args[key];
     } else throw new Error("Acción de edición desconocida.");
-    const valid = normalizeSitePlan(next, this.base);
-    normalizeControls({ ...this.base, ...settings }, true);
+    const valid = normalizeSitePlan(next, base);
+    normalizeControls({ ...base, ...settings }, true);
     cleanConfig({
-      ...this.base,
+      ...base,
       ...settings,
       route: settings.route?.length === 1 ? null : settings.route,
       sitePlan: valid,
@@ -181,6 +209,7 @@ export class EditorState {
       return false;
     this.past.push(this.snapshot());
     if (this.past.length > 80) this.past.shift();
+    this.base = base;
     this.plan = valid;
     this.settings = settings;
     this.future = [];

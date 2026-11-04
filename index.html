@@ -1297,6 +1297,25 @@
         Arrastra una infraestructura a una parcela libre o selecciónala y toca
         su destino. Para mover un objeto, arrástralo o usa «Mover».
       </p>
+      <section class="editor-route-box" aria-labelledby="editor-size-title">
+        <h3 id="editor-size-title">Tamaño de la manzana</h3>
+        <form id="editor-size-form" class="editor-weather editor-size-form">
+          <label for="editor-rows"
+            >Filas<select id="editor-rows">
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select></label
+          ><label for="editor-columns"
+            >Columnas<select id="editor-columns">
+              <option value="2">2</option>
+              <option value="3">3</option>
+              <option value="4">4</option>
+            </select></label
+          ><button class="reset-button" type="submit">Aplicar tamaño</button>
+        </form>
+        <p id="editor-size-status" role="status"></p>
+      </section>
       <details class="editor-example-panel">
         <summary>Aprender con un ejemplo</summary>
         <label for="editor-example">Escenario educativo</label

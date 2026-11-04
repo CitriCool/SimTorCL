@@ -57,6 +57,9 @@
   grid-column: 1/-1;
   font-size: 11px;
 }
+.editor-size-form button {
+  grid-column: auto;
+}
 .editor-palette label,
 .editor-palette select {
   grid-column: 1/-1;
@@ -133,6 +136,12 @@
 @media (max-width: 620px) {
   .editor-weather {
     grid-template-columns: 1fr;
+  }
+  .editor-size-form {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .editor-size-form button {
+    grid-column: 1/-1;
   }
   .learning-panel {
     padding: 18px 15px;

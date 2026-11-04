@@ -27,7 +27,9 @@ Durante una repetición visual el acceso al editor está deshabilitado. Se puede
 
 Se admiten diseños vacíos o sin viviendas: los indicadores de viviendas quedan en cero y muestran **Sin viviendas**. Árboles, bancos y edificios conservan sus resultados separados. Un diseño sin casas no representa una casa estable ni un edificio validado estructuralmente.
 
-Para cambiar filas, columnas, tamaño de parcela o ancho de calle, utiliza **Configurar barrio** y genera otro plano. Esa acción sustituye el plano manual; guarda antes el diseño y los resultados que quieras conservar. La edición inicial utiliza la cuadrícula existente, de 2 a 4 filas y columnas. Al abrir desde otro modo se propone una cuadrícula de 2 × 3 con parcelas libres.
+Usa **Tamaño de la manzana** dentro del editor para ajustar filas y columnas, de 2 a 4 por lado. Las parcelas nuevas quedan libres. Los objetos y el recorrido dibujado conservan su posición respecto a las parcelas existentes. Para reducir la cuadrícula, mueve primero los objetos de las parcelas que vas a quitar y ajusta el recorrido si queda fuera. Puedes deshacer el cambio. Al abrir desde otro modo se propone una cuadrícula de 2 × 3.
+
+Para cambiar el tamaño de cada parcela o el ancho de calle, usa **Configurar barrio** desde el modo **Barrio configurable**. Esa acción sustituye el plano manual. Guarda antes el diseño y los resultados que quieras conservar.
 
 Ejemplo importable: [manzana con dos casas, dos edificios y dos parques](examples/manzana-editor-v2.6.json).
 

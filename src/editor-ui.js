@@ -232,13 +232,28 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
     );
   }
   function render(rebuild = true) {
+    const { rows, columns } = draft.base;
+    const sizeChanged =
+      rows !== preview.config.rows || columns !== preview.config.columns;
     if (rebuild) {
       preview.reset(draft.config);
       view.sync();
+      if (sizeChanged) {
+        selected = null;
+        selectedObject = null;
+        if (topCamera) topView();
+        else view.setView("perspective");
+      }
       grid();
       view.vortex.visible = false;
       view.influence.visible = false;
       view.rain.visible = false;
+    }
+    if (!rebuild || sizeChanged) {
+      $("editor-rows").value = rows;
+      $("editor-columns").value = columns;
+      $("editor-size-status").textContent =
+        `${rows * columns} parcelas en el plano · Hasta 16.`;
     }
     const c = draft.layout.counts;
     const count = (n, singular, plural) =>
@@ -490,6 +505,22 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
   $("editor-object-list").addEventListener("change", () => {
     selectedObject = $("editor-object-list").value;
     selection();
+  });
+  $("editor-size-form").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const rows = Number($("editor-rows").value);
+    const columns = Number($("editor-columns").value);
+    const status = $("editor-size-status");
+    try {
+      if (draft.execute("resize-grid", { rows, columns })) {
+        tools();
+        render();
+        status.textContent =
+          `${rows * columns} parcelas en el plano. Puedes deshacer el cambio.`;
+      } else status.textContent = `El plano ya tiene ${rows * columns} parcelas.`;
+    } catch (error) {
+      status.textContent = error.message;
+    }
   });
   $("editor-route-draw").addEventListener("click", () => {
     tools({ action: "route-point" });
