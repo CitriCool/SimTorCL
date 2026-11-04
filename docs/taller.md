@@ -23,6 +23,8 @@ Abre **Caso histórico · Puerto Varas 2025** en la pantalla principal, o selecc
 - **Escenario simulado.** Una cuadrícula sintética de 4 × 4 parcelas representa un tramo urbano inspirado en Walker Martínez. Incluye seis casas, dos edificios bajos, dos parques y un árbol independiente. La polilínea conserva la dirección general publicada y usa coordenadas locales aproximadas. Los materiales, calles y posiciones se asignaron con fines educativos.
 - **Parámetros del ensayo.** 175 km/h de intensidad de referencia dentro del intervalo estimado por la DMC, 6 m/s de avance, 12 m de radio de influencia, 50 % de refuerzo y 25 s de duración. El refuerzo ilustra un caso de uniones vulnerables. El modelo calcula los desprendimientos y las fallas durante el ensayo. El radio y la velocidad de avance se ajustan al tramo local. La configuración, el recorrido y los resultados se conservan en el cuaderno.
 
+**Puerto Varas 2025 · Corredor ampliado** prepara otro ensayo de 60 s, con aproximadamente 273 × 183 m, 12 viviendas, 3 edificios y 3 parques. Las 96 parcelas permiten editar la distribución. El trazado local conserva la dirección general del evento y el radio de influencia del ensayo original. Las calles y las construcciones siguen siendo ilustrativas.
+
 ## Ejecutar e interpretar
 
 El avance se mide por longitud recorrida, también en los giros de la polilínea. Al llegar al último punto el tornado permanece allí; la física continúa hasta la duración declarada o hasta que se pause. Al cumplir la duración se detiene exactamente el cálculo. **Repetir ensayo** reconstruye el escenario desde cero. Llegar al final del recorrido no significa que haya cesado el viento.

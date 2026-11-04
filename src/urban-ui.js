@@ -3,6 +3,7 @@ import {
   generateNeighborhood,
   PARCEL_TYPES,
   URBAN_DEFAULTS,
+  URBAN_RULES,
   parcelTypeLabel,
 } from "./urban.js";
 const $ = (id) => document.getElementById(id);
@@ -14,6 +15,8 @@ const description = (layout, config) =>
 
 export function setupUrban({ experiment, getView, pause, reset }) {
   const fields = [...document.querySelectorAll("[data-urban]")];
+  for (const [field, max] of [["urban-rows", URBAN_RULES.maxRows], ["urban-columns", URBAN_RULES.maxColumns]])
+    for (let size = 5; size <= max; size++) $(field).add(new Option(size, size));
   function read() {
     return cleanConfig({
       ...experiment.config,

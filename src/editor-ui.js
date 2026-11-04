@@ -6,6 +6,7 @@ import { configurationDocument, normalizeName } from "./records.js";
 import { saveEntry } from "./library.js";
 import { LESSONS, lessonConfig } from "./lessons.js";
 import { renderHistoricalContext } from "./learning-ui.js";
+import { URBAN_RULES } from "./urban.js";
 
 const $ = (id) => document.getElementById(id);
 const names = {
@@ -29,6 +30,8 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
   const dialog = $("editor-dialog"),
     canvas = $("editor-scene");
   const palette = [...document.querySelectorAll("[data-editor-type]")];
+  for (const [field, max] of [["editor-rows", URBAN_RULES.maxRows], ["editor-columns", URBAN_RULES.maxColumns]])
+    for (let size = 5; size <= max; size++) $(field).add(new Option(size, size));
   let draft,
     preview,
     view,
@@ -254,7 +257,7 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
       $("editor-rows").value = rows;
       $("editor-columns").value = columns;
       $("editor-size-status").textContent =
-        `${rows * columns} parcelas en el plano · Hasta 16.`;
+        `${rows * columns} parcelas en el plano · Hasta ${URBAN_RULES.maxLots}.`;
     }
     const c = draft.layout.counts;
     const count = (n, singular, plural) =>
@@ -723,6 +726,7 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
   }
   $("editor-open").addEventListener("click", () => open());
   $("puerto-varas-open").addEventListener("click", () => open("puerto-varas-2025"));
+  $("puerto-varas-corridor-open").addEventListener("click", () => open("puerto-varas-corridor"));
   $("editor-close").addEventListener("click", () => dialog.close());
   dialog.addEventListener("cancel", (event) => {
     if (applying) event.preventDefault();

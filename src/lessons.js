@@ -55,8 +55,21 @@ export const LESSONS = {
   },
 };
 
-function puertoVarasConfig() {
-  const grid = { rows: 4, columns: 4, lotSize: 12, roadWidth: 4 };
+const puertoVaras = LESSONS["puerto-varas-2025"];
+LESSONS["puerto-varas-corridor"] = {
+  ...puertoVaras,
+  title: "Puerto Varas 2025 · Corredor ampliado",
+  historical: {
+    ...puertoVaras.historical,
+    model: "Ensayo ilustrativo de 273 × 183 m, con 96 parcelas y recorrido de noroeste a sureste. Las calles y construcciones son sintéticas. Se mantienen los parámetros didácticos del tramo original y se amplía la duración a 60 s. Los daños son resultados del modelo.",
+  },
+};
+
+function puertoVarasConfig(id) {
+  const expanded = id === "puerto-varas-corridor";
+  const grid = expanded
+    ? { rows: 8, columns: 12, lotSize: 16, roadWidth: 4 }
+    : { rows: 4, columns: 4, lotSize: 12, roadWidth: 4 };
   const d = new EditorState({
     ...grid,
     mode: "neighborhood",
@@ -76,31 +89,39 @@ function puertoVarasConfig() {
     loadPath: "grounded-graph-v1",
     fragmentFlight: "projected-v1",
     travelSpeed: 6,
-    duration: 25,
-    route: [
+    duration: expanded ? 60 : 25,
+    route: expanded ? [
+      { x: -136, z: -82 },
+      { x: -55, z: -37 },
+      { x: 56, z: 32 },
+      { x: 136, z: 82 },
+    ] : [
       { x: -39, z: -37 },
       { x: -12, z: -13 },
       { x: 13, z: 11 },
       { x: 39, z: 39 },
     ],
-    lesson: "puerto-varas-2025",
+    lesson: id,
   });
-  for (const parcelId of ["P01", "P02", "P06", "P10", "P15", "P16"])
+  const houses = expanded
+    ? ["P01", "P02", "P15", "P28", "P29", "P40", "P54", "P55", "P57", "P82", "P95", "P96"]
+    : ["P01", "P02", "P06", "P10", "P15", "P16"];
+  for (const parcelId of houses)
     d.execute("place", { type: "house", parcelId });
-  for (const parcelId of ["P02", "P10"])
+  for (const parcelId of expanded ? ["P02", "P29", "P55", "P95"] : ["P02", "P10"])
     d.execute("properties", { id: d.at(parcelId).id, profile: "masonry" });
-  for (const parcelId of ["P05", "P14"])
+  for (const parcelId of expanded ? ["P13", "P56", "P81"] : ["P05", "P14"])
     d.execute("place", { type: "building", parcelId });
-  for (const parcelId of ["P11", "P12"])
+  for (const parcelId of expanded ? ["P42", "P69", "P83"] : ["P11", "P12"])
     d.execute("place", { type: "green", parcelId });
-  d.execute("place-item", { type: "tree", parcelId: "P07", slot: 6 });
+  d.execute("place-item", { type: "tree", parcelId: expanded ? "P41" : "P07", slot: 6 });
   return d.assertReady();
 }
 
 export function lessonConfig(id) {
   if (!Object.hasOwn(LESSONS, id))
     throw new Error("Ejemplo guiado desconocido.");
-  if (id === "puerto-varas-2025") return puertoVarasConfig();
+  if (LESSONS[id].historical) return puertoVarasConfig(id);
   const d = new EditorState({
     mode: "neighborhood",
     rows: 2,

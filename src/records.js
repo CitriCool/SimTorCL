@@ -1,6 +1,7 @@
 import { ENV_MODEL, ENV_LABELS, environmentBlueprint } from "./environment.js";
 import {
   URBAN_DEFAULTS,
+  URBAN_RULES,
   validateUrban,
   generateNeighborhood,
   housePlacements,
@@ -150,6 +151,7 @@ export function cleanConfig(input = {}) {
       "plaza",
       "reinforced",
       "puerto-varas-2025",
+      "puerto-varas-corridor",
     ].includes(config.lesson)
   )
     throw new Error("Ejemplo guiado desconocido.");
@@ -493,7 +495,7 @@ function checkStats(stats) {
       throw new Error("Contadores estructurales inválidos.");
 
   if (stats.rows) {
-    if (!Array.isArray(stats.rows) || stats.rows.length > 16)
+    if (!Array.isArray(stats.rows) || stats.rows.length > URBAN_RULES.maxLots)
       throw new Error("Viviendas inválidas.");
     stats.rows.forEach(checkStats);
   }

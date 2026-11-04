@@ -16,7 +16,9 @@ export const URBAN_RULES = Object.freeze({
   sidewalk: 1.2,
   houseFootprint: 7.4,
   reserveFootprint: 8,
-  maxLots: 16,
+  maxRows: 8,
+  maxColumns: 12,
+  maxLots: 96,
 });
 export const PARCEL_TYPES = Object.freeze({
   house: "Vivienda",
@@ -26,9 +28,9 @@ export const PARCEL_TYPES = Object.freeze({
 });
 
 export function validateUrban(config) {
-  for (const key of ["rows", "columns"])
-    if (!Number.isInteger(config[key]) || config[key] < 2 || config[key] > 4)
-      throw new RangeError("El barrio admite de 2 a 4 filas y columnas.");
+  for (const [key, max] of [["rows", URBAN_RULES.maxRows], ["columns", URBAN_RULES.maxColumns]])
+    if (!Number.isInteger(config[key]) || config[key] < 2 || config[key] > max)
+      throw new RangeError("El barrio admite de 2 a 8 filas y de 2 a 12 columnas.");
   if (
     ![12, 16, 20].includes(config.lotSize) ||
     ![4, 6, 8].includes(config.roadWidth) ||

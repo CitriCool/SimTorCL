@@ -239,7 +239,7 @@ test("mismatched saved layouts and invalid planning parameters are rejected atom
   const e = new Experiment({ mode: "neighborhood" }),
     active = e.active;
   for (const changes of [
-    { rows: 5 },
+    { rows: 9 },
     { columns: 1 },
     { seed: -1 },
     { seed: 1.5 },
