@@ -822,6 +822,26 @@
       <button id="historical-more" class="details-button" type="button" hidden>Mostrar más</button>
       <p class="selection-note" id="historical-cutoff"></p>
     </dialog>
+    <dialog id="roof-reference" aria-labelledby="roof-reference-title">
+      <form method="dialog">
+        <button class="dialog-close" aria-label="Cerrar vista de techumbre">×</button>
+      </form>
+      <h2 id="roof-reference-title">Cómo se arma la techumbre</h2>
+      <label class="field-label" for="roof-reference-mode">Vista</label>
+      <select id="roof-reference-mode">
+        <option value="exploded">Despiece</option>
+        <option value="frame">Estructura sin planchas</option>
+        <option value="assembled">Cubierta montada</option>
+      </select>
+      <div class="editor-viewport roof-reference-viewport">
+        <canvas id="roof-reference-canvas" aria-label="Casa de madera y capas de la techumbre en 3D"></canvas>
+      </div>
+      <p id="roof-reference-status" role="status"></p>
+      <p>Arrastra para girar. Las marcas naranjas indican fijaciones de forma esquemática.</p>
+      <p><strong>Zincalum acanalado</strong> de 0,35 mm sobre <strong>costaneras de pino radiata</strong> de 45 × 45 mm cada 0,94 m y <strong>cerchas de pino radiata</strong> de 74 × 38 mm cada 0,90 m. La ficha especifica clavos helicoidales para fijar las planchas.</p>
+      <p>Geometría ilustrativa basada en una solución ensayada al fuego. Esta vista muestra el armado. Las resistencias al viento de las uniones requieren ensayos específicos.</p>
+      <a href="https://www.minvu.gob.cl/wp-content/uploads/2022/12/Listado-Oficial-de-Comportamiento-al-Fuego-de-Elementos-y-Componentes-de-la-Construccion.pdf" target="_blank" rel="noopener noreferrer">Ficha MINVU F.2.1.15.55 ↗</a>
+    </dialog>
     <dialog id="about-dialog" aria-labelledby="about-title">
       <button
         id="close-about"

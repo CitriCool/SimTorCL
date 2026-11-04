@@ -1326,6 +1326,24 @@ dialog a {
 #historical-more {
   margin-top: 12px;
 }
+#roof-reference {
+  box-sizing: border-box;
+  width: min(760px, 94vw);
+  padding: clamp(16px, 4vw, 32px);
+}
+.roof-reference-viewport {
+  height: clamp(230px, 46vh, 440px);
+  margin-top: 10px;
+}
+#roof-reference-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+#roof-reference-status:empty {
+  display: none;
+}
 .model-notice {
   font-size: 11px;
   line-height: 1.8;

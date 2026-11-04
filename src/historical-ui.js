@@ -31,7 +31,7 @@ function externalLink(label, address) {
   return link;
 }
 
-export function setupHistoricalCatalog({ openScenario }) {
+export function setupHistoricalCatalog({ openScenario, openRoofReference }) {
   const $ = (id) => document.getElementById(`historical-${id}`);
   const dialog = $("dialog");
   const events = [...catalog.events].reverse();
@@ -100,6 +100,13 @@ export function setupHistoricalCatalog({ openScenario }) {
         dialog.close();
         openScenario(id);
       });
+      actions.append(button);
+    }
+    if (event.id === "CL0056") {
+      const button = element("button", "Ver armado de la techumbre");
+      button.type = "button";
+      button.className = "details-button";
+      button.addEventListener("click", openRoofReference);
       actions.append(button);
     }
     body.append(actions);

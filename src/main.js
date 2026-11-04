@@ -2,6 +2,7 @@ import { ENV_MODEL } from "./environment.js";
 import { setupEditor } from "./editor-ui.js";
 import { setupLearning } from "./learning-ui.js";
 import { setupHistoricalCatalog } from "./historical-ui.js";
+import { setupRoofReference } from "./roof-reference.js";
 import { countHomesWithRoofLoss } from "./runs.js";
 import { LESSONS } from "./lessons.js";
 import { refreshParameterLibrary } from "./parameters-ui.js";
@@ -766,7 +767,14 @@ try {
     reset,
     isReplaying: () => !!notebook?.replaying,
   });
-  setupHistoricalCatalog({ openScenario: editor.open });
+  const openRoofReference = setupRoofReference();
+  setupHistoricalCatalog({
+    openScenario: editor.open,
+    openRoofReference: () => {
+      setRunning(false);
+      openRoofReference();
+    },
+  });
   learning = setupLearning({
     experiment: simulation,
     getView: () => view,
