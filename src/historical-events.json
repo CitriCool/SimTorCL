@@ -1,0 +1,2378 @@
+{
+  "reviewedThrough": "2026-11-04",
+  "events": [
+    {
+      "id": "CL0001",
+      "date": "1554-05-03",
+      "place": "Carahue (ex- Imperial)",
+      "region": "La Araucanía",
+      "kind": "Tornado",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -38.7079572518935,
+        -73.1601208083232
+      ],
+      "sources": [
+        "https://docs.google.com/document/d/1_mGGl7nPiJIUZzVEDOOS-NTyh0fKGgVcXFQPRLCMwrs/edit?usp=sharing"
+      ],
+      "damage": "Sí"
+    },
+    {
+      "id": "CL0002",
+      "date": "1633-05-14",
+      "place": "Carelmapu",
+      "region": "Los Lagos",
+      "kind": "Tornado",
+      "ef": "EF2",
+      "status": "Excel original",
+      "coordinates": [
+        -41.75,
+        -73.707
+      ],
+      "note": "Año original 1663. Se usó el año de la fecha completa.",
+      "damage": "Sí",
+      "injured": 1
+    },
+    {
+      "id": "CL0003",
+      "date": "1835-02-26",
+      "place": "Parral",
+      "region": "Maule",
+      "kind": "Tornado",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -36.14311,
+        -71.82605
+      ],
+      "note": "Fecha histórica incierta según el comentario original.",
+      "damage": "Sí"
+    },
+    {
+      "id": "CL0004",
+      "date": "1868-06-07",
+      "place": "Morro Gonzalo (Valdivia)",
+      "region": "Los Ríos",
+      "kind": "Tromba marina o lacustre",
+      "status": "Excel original",
+      "coordinates": [
+        -39.8495231751855,
+        -73.4687594517327
+      ],
+      "reference": "Vidal Gormaz",
+      "damage": "No"
+    },
+    {
+      "id": "CL0005",
+      "date": "1872-04-20",
+      "place": "Ancud",
+      "region": "Los Lagos",
+      "kind": "Tromba marina o lacustre",
+      "status": "Excel original",
+      "coordinates": [
+        -41.8702469236067,
+        -73.8283761097985
+      ],
+      "reference": "Vidal Gormaz",
+      "damage": "No"
+    },
+    {
+      "id": "CL0006",
+      "date": "1878-06-11",
+      "place": "Lebu",
+      "region": "Biobío",
+      "kind": "Tornado",
+      "ef": "EF0*",
+      "status": "Excel original",
+      "coordinates": [
+        -37.599136119778,
+        -73.6591194507573
+      ],
+      "damage": "Sí"
+    },
+    {
+      "id": "CL0007",
+      "date": "1878-06-14",
+      "place": "Lebu",
+      "region": "Biobío",
+      "kind": "Tornado",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -37.599136119778,
+        -73.6591194507573
+      ],
+      "damage": "Sí"
+    },
+    {
+      "id": "CL0008",
+      "date": "1881-04-26",
+      "place": "Valdivia",
+      "region": "Los Ríos",
+      "kind": "Tornado",
+      "ef": "EF3",
+      "status": "Excel original",
+      "coordinates": [
+        -39.8113647703531,
+        -73.2421700094018
+      ],
+      "sources": [
+        "https://babel.hathitrust.org/cgi/pt?id=uc1.$b703261&seq=5"
+      ],
+      "damage": "Sí",
+      "fatalities": 3,
+      "injured": 1
+    },
+    {
+      "id": "CL0009",
+      "date": "1893-05-14",
+      "place": "Santiago",
+      "region": "Metropolitana",
+      "kind": "Tornado",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -33.3811223103291,
+        -70.619821814293
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0010",
+      "date": "1893-05-16",
+      "place": "Nueva Imperial",
+      "region": "La Araucanía",
+      "kind": "Tornado",
+      "status": "Excel original",
+      "coordinates": [
+        -38.7395829275948,
+        -72.9520826048251
+      ],
+      "damage": "Sí"
+    },
+    {
+      "id": "CL0011",
+      "date": "1927-06-07",
+      "place": "Ancud",
+      "region": "Los Lagos",
+      "kind": "Tornado",
+      "ef": "EF2",
+      "status": "Excel original",
+      "coordinates": [
+        -41.8702469236067,
+        -73.8283761097985
+      ],
+      "damage": "Sí",
+      "fatalities": 1
+    },
+    {
+      "id": "CL0012",
+      "date": "1934-05-27",
+      "place": "Concepción",
+      "region": "Biobío",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF3",
+      "status": "Excel original",
+      "coordinates": [
+        -36.8272693629797,
+        -73.0501118856763
+      ],
+      "sources": [
+        "http://www.plataformaurbana.cl/archive/2012/08/15/archivo-fotografico-tornado-en-concepcion-1934/"
+      ],
+      "note": "El original solo marca tromba; el catálogo actualizado describe tornado. Se conserva la marca de origen para revisión.",
+      "damage": "Sí",
+      "fatalities": 27,
+      "injured": 599
+    },
+    {
+      "id": "CL0013",
+      "date": "1934-05-29",
+      "place": "Puerto Saavedra",
+      "region": "La Araucanía",
+      "kind": "Tornado y tromba",
+      "status": "Excel original",
+      "coordinates": [
+        -38.797624064584,
+        -73.4015796962771
+      ],
+      "damage": "Sí"
+    },
+    {
+      "id": "CL0014",
+      "date": "1934-06-03",
+      "place": "Linares",
+      "region": "Maule",
+      "kind": "Sin marcas de tipo",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -35.849,
+        -71.5992
+      ],
+      "damage": "Sí"
+    },
+    {
+      "id": "CL0101",
+      "date": "1941-06-13",
+      "place": "VIña del Mar",
+      "region": "Valparaíso",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -33.019504199033,
+        -71.5673596682979
+      ],
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0102",
+      "date": "1952-05-18",
+      "place": "Ancud",
+      "region": "Los Lagos",
+      "kind": "Tornado y tromba",
+      "status": "Excel original",
+      "coordinates": [
+        -41.8785956653397,
+        -73.8922703963844
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 6
+    },
+    {
+      "id": "CL0015",
+      "date": "1961-06-02",
+      "place": "Isla Quiriquina-Concepción",
+      "region": "Biobío",
+      "kind": "Tornado y tromba",
+      "ef": "EF2",
+      "status": "Excel original",
+      "coordinates": [
+        -36.625917,
+        -73.059923
+      ],
+      "damage": "Sí"
+    },
+    {
+      "id": "CL0016",
+      "date": "1962-07-27",
+      "place": "Linares",
+      "region": "Maule",
+      "kind": "Tornado y tromba",
+      "ef": "EF2",
+      "status": "Excel original",
+      "coordinates": [
+        -35.8440693494848,
+        -71.5910617546228
+      ],
+      "damage": "Sí",
+      "fatalities": 0
+    },
+    {
+      "id": "CL0017",
+      "date": "1962-07-27",
+      "place": "Chillan (Cato)",
+      "region": "Ñuble",
+      "kind": "Tornado",
+      "status": "Excel original",
+      "coordinates": [
+        -36.5357848753026,
+        -71.9977285329304
+      ],
+      "damage": "Sí",
+      "fatalities": 0
+    },
+    {
+      "id": "CL0018",
+      "date": "1975-07-10",
+      "place": "Los Ángeles",
+      "region": "Biobío",
+      "kind": "Tornado",
+      "ef": "EF3",
+      "status": "Excel original",
+      "coordinates": [
+        -37.449233,
+        -72.336948
+      ],
+      "sources": [
+        "http://www.ladiscusion.cl/tornado-en-san-carlos-37-aos-de-la-tragedia-ms-grande-de-la-comuna/"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0019",
+      "date": "1981-05-17",
+      "place": "Valdivia",
+      "region": "Los Ríos",
+      "kind": "Sin marcas de tipo",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -39.8199945813283,
+        -73.2321510770993
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0020",
+      "date": "1981-05-18",
+      "place": "San Carlos",
+      "region": "Ñuble",
+      "kind": "Sin marcas de tipo",
+      "ef": "EF3",
+      "status": "Excel original",
+      "coordinates": [
+        -36.4250130721276,
+        -71.958448492409
+      ],
+      "damage": "Sí",
+      "fatalities": 2,
+      "injured": 323
+    },
+    {
+      "id": "CL0021",
+      "date": "1991-06-19",
+      "place": "Valparaíso",
+      "region": "Valparaíso",
+      "kind": "Sin marcas de tipo",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -33.048301948194,
+        -71.5988247949241
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 2
+    },
+    {
+      "id": "CL0100",
+      "date": "2000-02-11",
+      "place": "Chinquihue",
+      "kind": "Tornado y tromba",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -41.5058796082189,
+        -72.99633617146829
+      ],
+      "sources": [
+        "https://tornadoschile.cl/lista-de-tornados/"
+      ],
+      "note": "Coordenadas convertidas de texto a números. Fecha original 02/11/2000; la referencia del propio registro y el catálogo web señalan 11/02/2000. Se usó 2000-02-11.",
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0022",
+      "date": "2005-02-22",
+      "place": "Volcán Osorno, Ensenada",
+      "region": "Los Lagos",
+      "kind": "Tornado",
+      "ef": "EF0*",
+      "status": "Excel original",
+      "coordinates": [
+        -41.1573146234944,
+        -72.4937454692987
+      ],
+      "sources": [
+        "https://archive.org/details/extrano-tornado-en-ensenada-diario-el-llanquihue/mode/2up"
+      ],
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0023",
+      "date": "2006-05-15",
+      "place": "Puerto Montt",
+      "region": "Los Lagos",
+      "kind": "Tornado",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -41.4742932782384,
+        -72.9525256288981
+      ],
+      "sources": [
+        "https://www.ellanquihue.cl/prontus4_nots/site/artic/20060516/pags/20060516010513.html?0.5?0.5"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 1
+    },
+    {
+      "id": "CL0024",
+      "date": "2007-06-21",
+      "place": "Arauco",
+      "region": "Biobío",
+      "kind": "Tornado y tromba",
+      "status": "Excel original",
+      "coordinates": [
+        -37.24,
+        -73.319
+      ],
+      "sources": [
+        "https://www.elbombero.cl/foro/threads/inusual-%E2%80%9Ctornado%E2%80%9D-en-arauco.3085/"
+      ],
+      "damage": "Sí"
+    },
+    {
+      "id": "CL0025",
+      "date": "2008-08-26",
+      "place": "Caleta Amargos-Corral",
+      "region": "Los Ríos",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -39.87509,
+        -73.42555
+      ],
+      "sources": [
+        "https://bibliogrd.senapred.gob.cl/bitstream/handle/2012/401/INFORME%20CONSOLIDADO%20definitivo%20agosto%202008.pdf?sequence=1&isAllowed=y"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 1
+    },
+    {
+      "id": "CL0026",
+      "date": "2010-06-14",
+      "place": "Vegas del Itata",
+      "region": "Ñuble",
+      "kind": "Tornado y tromba",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -36.3992510042731,
+        -72.8540454766737
+      ],
+      "sources": [
+        "https://www.youtube.com/watch?v=gzBZI5E7uFM"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0027",
+      "date": "2010-06-14",
+      "place": "Tomé-Lirquen",
+      "region": "Biobío",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Excel original",
+      "coordinates": [
+        -36.7043425378487,
+        -72.9937300540057
+      ],
+      "sources": [
+        "https://www.youtube.com/watch?v=gzBZI5E7uFM"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0028",
+      "date": "2011-04-12",
+      "place": "Ancud",
+      "region": "Los Lagos",
+      "kind": "Tornado",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -41.873,
+        -73.805
+      ],
+      "sources": [
+        "https://www.youtube.com/watch?v=0R40I9scDTg"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0029",
+      "date": "2011-06-07",
+      "place": "Villarrica",
+      "region": "La Araucanía",
+      "kind": "Tornado",
+      "ef": "EF2",
+      "status": "Excel original",
+      "coordinates": [
+        -39.281,
+        -72.226
+      ],
+      "sources": [
+        "https://es.wikipedia.org/wiki/Tornado_de_Villarrica_de_2011"
+      ],
+      "damage": "Sí",
+      "fatalities": 4,
+      "injured": 7
+    },
+    {
+      "id": "CL0030",
+      "date": "2013-05-31",
+      "place": "San Carlos",
+      "region": "Ñuble",
+      "kind": "Tornado",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -36.42,
+        -71.962
+      ],
+      "sources": [
+        "https://es.wikipedia.org/wiki/Tornado_de_San_Carlos_de_2013"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 2
+    },
+    {
+      "id": "CL0031",
+      "date": "2014-06-04",
+      "place": "Camino Perdido-Loncoche",
+      "region": "La Araucanía",
+      "kind": "Tornado",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -39.391912467499,
+        -72.660404594159
+      ],
+      "sources": [
+        "https://www.soychile.cl/Temuco/Sociedad/2014/06/07/254189/Un-mini-tornado-azoto-un-fundo-en-Loncoche-y-volo-techumbres-de-lecherias-y-galpones.aspx"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 1
+    },
+    {
+      "id": "CL0032",
+      "date": "2015-06-01",
+      "place": "Puerto Montt (Sector Lagunillas)",
+      "region": "Los Lagos",
+      "kind": "Tornado y tromba",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -41.447,
+        -73.022
+      ],
+      "sources": [
+        "https://www.soychile.cl/puerto-montt/sociedad/2015/06/01/325822/presunto-tornado-ocasiono-diversos-danos-en-casas-de-puerto-montt.aspx"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0033",
+      "date": "2015-06-03",
+      "place": "Lago Llanquihue",
+      "region": "Los Lagos",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Excel original",
+      "coordinates": [
+        -41.217,
+        -72.883
+      ],
+      "sources": [
+        "https://www.facebook.com/comunaLlanquihue/videos/964119710306912/"
+      ],
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0034",
+      "date": "2015-07-05",
+      "place": "Tirúa",
+      "region": "Biobío",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -38.341568,
+        -73.494404
+      ],
+      "sources": [
+        "https://cooperativa.cl/noticias/pais/tiempo/al-menos-16-viviendas-resultaron-danadas-por-tromba-marina-en-tirua/2015-07-05/163912.html"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0035",
+      "date": "2015-07-05",
+      "place": "Quidico",
+      "region": "Biobío",
+      "kind": "Tornado y tromba",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -38.242832,
+        -73.47609
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0036",
+      "date": "2015-08-08",
+      "place": "Tres Esquinas de Cato (al norte de Coihueco)",
+      "region": "Ñuble",
+      "kind": "Tornado",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -36.54386,
+        -71.7807693
+      ],
+      "sources": [
+        "http://sancarlosradioactivo.blogspot.com/2015/08/voladura-de-techos-y-caidas-de-arboles.html"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0037",
+      "date": "2016-07-11",
+      "place": "Vilcún (S. rural Curaco en la ruta a Codinhue - Al Noreste de Temuco)",
+      "region": "La Araucanía",
+      "kind": "Tornado",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -38.407,
+        -72.307
+      ],
+      "sources": [
+        "https://www.soychile.cl/Temuco/Sociedad/2016/07/11/404963/Una-especie-de-tornado-volo-techumbres-y-arranco-arboles-en-Vilcun.aspx"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0038",
+      "date": "2016-08-17",
+      "place": "Curiñanco (Valdivia)",
+      "region": "Los Ríos",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Excel original",
+      "coordinates": [
+        -39.739,
+        -73.411
+      ],
+      "sources": [
+        "https://www.facebook.com/watch/?v=1113028315434539"
+      ],
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0039",
+      "date": "2016-08-17",
+      "place": "Toltén",
+      "region": "La Araucanía",
+      "kind": "Tornado y tromba",
+      "ef": "EF2",
+      "status": "Excel original",
+      "coordinates": [
+        -39.226,
+        -73.204
+      ],
+      "sources": [
+        "https://www.google.com/url?q=https://www.emol.com/noticias/Nacional/2016/08/18/&sa=D&source=apps-viewer-frontend&ust=1705759736772891&usg=AOvVaw1QVht8CO6s4mIuvnA-56vo&hl=es"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 1
+    },
+    {
+      "id": "CL0040",
+      "date": "2017-01-09",
+      "place": "Lago Villarica",
+      "region": "La Araucanía",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Excel original",
+      "coordinates": [
+        -39.257,
+        -72.102
+      ],
+      "sources": [
+        "https://climatologia.meteochile.gob.cl/application/publicaciones/documentoPdf/boletinEventosExtremos/boletinEventosExtremos-2017.pdf"
+      ],
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0041",
+      "date": "2017-02-16",
+      "place": "Isla Mocha",
+      "region": "Biobío",
+      "kind": "Tornado y tromba",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -38.3842403541975,
+        -73.8751853298448
+      ],
+      "sources": [
+        "https://www.t13.cl/noticia/nacional/registran-danos-tromba-marina-isla-mocha"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0042",
+      "date": "2017-02-16",
+      "place": "Puerto Montt (Rucahue - Piedra Azul)",
+      "region": "Los Lagos",
+      "kind": "Tornado y tromba",
+      "status": "Excel original",
+      "coordinates": [
+        -41.492,
+        -72.792
+      ],
+      "sources": [
+        "https://www.biobiochile.cl/noticias/nacional/region-de-los-lagos/2017/02/18/sistema-frontal-en-los-lagos-un-centenar-de-turistas-son-llevados-a-albergue-en-chaiten.shtml"
+      ],
+      "damage": "Sí"
+    },
+    {
+      "id": "CL0043",
+      "date": "2017-05-17",
+      "place": "San pedro, Quillota",
+      "region": "Valparaíso",
+      "kind": "Tornado",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -32.939,
+        -71.287
+      ],
+      "sources": [
+        "https://www.emol.com/noticias/Economia/2017/05/18/859022/Tornado-en-Quillota.html"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0044",
+      "date": "2017-06-03",
+      "place": "Puerto Montt (Población Modelo)",
+      "region": "Los Lagos",
+      "kind": "Tornado y tromba",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -41.465594,
+        -72.949097
+      ],
+      "sources": [
+        "https://www.facebook.com/permalink.php?story_fbid=1404455222955854&id=714631728604877"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0045",
+      "date": "2017-07-14",
+      "place": "Ponotro, Tirúa",
+      "region": "Biobío",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -38.28,
+        -73.5
+      ],
+      "sources": [
+        "https://www.soychile.cl/Concepcion/Sociedad/2017/07/14/475773/Vecinos-reportaron-que-tromba-marina-derribo-arboles-en-carretera-de-Tirua.aspx"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0046",
+      "date": "2017-07-14",
+      "place": "Hualpín, Teodoro Schmidt",
+      "region": "La Araucanía",
+      "kind": "Tornado",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -39.081498,
+        -73.183752
+      ],
+      "sources": [
+        "https://www.soychile.cl/Temuco/Sociedad/2017/07/14/475736/Una-tromba-marina-destruyo-al-menos-seis-casas-y-un-casino-en-zona-costera-de-La-Araucania.aspx"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0047",
+      "date": "2017-07-17",
+      "place": "Meulín, Chiloé",
+      "region": "Los Lagos",
+      "kind": "Tornado",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -42.4,
+        -73.29
+      ],
+      "sources": [
+        "https://www.soychile.cl/Chiloe/Sociedad/2017/07/18/476525/Inusual-tromba-marina-dejo-su-huella-destructiva-en-isla-Meulin.aspx"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0048",
+      "date": "2017-08-10",
+      "place": "Llico",
+      "region": "Biobío",
+      "kind": "Tornado y tromba",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -37.196,
+        -73.562
+      ],
+      "sources": [
+        "https://www.24horas.cl/nacional/tromba-marina-genero-diversos-danos-a-viviendas-en-llico-2473561"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0049",
+      "date": "2017-10-04",
+      "place": "El Tume, Villarrica",
+      "region": "La Araucanía",
+      "kind": "Tornado",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -39.2301180116901,
+        -72.2788727214217
+      ],
+      "sources": [
+        "https://www.facebook.com/24horas.cl/videos/fuerte-tromba-en-villarrica/10156011489024113/?locale=es_LA"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0050",
+      "date": "2018-03-22",
+      "place": "Alerce, Puerto Montt",
+      "region": "Los Lagos",
+      "kind": "Tornado",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -41.396,
+        -72.91
+      ],
+      "sources": [
+        "https://www.facebook.com/watch/?v=1567083063340159"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0051",
+      "date": "2018-03-23",
+      "place": "Padre de Las Casas (Camino a Cunco)",
+      "region": "La Araucanía",
+      "kind": "Tornado",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -38.78,
+        -72.57
+      ],
+      "sources": [
+        "https://www.biobiochile.cl/noticias/nacional/region-de-la-araucania/2018/03/23/fuertes-vientos-derribaron-decenas-de-arboles-en-ruta-que-une-padre-las-casas-y-cuncos.shtml"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0052",
+      "date": "2018-09-30",
+      "place": "Lago Llanquihue",
+      "region": "Los Lagos",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Excel original",
+      "coordinates": [
+        -41.15542,
+        -72.670038
+      ],
+      "sources": [
+        "https://www.chvnoticias.cl/nacional/asi-se-vio-la-tromba-marina-en-el-lago-llanquihue_20180930/"
+      ],
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0053",
+      "date": "2018-09-30",
+      "place": "Caleta La Arena",
+      "region": "Los Lagos",
+      "kind": "Tornado",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -41.693,
+        -72.643
+      ],
+      "sources": [
+        "https://www.radiosago.cl/tromba-marina-destruyo-varios-inmuebles-en-la-carretera-austral/"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0054",
+      "date": "2019-05-30",
+      "place": "Quilelto (San Carlos)",
+      "region": "Ñuble",
+      "kind": "Tornado",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -36.496,
+        -71.943
+      ],
+      "sources": [
+        "https://www.biobiochile.cl/noticias/nacional/region-de-nuble/2019/05/30/tromba-terrestre-arranca-los-techos-de-dos-viviendas-en-sector-rural-de-san-carlos.shtml"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0055",
+      "date": "2019-05-30",
+      "place": "Coihueco, Ñuble",
+      "region": "Ñuble",
+      "kind": "Tornado",
+      "ef": "EF2",
+      "status": "Excel original",
+      "coordinates": [
+        -36.726,
+        -71.81
+      ],
+      "sources": [
+        "https://www.facebook.com/watch/?v=916853065412195"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0056",
+      "date": "2019-05-30",
+      "place": "San Miguel de Itata (Yungay)",
+      "region": "Ñuble",
+      "kind": "Tornado",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -37.106,
+        -72.119
+      ],
+      "sources": [
+        "https://climatologia.meteochile.gob.cl/publicaciones/climaHoy/climaHoy20201204.pdf",
+        "https://www.ladiscusion.cl/tornado-dana-al-menos-siete-casas-en-yungay/"
+      ],
+      "note": "EF0 estimado en esta base; el informe inicial DMC trató el episodio como sin confirmar.",
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0057",
+      "date": "2019-05-30",
+      "place": "Los Ángeles",
+      "region": "Biobío",
+      "kind": "Tornado",
+      "ef": "EF2",
+      "status": "Excel original",
+      "coordinates": [
+        -37.463,
+        -72.33
+      ],
+      "sources": [
+        "https://www.biobiochile.cl/noticias/nacional/region-del-bio-bio/2019/05/30/reportan-paso-de-una-especie-de-tornado-en-los-angeles.shtml"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 18
+    },
+    {
+      "id": "CL0058",
+      "date": "2019-05-30",
+      "place": "San Andrés (Collipulli)",
+      "region": "La Araucanía",
+      "kind": "Tornado",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -37.939,
+        -72.498
+      ],
+      "sources": [
+        "https://www.facebook.com/watch/?v=2170613709723373"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 13
+    },
+    {
+      "id": "CL0059",
+      "date": "2019-05-31",
+      "place": "Chanco, Maule",
+      "region": "Maule",
+      "kind": "Tornado",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -35.775,
+        -72.505
+      ],
+      "sources": [
+        "https://cooperativa.cl/noticias/pais/region-del-maule/tromba-marina-derribo-arboles-y-bloqueo-rutas-en-chanco/2019-05-31/173430.html"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0060",
+      "date": "2019-05-31",
+      "place": "Talcahuano-Concepción",
+      "region": "Biobío",
+      "kind": "Tornado",
+      "ef": "EF2",
+      "status": "Excel original",
+      "coordinates": [
+        -36.785,
+        -73.1
+      ],
+      "sources": [
+        "https://www.youtube.com/watch?v=DR5XC9Mo5cc&t=3s"
+      ],
+      "damage": "Sí",
+      "fatalities": 1,
+      "injured": 23
+    },
+    {
+      "id": "CL0061",
+      "date": "2019-06-13",
+      "place": "Alto del Rey (San Pedro de la Paz)",
+      "region": "Biobío",
+      "kind": "Tornado y tromba",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -36.825381,
+        -73.151671
+      ],
+      "sources": [
+        "https://www.24horas.cl/regiones/biobio/una-nueva-tromba-marina-es-registrada-por-pescadores-en-san-pedro-de-la-paz-3385320"
+      ],
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0062",
+      "date": "2019-10-28",
+      "place": "Pucatrihue",
+      "region": "Los Lagos",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Excel original",
+      "coordinates": [
+        -40.537,
+        -73.719
+      ],
+      "sources": [
+        "https://www.facebook.com/groups/otvemergencias/posts/827728434310073/"
+      ],
+      "note": "Coordenadas convertidas de texto a números.",
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0063",
+      "date": "2020-04-25",
+      "place": "Sector Manzanares, Renaico",
+      "region": "La Araucanía",
+      "kind": "Tornado",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -37.6747,
+        -72.5854
+      ],
+      "sources": [
+        "https://cooperativa.cl/noticias/pais/region-de-la-araucania/un-tornado-arraso-con-galpones-arboles-y-el-tendido-electrico-en-la/2020-04-25/115334.html"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0064",
+      "date": "2020-05-03",
+      "place": "Chamiza, Puerto Montt",
+      "region": "Los Lagos",
+      "kind": "Tornado",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -41.4842,
+        -72.8495
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0065",
+      "date": "2020-06-15",
+      "place": "Puralaco, Toltén",
+      "region": "La Araucanía",
+      "kind": "Tornado",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -39.3022,
+        -73.1578
+      ],
+      "sources": [
+        "https://www.facebook.com/watch/?v=271693353890413"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0066",
+      "date": "2020-06-19",
+      "place": "Sector Talquita, Parral",
+      "region": "Maule",
+      "kind": "Tornado",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -36.2376,
+        -71.8076
+      ],
+      "sources": [
+        "https://www.facebook.com/maulevirtualchile/videos/307360457089781/https:/www.facebook.com/watch/?v=707022773172481"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0067",
+      "date": "2020-06-24",
+      "place": "Llico",
+      "region": "Maule",
+      "kind": "Tornado",
+      "ef": "EF0*",
+      "status": "Excel original",
+      "coordinates": [
+        -34.774,
+        -72.063
+      ],
+      "sources": [
+        "https://www.elmostrador.cl/dia/2020/06/24/registran-inusual-tromba-marina-en-caleta-de-llico-el-fenomeno-provoco-la-caida-de-arboles-y-techumbres/"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0068",
+      "date": "2020-06-24",
+      "place": "Yerbas Buenas (San Carlos de Arquén)",
+      "region": "Maule",
+      "kind": "Tornado",
+      "ef": "EF0*",
+      "status": "Excel original",
+      "coordinates": [
+        -35.73889,
+        -71.58102
+      ],
+      "sources": [
+        "https://www.facebook.com/watch/?v=907230596423609"
+      ],
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0069",
+      "date": "2020-06-29",
+      "place": "Iloca (Duao)",
+      "region": "Maule",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Excel original",
+      "coordinates": [
+        -34.878,
+        -72.158
+      ],
+      "sources": [
+        "https://www.soychile.cl/Concepcion/Sociedad/2020/06/29/661617/VIDEO-Una-tromba-marina-se-registro-en-la-localidad-de-Iloca.aspx?utm_source=Destacadas&utm_medium=Twitter&utm_campaign=Botones%20Sociales"
+      ],
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0070",
+      "date": "2020-06-29",
+      "place": "Chigualoco, Los Vilos",
+      "region": "Coquimbo",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Excel original",
+      "coordinates": [
+        -31.755,
+        -71.514
+      ],
+      "sources": [
+        "https://www.eldesconcierto.cl/nacional/2020/06/29/videos-sistema-frontal-se-traslada-a-coquimbo-tromba-marina-en-chigualoco-e-inundaciones-en-los-vilos.html"
+      ],
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0071",
+      "date": "2020-07-04",
+      "place": "Quintay-El Quisco (Punta de Tralca)",
+      "region": "Valparaíso",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -33.426426,
+        -71.702984
+      ],
+      "sources": [
+        "https://www.biobiochile.cl/noticias/nacional/region-de-valparaiso/2020/07/04/onemi-confirma-paso-tromba-marina-quisco-evaluacion-una-reportada-quintay.shtm"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0072",
+      "date": "2020-08-24",
+      "place": "Tocopilla",
+      "region": "Antofagasta",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Excel original",
+      "coordinates": [
+        -22.092,
+        -70.207
+      ],
+      "sources": [
+        "https://www.soychile.cl/Antofagasta/Sociedad/2020/08/24/670316/Tromba-marina-fue-registrada-en-el-puerto-de-T"
+      ],
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0073",
+      "date": "2021-04-08",
+      "place": "Llanquihue",
+      "region": "Los Lagos",
+      "kind": "Tornado y tromba",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -41.268268,
+        -72.993278
+      ],
+      "sources": [
+        "https://climatologia.meteochile.gob.cl/publicaciones/boletinEventosExtremos/boletinEventosExtremos-2021.pdf"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0074",
+      "date": "2021-05-03",
+      "place": "Lago Villarrica",
+      "region": "La Araucanía",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Excel original",
+      "coordinates": [
+        -39.2563225272082,
+        -72.1577150404176
+      ],
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0075",
+      "date": "2021-06-09",
+      "place": "Toltén Viejo",
+      "region": "La Araucanía",
+      "kind": "Tornado y tromba",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -39.2062,
+        -73.2108
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 2
+    },
+    {
+      "id": "CL0076",
+      "date": "2021-06-09",
+      "place": "Mehuín",
+      "region": "Los Ríos",
+      "kind": "Tornado y tromba",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -39.433,
+        -73.1999
+      ],
+      "sources": [
+        "https://twitter.com/INF02000/status/1402800188784271365"
+      ],
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0077",
+      "date": "2021-06-09",
+      "place": "Ancud",
+      "region": "Los Lagos",
+      "kind": "Tornado y tromba",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -41.8615577658789,
+        -73.8190285948799
+      ],
+      "sources": [
+        "https://www.facebook.com/watch/live/?ref=watch_permalink&v=488699242204949"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0078",
+      "date": "2021-08-19",
+      "place": "Tucapel",
+      "region": "Biobío",
+      "kind": "Tornado",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -37.2892539894654,
+        -71.9510771826727
+      ],
+      "sources": [
+        "https://www.eldesconcierto.cl/nacional/2021/08/19/videos-paso-de-tornado-en-tucapel-deja-caidas-de-arboles-voladuras-de-techos-y-al-menos-30-familias-afectadas.html"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0079",
+      "date": "2022-03-08",
+      "place": "Valle Volcanes, Puerto Montt",
+      "region": "Los Lagos",
+      "kind": "Tornado",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -41.4592,
+        -72.9112
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0080",
+      "date": "2022-07-01",
+      "place": "Peralillo",
+      "region": "O’Higgins",
+      "kind": "Tornado",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -34.476,
+        -71.464
+      ],
+      "sources": [
+        "https://www.biobiochile.cl/noticias/nacional/region-de-ohiggins/2022/07/01/se-trataria-de-un-tornado-captan-fenomeno-que-causo-danos-estructurales-y-corte-de-luz-en-peralillo.shtml"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0081",
+      "date": "2022-08-15",
+      "place": "Cobquecura",
+      "region": "Ñuble",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Excel original",
+      "coordinates": [
+        -36.077,
+        -72.797
+      ],
+      "sources": [
+        "https://www.biobiochile.cl/noticias/nacional/region-de-nuble/2022/08/15/captan-tromba-marina-desde-playa-de-cobquecura-advierten-no-acercarse-al-borde-costero.shtml"
+      ],
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0082",
+      "date": "2023-02-04",
+      "place": "Rio Barraza (Salamanca)",
+      "region": "Coquimbo",
+      "kind": "Tornado",
+      "ef": "EF0*",
+      "status": "Excel original",
+      "coordinates": [
+        -31.946495,
+        -70.35
+      ],
+      "sources": [
+        "https://twitter.com/RedGeoChile/status/1627751621970038787"
+      ],
+      "note": "Año original 2022. Se usó el año de la fecha completa.",
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0083",
+      "date": "2023-02-06",
+      "place": "Paihuano",
+      "region": "Coquimbo",
+      "kind": "Tornado",
+      "ef": "EF0*",
+      "status": "Excel original",
+      "coordinates": [
+        -30.352277,
+        -70.439827
+      ],
+      "sources": [
+        "https://twitter.com/hernan_ahumada/status/1622807386049384448?ref_src=twsrc%5Etfw%7Ctwcamp%5Etweetembed%7Ctwterm%5E1622807386049384448%7Ctwgr%5E2e96145a82e4ba55f6abcde5301293d0834ab5a6%7Ctwcon%5Es1_&ref_url=https%3A%2F%2Fwww.24horas.cl%2Fregiones%2Fzona-norte%2Fcoquimbo%2Ftornado-valle-del-elqui-paihuano"
+      ],
+      "note": "Año original 2022. Se usó el año de la fecha completa.",
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0084",
+      "date": "2023-06-02",
+      "place": "Ancud",
+      "region": "Los Lagos",
+      "kind": "Tornado",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -41.8857238981502,
+        -73.8426691869657
+      ],
+      "sources": [
+        "https://www.meganoticias.cl/nacional/416003-reportan-tromba-marina-en-ancud-chiloe-tornado-03-06-2023.html"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0085",
+      "date": "2023-06-07",
+      "place": "Puerto Saavedra",
+      "region": "La Araucanía",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Excel original",
+      "coordinates": [
+        -38.813995,
+        -73.403686
+      ],
+      "sources": [
+        "https://twitter.com/NoticiasUMChile/status/1673691044704026624"
+      ],
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0086",
+      "date": "2023-06-25",
+      "place": "Lago todos los Santos",
+      "region": "Los Lagos",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Excel original",
+      "coordinates": [
+        -41.110048,
+        -72.352376
+      ],
+      "sources": [
+        "https://twitter.com/davidurra7/status/1673025350647914499"
+      ],
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0087",
+      "date": "2023-06-26",
+      "place": "Las Quinientas, Futrono",
+      "region": "Los Ríos",
+      "kind": "Tornado",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -40.12569,
+        -72.3834515
+      ],
+      "sources": [
+        "https://twitter.com/RedGeoChile/status/1673499954776621057"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0088",
+      "date": "2023-06-26",
+      "place": "Lago Llanquihue",
+      "region": "Los Lagos",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Excel original",
+      "coordinates": [
+        -41.104851,
+        -72.75763
+      ],
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0089",
+      "date": "2023-06-27",
+      "place": "La Vara (Puerto Montt)",
+      "region": "Los Lagos",
+      "kind": "Tornado",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -41.422427,
+        -72.907528
+      ],
+      "sources": [
+        "https://twitter.com/GrupoWurtlitzer/status/1673775339321868289"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0090",
+      "date": "2023-07-14",
+      "place": "Lago Llanquihue (km 34 Ruta 225 CH, P.Varas-Ensenada-Petrohué)",
+      "region": "Los Lagos",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Excel original",
+      "coordinates": [
+        -41.224,
+        -72.6574
+      ],
+      "sources": [
+        "https://twitter.com/GFFCandia/status/1680064124909244417"
+      ],
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0091",
+      "date": "2023-09-06",
+      "place": "San Pedro de la Paz",
+      "region": "Biobío",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Excel original",
+      "coordinates": [
+        -36.858005,
+        -73.161822
+      ],
+      "sources": [
+        "https://twitter.com/RedGeoChile/status/1699448782209839535"
+      ],
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0092",
+      "date": "2023-09-11",
+      "place": "Maiquillahue, Mariquina",
+      "region": "Los Ríos",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Excel original",
+      "coordinates": [
+        -39.45966,
+        -73.25942
+      ],
+      "sources": [
+        "https://twitter.com/RedGeoChile/status/1701331586271043699"
+      ],
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0099",
+      "date": "2024-05-25",
+      "place": "Cercanías de Calbuco",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -41.7787232012308,
+        -73.1082635841388
+      ],
+      "sources": [
+        "https://www.tiktok.com/@juan.chavez.l/video/7508482795602365701"
+      ],
+      "note": "Año original 2025. Se usó el año de la fecha completa.",
+      "damage": "No",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0093",
+      "date": "2024-06-18",
+      "place": "Penco",
+      "region": "Biobío",
+      "kind": "Sin marcas de tipo",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -36.7368500124749,
+        -73.0005757077109
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0094",
+      "date": "2024-06-20",
+      "place": "Malalhue (Lanco)",
+      "region": "Los Ríos",
+      "kind": "Sin marcas de tipo",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -39.539336396996,
+        -72.49742103114
+      ],
+      "sources": [
+        "https://x.com/Informa3Chile/status/1803906278533525906"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0095",
+      "date": "2024-06-20",
+      "place": "Folilco (Los Lagos)",
+      "region": "Los Ríos",
+      "kind": "Tornado",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -39.8717180511301,
+        -72.6595497314276
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0096",
+      "date": "2024-06-21",
+      "place": "Dadinco-Las Mariposas (cercanías de Chillán)",
+      "region": "Ñuble",
+      "kind": "Tornado",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -36.6409655732376,
+        -71.9853310043988
+      ],
+      "sources": [
+        "https://drive.google.com/drive/u/0/folders/1KqwYF8xUqXlajtA5Y90wBPP5SSAJRMiX"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "CL0097",
+      "date": "2025-05-17",
+      "place": "Los Ángeles",
+      "kind": "Tornado",
+      "ef": "EF0",
+      "status": "Excel original",
+      "coordinates": [
+        -37.4856,
+        -72.3155
+      ],
+      "sources": [
+        "https://drive.google.com/drive/u/0/folders/1k1NJZVfEqm-H8cF2oO2iPZ3ba1ma7voO"
+      ],
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 0
+    },
+    {
+      "id": "ACT-001",
+      "date": "2025-05-25",
+      "place": "Bahía de Corral",
+      "region": "Los Ríos",
+      "kind": "Tromba marina o lacustre",
+      "status": "Con fuente complementaria",
+      "sources": [
+        "https://blog.meteochile.gob.cl/2025/05/26/siguiendo-las-huellas-de-un-destructivo-tornado-en-puerto-varas/",
+        "https://tornadoschile.cl/lista-de-tornados/"
+      ],
+      "note": "Reporte de tromba marina del mismo día que Puerto Varas, incorporado por separado."
+    },
+    {
+      "id": "CL0098",
+      "date": "2025-05-25",
+      "place": "Puerto Varas",
+      "region": "Los Lagos",
+      "kind": "Tornado",
+      "ef": "EF1",
+      "status": "Excel original",
+      "coordinates": [
+        -41.3218754547657,
+        -72.985342023327
+      ],
+      "sources": [
+        "https://blog.meteochile.gob.cl/2025/06/18/encontrando-el-rastro-del-tornado-en-puerto-varas/",
+        "https://www.instagram.com/reel/DKOAecJogpM/?igsh=czlxdTR1eXl1bWF4"
+      ],
+      "note": "Región de Los Lagos según DMC. EF1 en el original y DMC; el catálogo web propone EF2 y usa CL0101.",
+      "webId": "CL0101",
+      "damage": "Sí",
+      "fatalities": 0,
+      "injured": 19
+    },
+    {
+      "id": "ACT-002",
+      "date": "2025-08-01",
+      "place": "Quintay, Casablanca",
+      "region": "Valparaíso",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0",
+      "status": "Con fuente complementaria",
+      "sources": [
+        "https://climatologia.meteochile.gob.cl/publicaciones/boletinEventosExtremos/boletinEventosExtremos-2025.pdf",
+        "https://tornadoschile.cl/lista-de-tornados/"
+      ],
+      "note": "DMC documenta tromba marina; EF0 proviene del catálogo."
+    },
+    {
+      "id": "ACT-003",
+      "date": "2025-08-02",
+      "place": "La Vara–Senda Sur, Puerto Montt",
+      "region": "Los Lagos",
+      "kind": "Por revisar",
+      "ef": "EF0",
+      "status": "Requiere revisión",
+      "sources": [
+        "https://patagoniaradio.cl/nube-embudo-sorprendio-a-vecinos-de-puerto-montt-este-sabado",
+        "https://tornadoschile.cl/lista-de-tornados/"
+      ],
+      "note": "El catálogo asigna EF0; la fuente local describe una nube embudo. Revisar contacto con suelo."
+    },
+    {
+      "id": "ACT-004",
+      "date": "2025-09-13",
+      "place": "Pilolcura, Valdivia",
+      "region": "Los Ríos",
+      "kind": "Por revisar",
+      "ef": "EF0",
+      "status": "Requiere revisión",
+      "sources": [
+        "https://tornadoschile.cl/lista-de-tornados/"
+      ]
+    },
+    {
+      "id": "ACT-005",
+      "date": "2025-09-20",
+      "place": "Linares",
+      "region": "Maule",
+      "kind": "Tornado",
+      "ef": "EF0",
+      "status": "Categoría preliminar",
+      "sources": [
+        "https://climatologia.meteochile.gob.cl/publicaciones/boletinEventosExtremos/boletinEventosExtremos-2025.pdf",
+        "https://tornadoschile.cl/lista-de-tornados/"
+      ],
+      "note": "Clasificación preliminar publicada por DMC."
+    },
+    {
+      "id": "ACT-006",
+      "date": "2025-09-20",
+      "place": "San Pedro de la Paz / Caleta Lenga",
+      "region": "Biobío",
+      "kind": "Tromba marina o lacustre",
+      "status": "Con fuente complementaria",
+      "sources": [
+        "https://climatologia.meteochile.gob.cl/publicaciones/boletinEventosExtremos/boletinEventosExtremos-2025.pdf",
+        "https://tornadoschile.cl/lista-de-tornados/"
+      ],
+      "note": "Múltiples puntos de observación del mismo evento. El boletín mensual de octubre da 20/10 en el texto; su imagen y el boletín anual respaldan 20/09."
+    },
+    {
+      "id": "ACT-007",
+      "date": "2025-09-20",
+      "place": "Chaihuín, Corral",
+      "region": "Los Ríos",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0",
+      "status": "Requiere revisión",
+      "sources": [
+        "https://climatologia.meteochile.gob.cl/application/publicaciones/documentoPdf/boletinClimatologicoMensual/boletinClimatologicoMensual202510.pdf",
+        "https://tornadoschile.cl/lista-de-tornados/"
+      ],
+      "note": "Fecha del catálogo. El texto del boletín mensual indica 20/10 pero su imagen satelital está fechada 20/09. EF0 proviene del catálogo."
+    },
+    {
+      "id": "ACT-008",
+      "date": "2025-11-08",
+      "place": "Volcán Llaima",
+      "region": "La Araucanía",
+      "kind": "Por revisar",
+      "ef": "EF0*",
+      "status": "Requiere revisión",
+      "sources": [
+        "https://tornadoschile.cl/cl0139/"
+      ],
+      "webId": "CL0139"
+    },
+    {
+      "id": "ACT-009",
+      "date": "2026-03-16",
+      "place": "Golfo de Penas",
+      "region": "Aysén",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Reporte de catálogo",
+      "sources": [
+        "https://tornadoschile.cl/lista-de-tornados/"
+      ]
+    },
+    {
+      "id": "ACT-010",
+      "date": "2026-06-20",
+      "place": "Caleta La Arena–Puelche, seno de Reloncaví",
+      "region": "Los Lagos",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Reporte de catálogo",
+      "sources": [
+        "https://tornadoschile.cl/lista-de-tornados/"
+      ]
+    },
+    {
+      "id": "ACT-011",
+      "date": "2026-07-18",
+      "place": "Sector Pangal, Pichilemu",
+      "region": "O’Higgins",
+      "kind": "Tornado",
+      "ef": "EF0",
+      "status": "Reporte de catálogo",
+      "sources": [
+        "https://tornadoschile.cl/lista-de-tornados/"
+      ]
+    },
+    {
+      "id": "ACT-012",
+      "date": "2026-07-24",
+      "place": "Playa Centinela, lago Llanquihue",
+      "region": "Los Lagos",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Reporte de catálogo",
+      "sources": [
+        "https://tornadoschile.cl/lista-de-tornados/"
+      ]
+    },
+    {
+      "id": "ACT-013",
+      "date": "2026-07-27",
+      "place": "Provincia de Diguillín",
+      "region": "Ñuble",
+      "kind": "Tornado",
+      "ef": "EF1",
+      "status": "Con fuente complementaria",
+      "sources": [
+        "https://dprnuble.dpr.gob.cl/2026/07/28/gobierno-despliega-equipos-tras-reportes-de-nubes-con-caracteristicas-tornadicas-en-cuatro-comunas-de-nuble/",
+        "https://tornadoschile.cl/cl0119/"
+      ],
+      "note": "EF1 del catálogo; reporte oficial inicial describe daños y características tornádicas.",
+      "webId": "CL0119"
+    },
+    {
+      "id": "ACT-014",
+      "date": "2026-08-18",
+      "place": "Costa de Antofagasta",
+      "region": "Antofagasta",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Reporte de catálogo",
+      "sources": [
+        "https://tornadoschile.cl/lista-de-tornados/"
+      ]
+    },
+    {
+      "id": "ACT-015",
+      "date": "2026-08-18",
+      "place": "Interior de Antofagasta, posible sector La Negra",
+      "region": "Antofagasta",
+      "kind": "Por revisar",
+      "ef": "EF0*",
+      "status": "Requiere revisión",
+      "sources": [
+        "https://tornadoschile.cl/lista-de-tornados/"
+      ],
+      "note": "Ubicación exacta por verificar."
+    },
+    {
+      "id": "ACT-016",
+      "date": "2026-08-18",
+      "place": "Nueva Imperial",
+      "region": "La Araucanía",
+      "kind": "Por revisar",
+      "ef": "EF0",
+      "status": "Requiere revisión",
+      "sources": [
+        "https://tornadoschile.cl/cat0/",
+        "https://tornadoschile.cl/lista-de-tornados/"
+      ],
+      "note": "Descripción e intensidad estimada requieren revisión; ver nota del catálogo."
+    },
+    {
+      "id": "ACT-017",
+      "date": "2026-08-28",
+      "place": "San Miguel de Itata–Cholguán–Tucapel",
+      "region": "Ñuble / Biobío",
+      "kind": "Tornado",
+      "ef": "EF1",
+      "status": "Reporte de catálogo",
+      "sources": [
+        "https://tornadoschile.cl/cl0123/"
+      ],
+      "webId": "CL0123"
+    },
+    {
+      "id": "ACT-018",
+      "date": "2026-08-28",
+      "place": "Los Pellines, Constitución",
+      "region": "Maule",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Reporte de catálogo",
+      "sources": [
+        "https://tornadoschile.cl/cl0124/"
+      ],
+      "webId": "CL0124"
+    },
+    {
+      "id": "ACT-019",
+      "date": "2026-08-28",
+      "place": "Tomé",
+      "region": "Biobío",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Requiere revisión",
+      "sources": [
+        "https://tornadoschile.cl/cl0125/"
+      ],
+      "note": "Posible duplicado de Caleta Cocholgüe según el catálogo. Conservar para revisión.",
+      "webId": "CL0125"
+    },
+    {
+      "id": "ACT-020",
+      "date": "2026-08-28",
+      "place": "Campanario",
+      "region": "Ñuble",
+      "kind": "Tornado",
+      "status": "Reporte de catálogo",
+      "sources": [
+        "https://tornadoschile.cl/cl0126/"
+      ],
+      "note": "Sin categoría EF asignada.",
+      "webId": "CL0126"
+    },
+    {
+      "id": "ACT-021",
+      "date": "2026-08-28",
+      "place": "Talcahuano, Tumbes–Taiguén",
+      "region": "Biobío",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Reporte de catálogo",
+      "sources": [
+        "https://tornadoschile.cl/cl0127/"
+      ],
+      "webId": "CL0127"
+    },
+    {
+      "id": "ACT-022",
+      "date": "2026-08-28",
+      "place": "Talcahuano, costanera",
+      "region": "Biobío",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Reporte de catálogo",
+      "sources": [
+        "https://tornadoschile.cl/cl0128/"
+      ],
+      "webId": "CL0128"
+    },
+    {
+      "id": "ACT-023",
+      "date": "2026-08-28",
+      "place": "Caleta Cocholgüe, Tomé",
+      "region": "Biobío",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Reporte de catálogo",
+      "sources": [
+        "https://tornadoschile.cl/cl0129/"
+      ],
+      "webId": "CL0129"
+    },
+    {
+      "id": "ACT-024",
+      "date": "2026-08-29",
+      "place": "Los Perales, Coelemu",
+      "region": "Ñuble",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Reporte de catálogo",
+      "sources": [
+        "https://tornadoschile.cl/cl0130/"
+      ],
+      "webId": "CL0130"
+    },
+    {
+      "id": "ACT-025",
+      "date": "2026-08-29",
+      "place": "La Achira, Santa Rita, Cobquecura",
+      "region": "Ñuble",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Reporte de catálogo",
+      "sources": [
+        "https://tornadoschile.cl/cl0131/"
+      ],
+      "webId": "CL0131"
+    },
+    {
+      "id": "ACT-026",
+      "date": "2026-08-29",
+      "place": "Rinconada de Taucu, Cobquecura",
+      "region": "Ñuble",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Reporte de catálogo",
+      "sources": [
+        "https://tornadoschile.cl/cl0132/"
+      ],
+      "webId": "CL0132"
+    },
+    {
+      "id": "ACT-027",
+      "date": "2026-08-29",
+      "place": "Coliumo, Tomé",
+      "region": "Biobío",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Reporte de catálogo",
+      "sources": [
+        "https://tornadoschile.cl/cl0133/"
+      ],
+      "webId": "CL0133"
+    },
+    {
+      "id": "ACT-028",
+      "date": "2026-08-29",
+      "place": "Caleta Tumbes, Talcahuano",
+      "region": "Biobío",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Reporte de catálogo",
+      "sources": [
+        "https://tornadoschile.cl/cl0134/"
+      ],
+      "webId": "CL0134"
+    },
+    {
+      "id": "ACT-029",
+      "date": "2026-08-29",
+      "place": "Pingueral, Dichato",
+      "region": "Biobío",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Reporte de catálogo",
+      "sources": [
+        "https://tornadoschile.cl/cl0135/"
+      ],
+      "webId": "CL0135"
+    },
+    {
+      "id": "ACT-030",
+      "date": "2026-08-29",
+      "place": "Cantarrana",
+      "region": "Ñuble",
+      "kind": "Tornado",
+      "ef": "EF1",
+      "status": "Reporte de catálogo",
+      "sources": [
+        "https://tornadoschile.cl/cl0136/"
+      ],
+      "webId": "CL0136"
+    },
+    {
+      "id": "ACT-031",
+      "date": "2026-08-29",
+      "place": "Morguilla, Lebu",
+      "region": "Biobío",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Reporte de catálogo",
+      "sources": [
+        "https://tornadoschile.cl/cl0137/"
+      ],
+      "webId": "CL0137"
+    },
+    {
+      "id": "ACT-032",
+      "date": "2026-08-29",
+      "place": "Queilén, Chiloé",
+      "region": "Los Lagos",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Reporte de catálogo",
+      "sources": [
+        "https://tornadoschile.cl/cl0138/"
+      ],
+      "webId": "CL0138"
+    },
+    {
+      "id": "ACT-033",
+      "date": "2026-08-31",
+      "place": "Lago Llanquihue",
+      "region": "Los Lagos",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Reporte de catálogo",
+      "sources": [
+        "https://tornadoschile.cl/lista-de-tornados/"
+      ]
+    },
+    {
+      "id": "ACT-034",
+      "date": "2026-09-20",
+      "place": "Lomas de La Tercera, Longaví",
+      "region": "Maule",
+      "kind": "Rachas de viento",
+      "status": "Reclasificado",
+      "sources": [
+        "https://www.latercera.com/nacional/noticia/dmc-descarta-tornado-en-longavi-y-atribuye-danos-a-fuertes-rachas-de-viento/?outputType=base-amp-type",
+        "https://tornadoschile.cl/lista-de-tornados/"
+      ],
+      "note": "La evaluación inicial de DMC atribuye daños a rachas de viento. El catálogo publica EF0."
+    },
+    {
+      "id": "ACT-035",
+      "date": "2026-09-27",
+      "place": "Rahue, Osorno",
+      "region": "Los Lagos",
+      "kind": "Por revisar",
+      "ef": "EF0",
+      "status": "Requiere revisión",
+      "sources": [
+        "https://www.latribuna.cl/medio-ambiente/2026/10/03/dmc-confirma-que-el-fenomeno-que-provoco-danos-en-mulchen-fue-un-tornado.html",
+        "https://tornadoschile.cl/lista-de-tornados/"
+      ],
+      "note": "El catálogo lista EF0; la fuente complementaria menciona una nube embudo."
+    },
+    {
+      "id": "ACT-036",
+      "date": "2026-09-27",
+      "place": "El Mirador, Mulchén",
+      "region": "Biobío",
+      "kind": "Tornado",
+      "ef": "EF0",
+      "status": "Con fuente complementaria",
+      "sources": [
+        "https://www.biobiochile.cl/noticias/nacional/region-del-bio-bio/2026/10/03/confirman-que-fenomeno-que-afecto-a-sector-de-mulchen-fue-un-tornado-alcanzo-hasta-los-137-km-h.shtml",
+        "https://tornadoschile.cl/lista-de-tornados/"
+      ],
+      "note": "La nota reproduce la confirmación de la DMC."
+    },
+    {
+      "id": "ACT-037",
+      "date": "2026-10-13",
+      "place": "Estación Central",
+      "region": "Metropolitana",
+      "kind": "Gustnado",
+      "status": "Reclasificado",
+      "sources": [
+        "https://blog.meteochile.gob.cl/2026/10/27/tornados-en-chile-un-2026-marcado-por-eventos-fuera-de-la-temporada-habitual/",
+        "https://tornadoschile.cl/lista-de-tornados/"
+      ],
+      "note": "DMC reclasificó el evento como gustnado; se conserva como antecedente."
+    },
+    {
+      "id": "ACT-038",
+      "date": "2026-10-21",
+      "place": "Huaso Chileno–Los Maitenes, Retiro",
+      "region": "Maule",
+      "kind": "Tornado",
+      "ef": "EF0",
+      "status": "Categoría preliminar",
+      "sources": [
+        "https://senapred.cl/evento/monitoreo-por-evento-meteorologico-entre-las-regiones-de-antofagasta-y-los-lagos-2026-10-20-21-39-25",
+        "https://tornadoschile.cl/cl0155/"
+      ],
+      "note": "EF0 preliminar en el reporte de SENAPRED; EF1 en catálogo.",
+      "webId": "CL0155"
+    },
+    {
+      "id": "ACT-039",
+      "date": "2026-10-21",
+      "place": "Coronel",
+      "region": "Biobío",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Con fuente complementaria",
+      "sources": [
+        "https://www.biobiochile.cl/noticias/nacional/region-del-bio-bio/2026/10/21/armada-confirma-tromba-marina-en-coronel-y-nube-embudo-en-talcahuano.shtml",
+        "https://tornadoschile.cl/lista-de-tornados/"
+      ],
+      "note": "Armada confirma tromba según el medio. EF0* proviene del catálogo."
+    },
+    {
+      "id": "ACT-040",
+      "date": "2026-10-22",
+      "place": "Curanipe, Pelluhue",
+      "region": "Maule",
+      "kind": "Tromba marina o lacustre",
+      "ef": "EF0*",
+      "status": "Reporte de catálogo",
+      "sources": [
+        "https://tornadoschile.cl/lista-de-tornados/"
+      ]
+    },
+    {
+      "id": "ACT-041",
+      "date": "2026-10-26",
+      "place": "Requínoa",
+      "region": "O’Higgins",
+      "kind": "Tornado",
+      "ef": "EF2",
+      "status": "Categoría preliminar",
+      "sources": [
+        "https://blog.meteochile.gob.cl/2026/10/27/tornados-en-chile-un-2026-marcado-por-eventos-fuera-de-la-temporada-habitual/",
+        "https://tornadoschile.cl/cl0152/"
+      ],
+      "note": "EF2 preliminar según DMC; se documentaron daños en viviendas y un colegio.",
+      "webId": "CL0152"
+    }
+  ]
+}

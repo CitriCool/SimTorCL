@@ -1,6 +1,7 @@
 import { ENV_MODEL } from "./environment.js";
 import { setupEditor } from "./editor-ui.js";
 import { setupLearning } from "./learning-ui.js";
+import { setupHistoricalCatalog } from "./historical-ui.js";
 import { LESSONS } from "./lessons.js";
 import { refreshParameterLibrary } from "./parameters-ui.js";
 import { setupUrban } from "./urban-ui.js";
@@ -764,6 +765,7 @@ try {
     reset,
     isReplaying: () => !!notebook?.replaying,
   });
+  setupHistoricalCatalog({ openScenario: editor.open });
   learning = setupLearning({
     experiment: simulation,
     getView: () => view,

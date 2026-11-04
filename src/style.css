@@ -1275,6 +1275,57 @@ dialog a {
   font-size: 12px;
   color: var(--teal);
 }
+#historical-dialog {
+  box-sizing: border-box;
+  width: min(680px, 94vw);
+  padding: clamp(16px, 4vw, 32px);
+}
+#historical-query {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #435b50;
+  border-radius: 5px;
+  background: #101b16;
+  color: inherit;
+  font: inherit;
+}
+.historical-filters {
+  margin-top: 12px;
+}
+.historical-filters .notebook-filters {
+  margin-top: 8px;
+}
+#historical-results details {
+  border-top: 1px solid #34473e;
+}
+#historical-dialog summary {
+  cursor: pointer;
+}
+#historical-results summary {
+  padding: 10px 0;
+}
+#historical-results summary small {
+  display: block;
+  margin: 4px 0 0 1em;
+  color: #a4b9ae;
+}
+.historical-detail {
+  padding: 0 0 12px 1em;
+  overflow-wrap: anywhere;
+}
+.historical-detail p {
+  margin: 0 0 8px;
+}
+.historical-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+#historical-more {
+  margin-top: 12px;
+}
 .model-notice {
   font-size: 11px;
   line-height: 1.8;

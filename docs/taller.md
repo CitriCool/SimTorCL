@@ -17,7 +17,7 @@ Ejemplo descargable: [Plaza con edificios](examples/plaza-v2.7.json), importable
 
 ## Caso histórico de Puerto Varas 2025
 
-Abre **Caso histórico · Puerto Varas 2025** en la pantalla principal, o selecciona el caso en **Aprender con un ejemplo**. El recorrido aparece en el borrador. Pulsa **Usar esta manzana** y luego **Iniciar simulación**. Puedes volver a ver la geometría intacta desde **Entiende lo que ocurrió** y consultar los daños calculados en el cuaderno.
+Abre **Catálogo histórico → Puerto Varas → Abrir tramo urbano**, o selecciona el caso en **Aprender con un ejemplo**. El recorrido aparece en el borrador. Pulsa **Usar esta manzana** y luego **Iniciar simulación**. Puedes volver a ver la geometría intacta desde **Entiende lo que ocurrió** y consultar los daños calculados en el cuaderno.
 
 - **Evento documentado.** El 25 de mayo de 2025, un tornado de categoría EF1 según la DMC afectó a Puerto Varas. La inspección documentó pérdidas de techumbre y permitió trazar su recorrido a partir de daños. El informe preliminar indica un avance general de noroeste a sureste. El municipio documenta afectación en Walker Martínez. [Mapa de la DMC](https://blog.meteochile.gob.cl/2025/06/18/encontrando-el-rastro-del-tornado-en-puerto-varas/) · [Dirección del recorrido](https://blog.meteochile.gob.cl/2025/05/26/siguiendo-las-huellas-de-un-destructivo-tornado-en-puerto-varas/) · [Municipalidad](https://www.ptovaras.cl/noticias/puerto-varas-conmemora-el-primer-aniversario-del-tornado-con-foco-en-reconstruccion-resiliencia-y-preparacion-climatica)
 - **Escenario simulado.** Una cuadrícula sintética de 4 × 4 parcelas representa un tramo urbano inspirado en Walker Martínez. Incluye seis casas, dos edificios bajos, dos parques y un árbol independiente. La polilínea conserva la dirección general publicada y usa coordenadas locales aproximadas. Los materiales, calles y posiciones se asignaron con fines educativos.
@@ -27,7 +27,7 @@ Abre **Caso histórico · Puerto Varas 2025** en la pantalla principal, o selecc
 
 ## Caso rural de Rinconada de Itata 2019
 
-Abre **Rinconada de Itata 2019 · Escenario rural**. El informe especial de la DMC recoge 42 viviendas afectadas y voladuras de techumbre en Yungay el 30 de mayo de 2019. La DMC incluyó el episodio entre los tornados sin confirmar. [Informe especial de la DMC](https://climatologia.meteochile.gob.cl/publicaciones/climaHoy/climaHoy20201204.pdf)
+Abre **Catálogo histórico → San Miguel de Itata → Abrir escenario rural**. El informe especial de la DMC recoge 42 viviendas afectadas y voladuras de techumbre en Yungay el 30 de mayo de 2019. La DMC incluyó el episodio entre los tornados sin confirmar. [Informe especial de la DMC](https://climatologia.meteochile.gob.cl/publicaciones/climaHoy/climaHoy20201204.pdf)
 
 El ensayo de 45 s ocupa unos 215 × 110 m. Cuatro de las seis viviendas y dos de los tres árboles están cerca de un recorrido ilustrativo. Las posiciones, los 160 km/h, los 12 m de radio, los 6 m/s de avance y el 50 % de refuerzo se eligieron para comparar la exposición de las parcelas. El recuento histórico de viviendas afectadas y el recuento simulado de piezas desprendidas se expresan en unidades distintas.
 

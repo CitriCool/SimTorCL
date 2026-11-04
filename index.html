@@ -59,14 +59,8 @@
         <p class="selection-note" id="editor-open-note">
           Coloca casas, edificios y parques en un plano 3D.
         </p>
-        <button class="details-button editor-entry" id="puerto-varas-open">
-          Caso histórico · Puerto Varas 2025 ↗
-        </button>
-        <button class="details-button editor-entry" id="puerto-varas-corridor-open">
-          Puerto Varas 2025 · Corredor ampliado ↗
-        </button>
-        <button class="details-button editor-entry" id="itata-open">
-          Rinconada de Itata 2019 · Escenario rural ↗
+        <button class="details-button editor-entry" id="historical-open">
+          Catálogo histórico ↗
         </button>
 
         <section class="control-section">
@@ -806,6 +800,27 @@
           Aplicar y generar barrio
         </button>
       </form>
+    </dialog>
+    <dialog id="historical-dialog" aria-labelledby="historical-title">
+      <form method="dialog">
+        <button class="dialog-close" aria-label="Cerrar catálogo">×</button>
+      </form>
+      <h2 id="historical-title">Catálogo histórico</h2>
+      <label class="field-label" for="historical-query">Buscar eventos</label>
+      <input id="historical-query" type="search" placeholder="Lugar, comuna, año o ID" autofocus />
+      <details class="historical-filters">
+        <summary>Filtros</summary>
+        <div class="notebook-filters">
+          <label>Región<select id="historical-region"></select></label>
+          <label>Año<select id="historical-year"></select></label>
+          <label>Fenómeno<select id="historical-kind"></select></label>
+          <label>Categoría EF<select id="historical-ef"></select></label>
+        </div>
+      </details>
+      <p id="historical-count" role="status"></p>
+      <div id="historical-results"></div>
+      <button id="historical-more" class="details-button" type="button" hidden>Mostrar más</button>
+      <p class="selection-note" id="historical-cutoff"></p>
     </dialog>
     <dialog id="about-dialog" aria-labelledby="about-title">
       <button
