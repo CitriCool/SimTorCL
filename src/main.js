@@ -2,6 +2,7 @@ import { ENV_MODEL } from "./environment.js";
 import { setupEditor } from "./editor-ui.js";
 import { setupLearning } from "./learning-ui.js";
 import { setupHistoricalCatalog } from "./historical-ui.js";
+import { countHomesWithRoofLoss } from "./runs.js";
 import { LESSONS } from "./lessons.js";
 import { refreshParameterLibrary } from "./parameters-ui.js";
 import { setupUrban } from "./urban-ui.js";
@@ -61,7 +62,7 @@ function updateReadout() {
   $("tilt").textContent = `Inclinación máx. ${s.maxTilt.toFixed(1)}°`;
   if (simulation.houses) {
     $("district-summary").textContent =
-      `${s.affected}/${s.houseTotal} viviendas afectadas · ${s.collapsed} con colapso del modelo · recorrido ${Math.round(s.progress * 100)} %`;
+      `${s.affected}/${s.houseTotal} viviendas afectadas · ${countHomesWithRoofLoss(s)} con desprendimientos de cubierta · ${s.collapsed} con colapso del modelo · recorrido ${Math.round(s.progress * 100)} %`;
     for (const row of s.rows) {
       const values = [
         row.label,

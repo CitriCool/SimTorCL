@@ -23,6 +23,7 @@ import {
   shareLink,
 } from "./records.js";
 import { listEntries, readEntry, saveEntry } from "./library.js";
+import { countHomesWithRoofLoss } from "./runs.js";
 
 const $ = (id) => document.getElementById(id);
 const labels = {
@@ -674,6 +675,7 @@ export function setupNotebook({
       [150, "150 %"],
       [200, "200 %"],
     ],
+    wind: Array.from({ length: 57 }, (_, i) => [i * 5, `${i * 5} km/h`]),
     distribution: [
       ["mixed", "Mezcla ilustrativa"],
       ["uniform", "Uniforme"],
@@ -698,6 +700,8 @@ export function setupNotebook({
     );
     if ($("run-variable").value === "reinforcement")
       $("run-value").value = "150";
+    if ($("run-variable").value === "wind")
+      $("run-value").value = experiment.config.wind === 135 ? "160" : "135";
   }
   $("run-variable").addEventListener("change", choices);
   choices();
@@ -748,6 +752,14 @@ export function setupNotebook({
     w.postMessage(message);
   }
   function renderResults() {
+    const condition = (config) => {
+      if (comparisonKey === "wind") return `${config.wind} km/h`;
+      if (comparisonKey === "trajectory" && config.route) return "Recorrido dibujado";
+      return variables[comparisonKey].find(([value]) => value === config[comparisonKey])?.[1]
+        ?? String(config[comparisonKey]);
+    };
+    const conditionName = [...$("run-variable").options]
+      .find((option) => option.value === comparisonKey).textContent;
     const table = document.createElement("table"),
       head = document.createElement("tr");
     for (const title of [
@@ -770,7 +782,7 @@ export function setupNotebook({
       ]) {
         const tr = document.createElement("tr");
         for (const value of [
-          `${result.label} · ${s.label} · ${[...$("run-variable").options].find((o) => o.value === comparisonKey).textContent}: ${comparisonKey === "trajectory" && result.config.route ? "Recorrido dibujado" : variables[comparisonKey].find(([v]) => v === result.config[comparisonKey])[1]}`,
+          `${result.label} · ${s.label} · ${conditionName} ${condition(result.config)}`,
           `${s.detached}/${s.total}`,
           `${s.wallDetached}/${s.wallTotal}`,
           `${s.broken}/${s.connectionTotal}`,
@@ -791,7 +803,8 @@ export function setupNotebook({
         label = document.createElement("p"),
         meter = document.createElement("div"),
         fill = document.createElement("span");
-      label.textContent = `${result.label} · ${result.config.reinforcement} % de refuerzo · ${result.stats.elapsed.toFixed(2)} s calculados · cubierta: ${result.stats.detached}/${result.stats.total}`;
+      const stats = result.stats;
+      label.textContent = `${result.label} · ${condition(result.config)} · ${stats.elapsed.toFixed(2)} s · ${countHomesWithRoofLoss(stats)}/${stats.houseTotal ?? 1} viviendas con desprendimientos de cubierta · ${stats.detached}/${stats.total} piezas desprendidas`;
       meter.className = "comparison-meter";
       fill.style.width = `${(result.stats.detached / Math.max(1, result.stats.total)) * 100}%`;
       meter.append(fill);
@@ -840,7 +853,7 @@ export function setupNotebook({
     "click",
     attempt(() => {
       const key = $("run-variable").value,
-        value = ["reinforcement", "spacing", "lotSize", "orientation"].includes(
+        value = ["reinforcement", "wind", "spacing", "lotSize", "orientation"].includes(
           key,
         )
           ? Number($("run-value").value)

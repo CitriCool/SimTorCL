@@ -4,6 +4,10 @@ import { FIXED_STEP } from "./physics.js";
 
 import { cleanConfig } from "./records.js";
 
+export function countHomesWithRoofLoss(stats) {
+  return (stats.rows ?? [stats]).filter((home) => home.detached > 0).length;
+}
+
 export function recalculate(record, onProgress = () => {}) {
   const experiment = new Experiment(record.initial, { record: false });
   let change = 0;
@@ -28,6 +32,7 @@ export function* compareScenarios(config, key, value, seconds = 20) {
   if (
     ![
       "reinforcement",
+      "wind",
       "distribution",
       "spacing",
       "roof",
