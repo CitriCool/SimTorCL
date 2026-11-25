@@ -21,7 +21,7 @@ En **Elegir parcela por botones · teclado y móvil**, las flechas recorren dest
 
 **Guardar diseño en biblioteca** conserva una configuración en IndexedDB, en el mismo origen del sitio. **Descargar diseño JSON** permite trasladarla. Se cargan desde el cuaderno de experimentos; también pueden compartirse con el generador de enlaces existente.
 
-**Usar esta manzana** reconstruye el experimento intacto con el diseño elegido. Si hay pasos calculados, ofrece guardar la ejecución anterior antes de aplicar, aplicar sin conservar sus resultados o seguir editando. Si el guardado falla, el experimento anterior se conserva. Al terminar, ajusta el viento, inicia la simulación y consulta eventos, inspección y resultados en el cuaderno.
+**Aplicar a la simulación** reconstruye el experimento intacto con el diseño elegido. Si hay pasos calculados, ofrece guardar la ejecución anterior antes de aplicar, aplicar sin conservar sus resultados o seguir editando. Si el guardado falla, el experimento anterior se conserva. Al terminar, ajusta el viento, inicia la simulación y consulta eventos, inspección y resultados en el cuaderno.
 
 Durante una repetición visual el acceso al editor está deshabilitado. Se puede volver a la ejecución propia y abrir un nuevo borrador. No se continúa la física desde una geometría dañada editada.
 

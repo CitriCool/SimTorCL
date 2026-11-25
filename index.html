@@ -46,23 +46,7 @@
 
     <main class="workspace">
       <aside class="sidebar" aria-label="Configuración del experimento">
-        <div class="eyebrow">
-          <span class="tiny-cross">+</span> LABORATORIO INTERACTIVO
-        </div>
-        <h1>La fuerza del viento.<br /><span>Explora sus efectos.</span></h1>
-        <p class="intro">
-          Explora la respuesta de una vivienda chilena ante un tornado.
-        </p>
-        <button class="primary-button editor-entry" id="editor-open">
-          ⌂ Construir mi manzana
-        </button>
-        <p class="selection-note" id="editor-open-note">
-          Coloca casas, edificios y parques en un plano 3D.
-        </p>
-        <button class="details-button editor-entry" id="historical-open">
-          Catálogo histórico ↗
-        </button>
-
+        <h1>Laboratorio de tornados</h1>
         <section class="control-section">
           <div class="section-heading">
             <h2><span>01</span> Escenario</h2>
@@ -75,6 +59,17 @@
             <option value="block16">Manzana · 16 casas</option>
             <option value="neighborhood">Barrio configurable</option>
           </select>
+        <button class="reset-button editor-entry" id="editor-open">
+          Editar manzana
+        </button>
+        <p class="selection-note" id="editor-open-note">
+          Coloca casas, edificios y parques en un plano 3D.
+        </p>
+        <button class="details-button editor-entry" id="historical-open">
+          Casos de Chile ↗
+        </button>
+
+          <details class="lab-options"><summary>Configurar viviendas</summary>
           <div id="district-controls" hidden>
             <label class="field-label" for="distribution"
               >Distribución de perfiles</label
@@ -137,36 +132,10 @@
           <button class="details-button" id="parameters-button">
             Parámetros y fuentes ↗
           </button>
+          </details>
         </section>
 
-        <section class="control-section wind-controls">
-          <div class="section-heading">
-            <h2><span>02</span> Condiciones del tornado</h2>
-          </div>
-          <div class="presets" role="group" aria-label="Intensidad predefinida">
-            <button data-preset="suave">Suave</button
-            ><button class="active" data-preset="fuerte" aria-pressed="true">
-              Fuerte</button
-            ><button data-preset="extremo">Extremo</button>
-          </div>
-          <label class="range-label" for="wind"
-            >Velocidad del viento
-            <span
-              ><output id="wind-value" for="wind">160</output>
-              <small>km/h</small></span
-            ></label
-          >
-          <input
-            id="wind"
-            type="range"
-            min="0"
-            max="280"
-            step="5"
-            value="160"
-          />
-          <div class="range-ticks">
-            <span>0 km/h</span><span>280 km/h</span>
-          </div>
+        <details class="control-section lab-options"><summary>Opciones avanzadas del tornado</summary>
           <label class="range-label" for="radius"
             >Radio de influencia
             <span
@@ -244,7 +213,7 @@
           <p class="selection-note">
             Consulta la demanda de cada unión en Cuaderno → Inspección.
           </p>
-        </section>
+        </details>
 
         <section class="control-section visual-controls">
           <div class="section-heading">
@@ -289,6 +258,51 @@
           </div>
           <div class="status" id="status" role="status">
             <span></span><b id="status-text">Listo para iniciar</b>
+          </div>
+        </div>
+        <div class="lab-controls">
+          <section class="lab-wind" aria-label="Viento del ensayo">
+            <div class="presets" role="group" aria-label="Intensidad predefinida">
+              <button data-preset="suave">Suave</button
+              ><button class="active" data-preset="fuerte" aria-pressed="true">
+                Fuerte</button
+              ><button data-preset="extremo">Extremo</button>
+            </div>
+            <label class="range-label" for="wind"
+              >Velocidad del viento
+              <span
+                ><output id="wind-value" for="wind">160</output>
+                <small>km/h</small></span
+              ></label
+            >
+            <input
+              id="wind"
+              type="range"
+              min="0"
+              max="280"
+              step="5"
+              value="160"
+            />
+            <div class="range-ticks">
+              <span>0 km/h</span><span>280 km/h</span>
+            </div>
+          </section>
+          <div class="transport">
+            <div class="transport-actions">
+              <button class="primary-button" id="play">
+                <span id="play-icon">▶</span
+                ><span id="play-text">Iniciar simulación</span></button
+              ><button
+                class="reset-button"
+                id="reset"
+                title="Reiniciar escenario (R)"
+              >
+                <span>↺</span> Reiniciar
+              </button>
+            </div>
+            <button class="reset-button compare-open" id="compare-button">
+              Comparar perfiles ↗
+            </button>
           </div>
         </div>
         <div class="viewport" id="viewport">
@@ -351,6 +365,7 @@
           </div>
           <div class="error-banner" id="error" role="alert" hidden></div>
         </div>
+        <a class="lab-results" href="#learning-panel">Ver qué falló ↓</a>
         <div class="telemetry" aria-label="Resultados del experimento">
           <div class="metric">
             <span class="metric-label"
@@ -415,23 +430,6 @@
             <span class="metric-foot">Paso fijo · 120 Hz</span>
           </div>
         </div>
-        <div class="transport">
-          <div class="transport-actions">
-            <button class="primary-button" id="play">
-              <span id="play-icon">▶</span
-              ><span id="play-text">Iniciar simulación</span></button
-            ><button
-              class="reset-button"
-              id="reset"
-              title="Reiniciar escenario (R)"
-            >
-              <span>↺</span> Reiniciar
-            </button>
-          </div>
-          <button class="reset-button compare-open" id="compare-button">
-            Comparar perfiles ↗
-          </button>
-        </div>
         <section class="notebook-strip" aria-label="Cuaderno del experimento">
           <button class="reset-button" id="notebook-open">
             Cuaderno de experimentos ↗</button
@@ -470,7 +468,7 @@
           class="learning-panel"
           aria-label="Entender los resultados"
         >
-          <h3>3 · Entiende lo que ocurrió</h3>
+          <h3>Entiende lo que ocurrió</h3>
           <details id="learning-guide">
             <summary>Guía rápida del laboratorio</summary>
             <ol>
@@ -833,7 +831,7 @@
         <option value="frame">Estructura sin planchas</option>
         <option value="assembled">Cubierta montada</option>
       </select>
-      <div class="editor-viewport roof-reference-viewport">
+      <div class="block-editor__viewport roof-reference-viewport">
         <canvas id="roof-reference-canvas" aria-label="Casa de madera y capas de la techumbre en 3D"></canvas>
       </div>
       <p id="roof-reference-status" role="status"></p>
@@ -1332,20 +1330,19 @@
     </dialog>
     <dialog
       id="editor-dialog"
-      class="editor-dialog"
+      class="block-editor"
       aria-labelledby="editor-title"
     >
-      <button class="dialog-close" id="editor-close" aria-label="Cerrar editor">
+      <button class="block-editor__close" id="editor-close" aria-label="Cerrar editor">
         ×
       </button>
-      <div class="eyebrow">TU BARRIO, PARCELA A PARCELA</div>
       <h2 id="editor-title">Construye tu manzana</h2>
-      <ol class="editor-steps" aria-label="Pasos del experimento">
+      <ol class="block-editor__steps" aria-label="Pasos del experimento">
         <li aria-current="step">1 · Construir</li>
         <li>2 · Simular</li>
         <li>3 · Entender</li>
       </ol>
-      <p class="editor-intro">
+      <p class="block-editor__intro">
         Arrastra una infraestructura a una parcela libre o selecciónala y toca
         su destino. Para mover un objeto, arrástralo o usa «Mover».
       </p>
@@ -1355,9 +1352,9 @@
         <p data-case-model></p>
         <a data-case-source target="_blank" rel="noopener noreferrer">Mapa y análisis de la DMC ↗</a>
       </section>
-      <section class="editor-route-box" aria-labelledby="editor-size-title">
+      <section class="block-editor__panel" aria-labelledby="editor-size-title">
         <h3 id="editor-size-title">Tamaño de la manzana</h3>
-        <form id="editor-size-form" class="editor-weather editor-size-form">
+        <form id="editor-size-form" class="block-editor__fields block-editor__fields--size">
           <label for="editor-rows"
             >Filas<select id="editor-rows">
               <option value="2">2</option>
@@ -1374,7 +1371,7 @@
         </form>
         <p id="editor-size-status" role="status"></p>
       </section>
-      <details class="editor-example-panel">
+      <details class="block-editor__examples">
         <summary>Aprender con un ejemplo</summary>
         <label for="editor-example">Escenario educativo</label
         ><select id="editor-example">
@@ -1394,9 +1391,9 @@
         </p>
         <p id="editor-lesson-goal"></p>
       </details>
-      <div class="editor-layout">
+      <div class="block-editor__layout">
         <section
-          class="editor-palette"
+          class="block-editor__palette"
           aria-label="Infraestructuras disponibles"
         >
           <h3>¿Qué quieres añadir?</h3>
@@ -1461,8 +1458,8 @@
             parcelas sin construcción. Las calles permanecen fijas.
           </p>
         </section>
-        <section class="editor-plan" aria-label="Plano de construcción">
-          <div class="editor-tools">
+        <section class="block-editor__plan" aria-label="Plano de construcción">
+          <div class="block-editor__tools">
             <button type="button" id="editor-select" aria-pressed="true">
               Seleccionar
             </button>
@@ -1474,21 +1471,21 @@
             <button type="button" id="editor-undo" disabled>↶ Deshacer</button>
             <button type="button" id="editor-redo" disabled>↷ Rehacer</button>
           </div>
-          <div class="editor-viewport">
+          <div class="block-editor__viewport">
             <canvas
               id="editor-scene"
               aria-label="Plano tridimensional editable de la manzana"
             ></canvas
-            ><span class="editor-canvas-tag">BORRADOR · SIN VIENTO</span>
+            ><span class="block-editor__canvas-tag">BORRADOR · SIN VIENTO</span>
           </div>
           <p id="editor-summary" class="selection-note"></p>
-          <section class="editor-route-box" aria-label="Preparar el tornado">
+          <section class="block-editor__panel" aria-label="Preparar el tornado">
             <h3>2 · Prepara el tornado</h3>
             <p>
               Marca puntos sobre el plano o usa las parcelas para un recorrido
               por sus centros. Las líneas unen los puntos en orden.
             </p>
-            <div class="editor-tools">
+            <div class="block-editor__tools">
               <button type="button" id="editor-route-draw" aria-pressed="false">
                 Dibujar recorrido</button
               ><button type="button" id="editor-route-remove">
@@ -1498,7 +1495,7 @@
               </button>
             </div>
             <p id="editor-route-summary" role="status"></p>
-            <form id="editor-weather-form" class="editor-weather">
+            <form id="editor-weather-form" class="block-editor__fields">
               <label for="editor-wind"
                 >Intensidad del viento (km/h)<input
                   id="editor-wind"
@@ -1529,7 +1526,7 @@
               </button>
             </form>
           </section>
-          <details class="editor-grid-details">
+          <details class="block-editor__grid-details">
             <summary>Elegir parcela por botones · teclado y móvil</summary>
             <p class="selection-note">
               Las flechas recorren las parcelas. Pulsa Enter para seleccionar o
@@ -1537,20 +1534,20 @@
             </p>
             <div
               id="editor-grid"
-              class="editor-grid"
+              class="block-editor__grid"
               aria-label="Parcelas editables"
             ></div>
           </details>
         </section>
         <section
-          class="editor-properties"
+          class="block-editor__properties"
           aria-label="Propiedades de la selección"
         >
           <h3>Tu selección</h3>
           <p id="editor-selected">Selecciona una parcela.</p>
           <label for="editor-object-list">Objeto en esta parcela</label
           ><select id="editor-object-list"></select>
-          <div class="editor-object-actions">
+          <div class="block-editor__object-actions">
             <button type="button" id="editor-move" disabled>Mover</button
             ><button type="button" id="editor-duplicate" disabled>
               Duplicar</button
@@ -1601,30 +1598,32 @@
       </div>
       <p
         id="editor-status"
-        class="editor-status"
+        class="block-editor__status"
         role="status"
         aria-live="polite"
       >
         Elige una infraestructura o selecciona una parcela.
       </p>
-      <div class="editor-save">
-        <label for="editor-name"
-          >Nombre de la manzana<input
-            id="editor-name"
-            maxlength="80"
-            value="Mi manzana"
-        /></label>
-        <button class="reset-button" id="editor-save">
-          Guardar diseño en biblioteca
-        </button>
-        <button class="reset-button" id="editor-export">
-          Descargar diseño JSON
-        </button>
+      <div class="block-editor__footer">
+        <div class="block-editor__design-actions">
+          <label for="editor-name">
+            Nombre de la manzana
+            <input id="editor-name" maxlength="80" value="Mi manzana" />
+          </label>
+          <button class="reset-button" id="editor-save">
+            Guardar en biblioteca
+          </button>
+          <button class="reset-button" id="editor-export">
+            Descargar JSON
+          </button>
+        </div>
+      </div>
+      <div class="block-editor__simulation-action">
         <button class="primary-button" id="editor-apply">
-          Usar esta manzana →
+          Aplicar a la simulación →
         </button>
       </div>
-      <div id="editor-replace" class="editor-replace" hidden>
+      <div id="editor-replace" class="block-editor__replace" hidden>
         <p>
           Aplicar el diseño reconstruye el experimento desde cero. Tu ejecución
           pausada sigue intacta hasta elegir una opción.

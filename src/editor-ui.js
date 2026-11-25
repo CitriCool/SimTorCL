@@ -714,7 +714,7 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
       animate();
       say(
         exampleId
-          ? "Revisa el recorrido y pulsa «Usar esta manzana» para preparar el ensayo."
+          ? "Revisa el recorrido y pulsa «Aplicar a la simulación» para preparar el ensayo."
           : "Borrador independiente. Elige una infraestructura o selecciona una parcela; tu experimento permanece intacto.",
       );
     } catch (error) {
@@ -766,7 +766,7 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
     try {
       await saveEntry(designDocument());
       say(
-        "Diseño guardado en la biblioteca local. También puedes descargar su JSON.",
+        "Diseño guardado en la biblioteca local. Pulsa «Aplicar a la simulación» para usarlo en el ensayo.",
       );
     } catch (error) {
       say(error.message);
@@ -798,8 +798,8 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
     if (applying) return;
     applying = true;
     $("editor-close").disabled = true;
-    dialog.querySelector(".editor-layout").inert = true;
-    dialog.querySelector(".editor-save").inert = true;
+    dialog.querySelector(".block-editor__layout").inert = true;
+    dialog.querySelector(".block-editor__footer").inert = true;
     $("editor-keep-editing").disabled = true;
     for (const id of [
       "editor-apply",
@@ -822,8 +822,8 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
     } finally {
       applying = false;
       $("editor-close").disabled = false;
-      dialog.querySelector(".editor-layout").inert = false;
-      dialog.querySelector(".editor-save").inert = false;
+      dialog.querySelector(".block-editor__layout").inert = false;
+      dialog.querySelector(".block-editor__footer").inert = false;
       $("editor-keep-editing").disabled = false;
       for (const id of [
         "editor-apply",
@@ -852,7 +852,7 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
     open,
     openExamples() {
       open();
-      const panel = document.querySelector(".editor-example-panel");
+      const panel = document.querySelector(".block-editor__examples");
       panel.open = true;
       panel.scrollIntoView({ block: "nearest" });
     },

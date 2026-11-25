@@ -9,7 +9,7 @@ B3 amplía el editor de parcelas de v2.6. Los cuatro ejemplos originales son dis
 3. Selecciona un objeto en 3D o mediante **Objeto en esta parcela**. Puedes moverlo, girarlo, duplicarlo, eliminarlo y modificar las propiedades disponibles. El árbol permite anclaje estándar o reducido, ambos educativos. La identidad se conserva al moverlo; duplicar crea otra. Los elementos añadidos permanecen en su parcela al mover o eliminar el conjunto del parque.
 4. En **Prepara el tornado**, usa **Dibujar recorrido** y marca los puntos en el plano, o utiliza los botones de parcelas para unir sus centros. Admite 2–24 puntos con al menos 0,5 m entre puntos consecutivos. Un solo punto puede quedar en borrador, pero no se guarda ni aplica. **Quitar último punto**, **Usar recorrido lineal** y Deshacer permiten corregirlo.
 5. Ajusta intensidad (0–280 km/h), avance (0,5–8 m/s) y duración, y pulsa **Aplicar condiciones**. El formato admite duraciones enteras de 5–180 s o sin límite; el selector ofrece las más habituales y conserva otras duraciones importadas.
-6. Guarda el diseño en biblioteca o JSON y pulsa **Usar esta manzana**. Si hay resultados anteriores, puedes conservarlos antes de reconstruir. El borrador no modifica la ejecución original hasta aplicarlo.
+6. Guarda el diseño en biblioteca o JSON y pulsa **Aplicar a la simulación**. Si hay resultados anteriores, puedes conservarlos antes de reconstruir. El borrador no modifica la ejecución original hasta aplicarlo.
 
 Ejemplo descargable: [Plaza con edificios](examples/plaza-v2.7.json), importable desde el cuaderno.
 
@@ -17,7 +17,7 @@ Ejemplo descargable: [Plaza con edificios](examples/plaza-v2.7.json), importable
 
 ## Caso histórico de Puerto Varas 2025
 
-Abre **Catálogo histórico → Puerto Varas → Abrir tramo urbano**, o selecciona el caso en **Aprender con un ejemplo**. El recorrido aparece en el borrador. Pulsa **Usar esta manzana** y luego **Iniciar simulación**. Puedes volver a ver la geometría intacta desde **Entiende lo que ocurrió** y consultar los daños calculados en el cuaderno.
+Abre **Catálogo histórico → Puerto Varas → Abrir tramo urbano**, o selecciona el caso en **Aprender con un ejemplo**. El recorrido aparece en el borrador. Pulsa **Aplicar a la simulación** y luego **Iniciar simulación**. Puedes volver a ver la geometría intacta desde **Entiende lo que ocurrió** y consultar los daños calculados en el cuaderno.
 
 - **Evento documentado.** El 25 de mayo de 2025, un tornado de categoría EF1 según la DMC afectó a Puerto Varas. La inspección documentó pérdidas de techumbre y permitió trazar su recorrido a partir de daños. El informe preliminar indica un avance general de noroeste a sureste. El municipio documenta afectación en Walker Martínez. [Mapa de la DMC](https://blog.meteochile.gob.cl/2025/06/18/encontrando-el-rastro-del-tornado-en-puerto-varas/) · [Dirección del recorrido](https://blog.meteochile.gob.cl/2025/05/26/siguiendo-las-huellas-de-un-destructivo-tornado-en-puerto-varas/) · [Municipalidad](https://www.ptovaras.cl/noticias/puerto-varas-conmemora-el-primer-aniversario-del-tornado-con-foco-en-reconstruccion-resiliencia-y-preparacion-climatica)
 - **Escenario simulado.** Una cuadrícula sintética de 4 × 4 parcelas representa un tramo urbano inspirado en Walker Martínez. Incluye seis casas, dos edificios bajos, dos parques y un árbol independiente. La polilínea conserva la dirección general publicada y usa coordenadas locales aproximadas. Los materiales, calles y posiciones se asignaron con fines educativos.

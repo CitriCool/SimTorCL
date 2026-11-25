@@ -10,7 +10,7 @@ Construido con Vite, Three.js y Cannon-es. Viviendas, texturas, vegetación y ef
 
 Abre **Construir mi manzana → Aprender con un ejemplo**. Hay cuatro escenarios sintéticos modificables: residencial, mixto, plaza con edificios y viviendas reforzadas. La paleta permite colocar casas, edificios, parques y también árboles y bancas independientes, con propiedades, identidades persistentes y deshacer/rehacer.
 
-Dibuja un recorrido sobre el plano y ajusta intensidad, avance y duración. Guarda el diseño y pulsa **Usar esta manzana** para simularlo. En **Entiende lo que ocurrió**, selecciona objetos o piezas, consulta las causas registradas y abre el evento en la línea de tiempo. Puedes alternar la geometría inicial y calculada y comparar refuerzos A/B conservando el mismo diseño.
+Dibuja un recorrido sobre el plano y ajusta intensidad, avance y duración. Guarda el diseño y pulsa **Aplicar a la simulación** para simularlo. En **Entiende lo que ocurrió**, selecciona objetos o piezas, consulta las causas registradas y abre el evento en la línea de tiempo. Puedes alternar la geometría inicial y calculada y comparar refuerzos A/B conservando el mismo diseño.
 
 El borrador conserva el experimento original hasta aplicarlo y ofrece guardar los resultados antes de reconstruir. Las calles permanecen fijas; los parques conservan sus elementos originales como conjunto y los árboles y bancas añadidos mantienen identidades propias.
 

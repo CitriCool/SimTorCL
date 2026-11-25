@@ -17,8 +17,9 @@ export class SceneView {
     this.random = randomGenerator(42);
     this.meshes = new Map();
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color("#293c36");
-    this.scene.fog = new THREE.FogExp2("#293c36", 0.016);
+    const skyColor = "#303b49";
+    this.scene.background = new THREE.Color(skyColor);
+    this.scene.fog = new THREE.FogExp2(skyColor, 0.016);
     this.renderer = new THREE.WebGLRenderer({
       canvas,
       antialias: true,
