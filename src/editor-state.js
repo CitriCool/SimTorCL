@@ -128,6 +128,22 @@ export class EditorState {
       }
     } else if (action === "route-point") {
       settings.route = [...(settings.route ?? []), { x: args.x, z: args.z }];
+    } else if (action === "route-smooth") {
+      const points = settings.route;
+      if (!points || points.length < 3 || points.length > 13)
+        throw new Error("Para suavizar, dibuja entre 3 y 13 puntos.");
+      // Cut each interior corner while preserving the endpoints and file format.
+      const softened = [points[0]];
+      for (let i = 1; i < points.length - 1; i++) {
+        const corner = points[i];
+        for (const neighbor of [points[i - 1], points[i + 1]]) {
+          softened.push({
+            x: corner.x + (neighbor.x - corner.x) / 4,
+            z: corner.z + (neighbor.z - corner.z) / 4,
+          });
+        }
+      }
+      settings.route = [...softened, points.at(-1)];
     } else if (action === "route-remove") {
       settings.route = settings.route?.slice(0, -1) ?? null;
       if (!settings.route?.length) settings.route = null;
