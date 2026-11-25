@@ -93,7 +93,7 @@ export function setupHistoricalCatalog({ openScenario, openRoofReference }) {
         `https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=13/${lat}/${lon}`));
     }
     for (const [id, label] of scenarios[event.id] ?? []) {
-      const button = element("button", label);
+      const button = element("button", "Probar una variante · " + label.replace(/^Abrir /, ""));
       button.type = "button";
       button.className = "details-button";
       button.addEventListener("click", () => {

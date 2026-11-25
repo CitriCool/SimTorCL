@@ -282,6 +282,7 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
       $("editor-duration").add(option);
     }
     $("editor-duration").value = duration;
+    $("editor-route-smooth").disabled = !(route?.length >= 3 && route.length <= 13);
     $("editor-route-remove").disabled = !route?.length;
     view.showRoutePreview(route);
     const lesson = LESSONS[draft.settings.lesson];
@@ -535,6 +536,7 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
     );
   });
   for (const [id, action] of [
+    ["editor-route-smooth", "route-smooth"],
     ["editor-route-remove", "route-remove"],
     ["editor-route-clear", "route-clear"],
   ])
@@ -687,7 +689,8 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
     };
     try {
       draft = new EditorState(exampleId ? lessonConfig(exampleId) : settings);
-      $("editor-name").value = LESSONS[draft.settings.lesson]?.title ?? "Mi manzana";
+      const title = LESSONS[draft.settings.lesson]?.title ?? "Mi manzana";
+      $("editor-name").value = exampleId ? "Variante hipotética · " + title : title;
       if (draft.settings.lesson) $("editor-example").value = draft.settings.lesson;
       selected = null;
       selectedObject = null;
@@ -714,7 +717,7 @@ export function setupEditor({ experiment, pause, reset, isReplaying }) {
       animate();
       say(
         exampleId
-          ? "Revisa el recorrido y pulsa «Aplicar a la simulación» para preparar el ensayo."
+          ? "Variante hipotética del caso. Edita el recorrido y pulsa «Aplicar a la simulación» para preparar el ensayo."
           : "Borrador independiente. Elige una infraestructura o selecciona una parcela; tu experimento permanece intacto.",
       );
     } catch (error) {
